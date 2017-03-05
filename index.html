@@ -41,33 +41,33 @@
     <span class="icon-bar"> </span>
     <span class="icon-bar"></span>
     </button>
-      <a href="#" class="navbar-text"><strong>Observatorio Astronómico <br> Francisco Manuel Sanchez</strong></a>
+      <a href="#/" class="navbar-text"><strong>Observatorio Astronómico <br> Francisco Manuel Sanchez</strong></a>
     </div>
 
           <!-- home -->
           <div class="collapse navbar-collapse navbar-ext1-collapse">
               <ul class="nav navbar-nav" ng-hide="user.login">
-                  <li class="active"><a href="#">Home</a></li>
+                  <li class="active"><a href="#/inicio">Inicio</a></li>
                   <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Experimentos<b class="caret"></b></a>
+                      <a href="" class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;">Experimentos<b class="caret"></b></a>
                       <ul class="dropdown-menu">
-                          <li><a href="#">Solar</a></li>
-                          <li><a href="#">Nocturno</a></li>
+                          <li><a href="#/experimento/nocturno">Nocturno</a></li>
+                          <li><a href="#/experimento/solar">Solar</a></li>
                       </ul>
                   </li>
-                  <li><a href="#">Reservas</a></li>
-                  <li><a href="#">Galeria</a></li>
-                  <li><a href="#">Perfil</a></li>
+                  <li><a href="#/reservas">Reservas</a></li>
+                  <li><a href="#/galeria">Galeria</a></li>
+                  <li><a href="#/perfil">Perfil</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right" ng-hide="user.login">
                   <li>
                       <p class="navbar-text"><strong>Hola, {{name}}</strong></p><button type="submit" class="btn btn-default navbar-btn">Cerrar sesión</button></li>
               </ul>
-              <form class="navbar-form navbar-form-1 navbar-right" role="login" ng-hide="user.login">
+              <form class="navbar-form navbar-form-1 navbar-right" role="login" ng-show="user.login">
                   <div class="form-group">
                       <input type="email" class="form-control" placeholder="Email" maxlength="30" ng-model="user.email">
                       <input type="password" class="form-control" placeholder="Contraseña" maxlength="30" ng-model="user.password">
-                      <button type="submit" href="#/home" class="btn btn-group-vertical" name="button" ng-click="register()">Entrar</button>
+                      <button type="submit" href="#!/inicio" class="btn btn-group-vertical" name="button" ng-click="register()">Entrar</button>
                   </div>
               </form>
           </div>
