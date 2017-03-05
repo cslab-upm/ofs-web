@@ -6,4 +6,10 @@
     margin-right: 15px;
   }
 }
+@media (min-width: 768px) and (max-width:991px) {
+  .navbar-form {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+}
 /*----- End Navbar -----*/
