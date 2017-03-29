@@ -12,4 +12,106 @@
     padding-right: 0px !important;
   }
 }
+@media (min-width: 768px){
+  .navbar-nav {
+    float: left;
+    margin: 10px 0px;
+  }
+}
+
+.navbar-default{
+  background-color: #fff;
+  border: 0px;
+}
+.navbar-nav > li > a:before {
+  position: absolute;
+  content: '';
+  height: 8px;
+  width: 100%;
+  background: #dc0032;
+  margin-left: -15px;
+  opacity: 0;
+  bottom: 0;
+}
+.navbar-nav > .active > a:before {
+    opacity: 1;
+    bottom: 0;
+}
+#navbar{
+  background-color: #272727;
+}
+a{
+  color: white;
+}
 /*----- End Navbar -----*/
+p{
+  color:black;
+}
+
+body{
+  /*background-image: url('../img/earth.jpg');
+  background-color: #000;
+  background-repeat: no-repeat;
+  background-position: center;*/
+  /*color: #000;*/
+  padding-top: 70px;
+  font-size: 16px;
+  color:black;
+}
+
+#content{
+  background-color: rgba(255, 255, 255, 0.77);
+}
+
+a {
+  color: white;
+}
+
+/*--Footer--*/
+footer{
+  padding: 40px;
+    /*background-color: #eaeaea;*/
+    background-color: #272727;
+}
+
+.social{
+  color: #fff;
+  margin: 10px;
+}
+.social:hover{
+  color: #fff;
+}
+.social:visited{
+  color: #fff;
+}
+.social:link{
+  color: #fff;
+}
+/*--End Footer--*/
+
+/*==========  Non-Mobile First Method  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px) {
+
+}
