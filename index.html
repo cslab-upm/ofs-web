@@ -14,6 +14,74 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- fontsawesome -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
+</head>
+
+<body ng-controller="mainController">
+
+
+    <nav class="navbar navbar-invers navbar-fixed-top" role="navigation" id="slide-nav">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- <a href="#"><img src="img/logo.png" width="50" height="50" alt=""> Observatorio</a> -->
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ext1-collapse" aria-expanded="true" aria-controls="navbar">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"> </span>
+    <span class="icon-bar"></span>
+    </button>
+                <a href="./" class="navbar-text"><strong>Observatorio Astronómico <br> Francisco Manuel Sánchez</strong></a>
+            </div>
+
+            <!-- home -->
+            <div class="" id="slidemenu">
+                <ul class="nav navbar-nav" ng-hide="user.login">
+                    <li class="active" id="init"><a href="./inicio">Inicio</a></li>
+                    <!-- <li class="dropdown">
+                      <a href="" class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;">Experimentos<b class="caret"></b></a>
+                      <ul class="dropdown-menu">
+                          <li><a href="#/experimento/nocturno">Nocturno</a></li>
+                          <li><a href="#/experimento/solar">Solar</a></li>
+                      </ul>
+                  </li> -->
+                    <li id="equip"><a href="./equipamiento">Equipamiento</a></li>
+                    <li id="about"><a href="./acerca">Acerca de</a></li>
+                    <li id="contact"><a href="./contacto">Contacto</a></li>
+                    <!-- <li><a href="#/reservas">Reservas</a></li>
+                  <li><a href="#/galeria">Galeria</a></li>
+                  <li><a href="#/perfil">Perfil</a></li> -->
+                </ul>
+                <!-- <ul class="nav navbar-nav navbar-right" ng-show="user.login">
+                <li>
+                    <p class="black"><strong>Hola, {{name}}</strong></p><button type="submit" class="btn btn-default navbar-btn">Cerrar sesión</button></li>
+            </ul> -->
+                <!-- <form class="navbar-form navbar-form-1 navbar-right" role="login" ng-show="user.login">
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Email" maxlength="30" ng-model="user.email">
+                    <input type="password" class="form-control" placeholder="Contraseña" maxlength="30" ng-model="user.password">
+                    <button type="submit" href="#!/inicio" class="btn btn-group-vertical" name="button" ng-click="register()">Entrar</button>
+                </div>
+            </form> -->
+            </div>
+            <!-- end home -->
+        </div>
+    </nav>
+
+    <div id="page-content">
+        <div class="container" id="content" ng-view></div>
+
+        <div class="container">
+            <footer>
+                <div class="row">
+                    <div class="col-md-12 center-block text-center">
+                        <a href="#" class="social" target="_blank"><i class="fa fa-facebook-square fa-2x" aria-hidden="true"></i></a>
+                        <a href="#" class="social" target="_blank"><i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
     <!-- AngujarJS -->
     <script src="js/angular.min.js"></script>
     <!-- AngularJS route -->
@@ -28,71 +96,6 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- Script js -->
     <script src="js/script.js"></script>
- </head>
-
-<body ng-controller="mainController">
-
-
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container" id="navbar">
-          <div class="navbar-header">
-              <!-- <a href="#"><img src="img/logo.png" width="50" height="50" alt=""> Observatorio</a> -->
-
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ext1-collapse" aria-expanded="true" aria-controls="navbar">
-    <span class="sr-only">Toggle navigation</span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"> </span>
-    <span class="icon-bar"></span>
-    </button>
-      <a href="./" class="navbar-text"><strong>Observatorio Astronómico <br> Francisco Manuel Sanchez</strong></a>
-    </div>
-
-          <!-- home -->
-          <div class="collapse navbar-collapse navbar-ext1-collapse">
-              <ul class="nav navbar-nav" ng-hide="user.login">
-                  <li class="active"><a href="./inicio">Inicio</a></li>
-                  <!-- <li class="dropdown">
-                      <a href="" class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;">Experimentos<b class="caret"></b></a>
-                      <ul class="dropdown-menu">
-                          <li><a href="#/experimento/nocturno">Nocturno</a></li>
-                          <li><a href="#/experimento/solar">Solar</a></li>
-                      </ul>
-                  </li> -->
-                  <li><a href="./equipamiento">Equipamiento</a></li>
-                  <li><a href="./acerca">Acerca de</a></li>
-                  <li><a href="./contacto">Contacto</a></li>
-                  <!-- <li><a href="#/reservas">Reservas</a></li>
-                  <li><a href="#/galeria">Galeria</a></li>
-                  <li><a href="#/perfil">Perfil</a></li> -->
-              </ul>
-              <ul class="nav navbar-nav navbar-right" ng-show="user.login">
-                  <li>
-                      <p class="black"><strong>Hola, {{name}}</strong></p><button type="submit" class="btn btn-default navbar-btn">Cerrar sesión</button></li>
-              </ul>
-              <form class="navbar-form navbar-form-1 navbar-right" role="login" ng-show="user.login">
-                  <div class="form-group">
-                      <input type="email" class="form-control" placeholder="Email" maxlength="30" ng-model="user.email">
-                      <input type="password" class="form-control" placeholder="Contraseña" maxlength="30" ng-model="user.password">
-                      <button type="submit" href="#!/inicio" class="btn btn-group-vertical" name="button" ng-click="register()">Entrar</button>
-                  </div>
-              </form>
-          </div>
-          <!-- end home -->
-      </div>
-  </nav>
-
-  <div class="container" id="content" ng-view></div>
-
-    <div class="container">
-      <footer>
-      <div class="row">
-        <div class="col-md-12 center-block text-center">
-          <a href="#" class="social" target="_blank"><i class="fa fa-facebook-square fa-2x" aria-hidden="true"></i></a>
-          <a href="#" class="social" target="_blank"><i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i></a>
-        </div>
-      </div>
-      </footer>
-    </div>
-
 </body>
+
 </html>

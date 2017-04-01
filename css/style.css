@@ -1,117 +1,262 @@
-/*----- Navbar -----*/
-@media (max-width: 767px) {
-  .navbar-text {
-    float: left;
-    margin-left: 15px;
-    margin-right: 15px;
-  }
-}
-@media (min-width: 768px) and (max-width:991px) {
-  .navbar-form {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-  }
-}
-@media (min-width: 768px){
-  .navbar-nav {
-    float: left;
-    margin: 10px 0px;
-  }
-}
-
-.navbar-default{
-  background-color: #fff;
-  border: 0px;
-}
-.navbar-nav > li > a:before {
-  position: absolute;
-  content: '';
-  height: 8px;
-  width: 100%;
-  background: #dc0032;
-  margin-left: -15px;
-  opacity: 0;
-  bottom: 0;
-}
-.navbar-nav > .active > a:before {
-    opacity: 1;
-    bottom: 0;
-}
-#navbar{
-  background-color: #272727;
-}
-a{
-  color: white;
-}
-/*----- End Navbar -----*/
-p{
-  color:black;
-}
-
-body{
-  /*background-image: url('../img/earth.jpg');
+body {
+    /*background-image: url('../img/earth.jpg');
   background-color: #000;
   background-repeat: no-repeat;
   background-position: center;*/
-  /*color: #000;*/
-  padding-top: 70px;
-  font-size: 16px;
-  color:black;
+    /*color: #000;*/
+    /*padding-top: 70px;*/
+    font-size: 16px;
+    color: black;
 }
 
-#content{
-  background-color: rgba(255, 255, 255, 0.77);
+p {
+    color: black;
 }
 
-a {
-  color: white;
+#page-content {
+    margin-top: 100px;
 }
 
-/*--Footer--*/
-footer{
-  padding: 40px;
+
+/*----- Navbar -----*/
+
+.navbar-nav {
+    float: left;
+    margin: 10px 0px;
+}
+
+.navbar-text {
+    color: #fff !important;
+    margin-left: 0px;
+    text-decoration: none !important;
+    margin-right: 15px;
+}
+
+.navbar-text a:focus, a:hover, a:visited {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.navbar-nav>li>a {
+    color: #a9b6c1;
+}
+
+.navbar-nav .active a {
+    background-color: inherit !important;
+    color: #FFF !important;
+}
+
+.navbar-nav li a:before {
+    position: absolute;
+    content: '';
+    height: 7px;
+    width: 100%;
+    background: #dc0032;
+    margin-left: -15px;
+    opacity: 0;
+    bottom: 0;
+}
+
+.navbar-nav .active a:before {
+    opacity: 1;
+    bottom: 0;
+}
+
+.navbar-nav a:hover:before {
+    opacity: 1;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+    text-decoration: none;
+    background-color: transparent;
+}
+
+#navbar {
+    background-color: #272727;
+}
+
+.active a {
+    background-color: inherit !important;
+    color: #FFF !important;
+}
+
+#slide-nav.navbar-invers {
+    background-color: #333;
+}
+
+
+/*not using button -- comentar para usar el boto y poner otro icono icomoon */
+
+#slide-nav .navbar-toggle {
+    cursor: pointer;
+    position: relative;
+    line-height: 0;
+    margin: 0;
+    width: 35px;
+    height: 70px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+#slide-nav .navbar-toggle>.icon-bar {
+    width: 100%;
+    display: block;
+    height: 4px;
+    margin: 6px 0 0 0;
+    background-color: #FFF;
+}
+
+#slide-nav .navbar-toggle.slide-active .icon-bar {
+    background: #dc0032;
+}
+
+
+/*----- End Navbar -----*/
+
+
+/*-----Footer-----*/
+
+footer {
+    padding: 40px;
     /*background-color: #eaeaea;*/
     background-color: #272727;
 }
 
-.social{
-  color: #fff;
-  margin: 10px;
+.social {
+    color: #fff;
+    margin: 10px;
 }
-.social:hover{
-  color: #fff;
+
+.social:hover {
+    color: #fff;
 }
-.social:visited{
-  color: #fff;
+
+.social:visited {
+    color: #fff;
 }
-.social:link{
-  color: #fff;
+
+.social:link {
+    color: #fff;
 }
+
+
 /*--End Footer--*/
+
 
 /*==========  Non-Mobile First Method  ==========*/
 
-/* Large Devices, Wide Screens */
-@media only screen and (max-width : 1200px) {
 
-}
+/* Large Devices, Wide Screens */
+
+@media only screen and (max-width: 1200px) {}
+
 
 /* Medium Devices, Desktops */
-@media only screen and (max-width : 992px) {
 
-}
+@media only screen and (max-width: 992px) {}
+
 
 /* Small Devices, Tablets */
-@media only screen and (max-width : 768px) {
 
+@media only screen and (max-width: 768px) {
+    .navbar-text {
+        float: left;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
 }
+
 
 /* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
 
-}
+@media only screen and (max-width: 480px) {}
+
 
 /* Custom, iPhone Retina */
-@media only screen and (max-width : 320px) {
 
+@media only screen and (max-width: 320px) {}
+
+@media only screen and (max-width:767px) {
+    /*-----End Navar-----*/
+    #slide-nav .container {
+        margin: 0!important;
+        padding: 0!important;
+        height: 100%;
+    }
+    #slide-nav .navbar-header {
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    #slide-nav .navbar.slide-active {
+        position: absolute;
+        width: 80%;
+        top: -1px;
+        z-index: 1000;
+    }
+    #slide-nav #slidemenu {
+        /*background: #f7f7f7;*/
+        left: -100%;
+        width: 40%;
+        min-width: 0;
+        /*position: absolute;*/
+        padding-left: 0;
+        z-index: 2;
+        top: 75px;
+        /*margin-top: 10px;*/
+        position: fixed;
+        height: 100%;
+    }
+    #slide-nav #slidemenu .navbar-nav {
+        min-width: 0;
+        width: 100%;
+        margin: 0;
+    }
+    #slide-nav #slidemenu .navbar-nav .dropdown-menu li a {
+        min-width: 0;
+        width: 80%;
+        white-space: normal;
+    }
+    #slide-nav {
+        border-top: 0
+    }
+    #slide-nav.navbar-invers #slidemenu {
+        background-color: #333;
+    }
+    #slide-nav .navbar-form {
+        width: 100%;
+        margin: 8px 0;
+        text-align: center;
+        overflow: hidden;
+        /*fast clearfixer*/
+    }
+    #slide-nav .navbar-form .form-control {
+        text-align: center
+    }
+    #slide-nav .navbar-form .btn {
+        width: 100%
+    }
+    .navbar-nav>li>a:before {
+        position: absolute;
+        content: '';
+        height: 100%;
+        width: 7px;
+        background: #dc0032;
+        margin-left: -15px;
+        opacity: 0;
+        bottom: 0;
+    }
+    /*-----End Navar-----*/
+    #page-content {
+        margin-top: 70px;
+    }
+}
+
+@media only screen and (min-width:768px) {
+    .navbar.navbar-fixed-top.slide-active {
+        position: fixed
+    }
+    .navbar-header {
+        left: 0!important
+    }
 }
