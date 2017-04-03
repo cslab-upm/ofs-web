@@ -46,7 +46,6 @@ $(document).ready(function() {
         $(this).toggleClass('slide-active', !selected);
 
         $('#slidemenu').toggleClass('slide-active');
-        console.log(selected);
     });
     //End Navbar lateral activo
 
@@ -59,4 +58,35 @@ $(document).ready(function() {
             $(del).removeClass('slide-active');
         }
     });
+    
+        if ($(window).width() > 767) {
+            var $lightbox = $('#lightbox');
+            console.log('menor');
+            $('[data-target="#lightbox"]').on('click', function(event) {
+                var $img = $(this).find('img'),
+                    src = $img.attr('src'),
+                    alt = $img.attr('alt'),
+                    css = {
+                        'maxWidth': $(window).width() - 100,
+                        'maxHeight': $(window).height() - 100
+                    };
+
+                $lightbox.find('.close').addClass('hidden');
+                $lightbox.find('img').attr('src', src);
+                $lightbox.find('img').attr('alt', alt);
+                $lightbox.find('img').css(css);
+            });
+
+            $lightbox.on('shown.bs.modal', function(e) {
+                var $img = $lightbox.find('img');
+
+                $lightbox.find('.modal-dialog').css({
+                    'width': $img.width()
+                });
+                $lightbox.find('.close').removeClass('hidden');
+            });
+
+        } else {
+            $('.thumbnail').removeAttr('data-toggle');
+        }
 });

@@ -1,4 +1,4 @@
-var app = angular.module('observatorioapp', ['ngRoute']);
+var app = angular.module('observatorioapp', ['ngRoute', 'ngSanitize']);
 
 // URL prefix
 app.config(['$locationProvider', function($locationProvider) {
@@ -45,26 +45,26 @@ app.config(function($routeProvider) {
               return  '/'
             }
         })
-        .when('/experimento/nocturno', {
-            templateUrl: 'views/night-exp.html',
-            controller: ''
-        })
-        .when('/experimento/solar', {
-            templateUrl: 'views/solar-exp.html',
-            controller: ''
-        })
-        .when('/reservas', {
-          templateUrl: 'views/reservations.html',
-          controller: ''
-        })
-        .when('/galeria', {
-          templateUrl: 'views/gallery.html',
-          controller: ''
-        })
-        .when('/perfil', {
-          templateUrl: 'views/profile.html',
-          controller: ''
-        })
+        // .when('/experimento/nocturno', {
+        //     templateUrl: 'views/night-exp.html',
+        //     controller: ''
+        // })
+        // .when('/experimento/solar', {
+        //     templateUrl: 'views/solar-exp.html',
+        //     controller: ''
+        // })
+        // .when('/reservas', {
+        //   templateUrl: 'views/reservations.html',
+        //   controller: ''
+        // })
+        // .when('/galeria', {
+        //   templateUrl: 'views/gallery.html',
+        //   controller: ''
+        // })
+        // .when('/perfil', {
+        //   templateUrl: 'views/profile.html',
+        //   controller: ''
+        // })
 
 
         // $locationProvider.html5Mode(true);

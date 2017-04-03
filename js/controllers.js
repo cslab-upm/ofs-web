@@ -11,9 +11,9 @@ app.controller('inicioController', ['$scope', '$sce', '$http', function($scope, 
                 // $scope.state.humidity = null;
                 // $scope.state.pressure = null;
                 // $scope.state.windSpeed = null;
-                // $scope.state.visibility = null;
-                $scope.state.operability = "Actualmente se encuentra operativo.";
-                $scope.state.busy = "El observatorio está libre. Inicie sesión o Registrese para observar el cielo."
+                // $scope.state.visibility = null;'
+                $scope.state.operability = "Estado de la cúpula: <span class='dome-red'>CERRADA</span>";
+                // $scope.state.busy = "El observatorio está libre. Inicie sesión o Registrese para observar el cielo."
                 $http.get('http://api.openweathermap.org/data/2.5/weather?q=Boadilladelmonte,sp&APPID=41a51db0a52c9d6db1462321b6a6a297')
                 .then(function successCallback(response){
                   $scope.state.temperature = response.data.main.temp - 273.15;
@@ -28,15 +28,17 @@ app.controller('inicioController', ['$scope', '$sce', '$http', function($scope, 
                   $scope.state.windSpeed = "No disponible";
                   $scope.state.visibility = "No disponible";
                 });
-
+                $scope.cameraFile = 'img/cameraObs.jpg';
                 // Seleccion de camara
                 $scope.SelectCamera = function() {
                     if ($scope.camera == 'interior') {
-                        $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/FM7MFYoylVs');
+                        // $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/FM7MFYoylVs');
+                        $scope.cameraFile = 'img/moobotix.jpg';
                     } else if ($scope.camera == 'exterior') {
-                        $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/D5drYkLiLI8');
+                      $scope.cameraFile = 'img/philips.jpg';
+                        // $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/D5drYkLiLI8');
                     } else if ($scope.camera == 'ccd') {
-                        $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/RhU9MZ98jxo');
+                        // $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/RhU9MZ98jxo');
                     }
                 }
 
