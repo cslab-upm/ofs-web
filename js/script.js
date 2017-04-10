@@ -1,5 +1,5 @@
 var path = window.location.pathname;
-var dir = path.slice(18);
+var dir = path.slice(18); //poner a 1 al subir a venus
 var selected; //clase activa navbar
 
 // Ajuste path - navbar
@@ -25,7 +25,6 @@ $(document).ready(function() {
         $(this).addClass('active');
     });
     // End elemento activo Lista navbar
-
 
     // Navbar lateral activo
     $('.navbar-nav').on('click', 'li', function() {
@@ -58,35 +57,4 @@ $(document).ready(function() {
             $(del).removeClass('slide-active');
         }
     });
-    
-        if ($(window).width() > 767) {
-            var $lightbox = $('#lightbox');
-            console.log('menor');
-            $('[data-target="#lightbox"]').on('click', function(event) {
-                var $img = $(this).find('img'),
-                    src = $img.attr('src'),
-                    alt = $img.attr('alt'),
-                    css = {
-                        'maxWidth': $(window).width() - 100,
-                        'maxHeight': $(window).height() - 100
-                    };
-
-                $lightbox.find('.close').addClass('hidden');
-                $lightbox.find('img').attr('src', src);
-                $lightbox.find('img').attr('alt', alt);
-                $lightbox.find('img').css(css);
-            });
-
-            $lightbox.on('shown.bs.modal', function(e) {
-                var $img = $lightbox.find('img');
-
-                $lightbox.find('.modal-dialog').css({
-                    'width': $img.width()
-                });
-                $lightbox.find('.close').removeClass('hidden');
-            });
-
-        } else {
-            $('.thumbnail').removeAttr('data-toggle');
-        }
 });

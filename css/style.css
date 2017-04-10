@@ -71,7 +71,7 @@ h1,h2,h3,h4,h5,h6{
     margin-right: 15px;
 }
 
-.navbar-text a:focus, a:hover, a:visited {
+.navbar-text a:focus, a:hover {
     color: #fff !important;
     text-decoration: none;
 }

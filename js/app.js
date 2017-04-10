@@ -17,32 +17,32 @@ app.config(['$locationProvider', function($locationProvider) {
 // Routing
 app.config(function($routeProvider) {
     $routeProvider
-        .when('/', {
-          redirectTo: '/bienvenido'
-        })
-        .when('/bienvenido', {
+        // .when('/', {
+        //   redirectTo: '/bienvenido'
+        // })
+        .when('/inicio', {
             templateUrl: 'views/inicio.html',
             controller: 'inicioController'
         })
         .when('/equipamiento', {
           templateUrl: 'views/equipment.html',
-          controller: ''
+          controller: 'equipamientoController'
         })
         .when('/acerca', {
           templateUrl: 'views/about.html',
-          controller: ''
+          controller: 'acercaController'
         })
         .when('/contacto', {
           templateUrl: 'views/contact.html',
-          controller: ''
+          controller: 'contactoController'
         })
-        .when('/inicio', {
-            templateUrl: 'views/inicio.html',
-            controller: 'inicioController'
-        })
+        // .when('/inicio', {
+        //     templateUrl: 'views/inicio.html',
+        //     controller: 'inicioController'
+        // })
         .otherwise({
             redirectTo: function(){
-              return  '/'
+              return  '/inicio'
             }
         })
         // .when('/experimento/nocturno', {
