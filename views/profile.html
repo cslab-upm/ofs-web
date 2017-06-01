@@ -1,3 +1,71 @@
-<div class="">
-  <h1>Perfil</h1>
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="col-md-5 col-md-push-7">
+
+          <h3>Perfil de usuario</h3><br/>
+          <p>Nombre de usuario:<span class="robot-b"> {{user.name}}</span></p>
+          <p>Email:<span class="robot-b"> {{user.email}}</span></p>
+        </div>
+
+
+    <div class="col-md-7 col-md-pull-5">
+
+
+
+          <h3>Mis reservas</h3><br/>
+          <p>Desde aquí podrás gestionar tus reservas. Podrás revisarlas, cancelarlas y, en cuanto estén activas, acceder al experimento y controlar el telescopio.</p>
+          <p>No tienes ninguna reserva en este momento</p>
+          <table class=" table table-striped" style=" overflow-x:auto;" >
+            <thead>
+              <td>Usuario</td>
+              <td>Experimento</td>
+              <td>Fecha</td>
+              <td>Hora</td>
+              <td>V</td>
+              <td>X</td>
+            </thead>
+            <tbody>
+              <tr>
+                <td>rafaelT{{}}</td>
+                <td>Solar{{}}</td>
+                <td>25/05/2017{{}}</td>
+                <td>3:00 (11:00 UT) -	13:15 (11:15 UT)</td>
+                <td>{{}}</td>
+                <td>{{}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+
+
+    </div>
+
+  </div>
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <h3>Mi galería</h3>
+
+
+      </div>
+      <!-- <div class="col-md-4 col-xs-10 col-xs-offset-1 col-md-offset-1">
+        <label for="" ng-model="date">Fecha:</label>
+        <input type="text" id="mydate2" style="width:100%;max-width:500px;"/>
+      </div> -->
+      <div class="col-md-12">
+        <div class="col-md-3 col-sm-4 col-xs-6">
+          <img class="img-responsive" src="img/i1.png" alt="">
+        </div>
+        <div class="col-md-3 col-sm-4 col-xs-6">
+          <img class="img-responsive" src="img/i2.png" alt="">
+        </div>
+        <div class="col-md-3 col-sm-4 col-xs-6" >
+          <img class="img-responsive" src="img/i3.png" alt="">
+        </div>
+        <div class="col-md-3 col-sm-4 col-xs-6">
+          <img class="img-responsive" src="img/i4.jpg" alt="">
+        </div>
+      </div>
+
+    </div>
 </div>

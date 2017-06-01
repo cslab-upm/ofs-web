@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- fontsawesome -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!-- DatePicker -->
+    <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
     <!-- Google Analytics -->
     <script>
         window.ga = window.ga || function() {
@@ -43,7 +45,7 @@
     <span class="icon-bar"> </span>
     <span class="icon-bar"></span>
     </button>
-                <a href="./" class="navbar-text"><strong>Observatorio Astronómico <br> Francisco Manuel Sánchez</strong></a>
+                <a href="./inicio" id="logo" class="navbar-text"><strong>Observatorio Astronómico <br> Francisco Manuel Sánchez</strong></a>
             </div>
 
             <!-- home -->
@@ -60,9 +62,19 @@
                     <li id="equip"><a href="./equipamiento">Equipamiento</a></li>
                     <li id="about"><a href="./acerca">Acerca de</a></li>
                     <li id="contact"><a href="./contacto">Contacto</a></li>
-                    <!-- <li><a href="#/reservas">Reservas</a></li>
-                  <li><a href="#/galeria">Galeria</a></li>
-                  <li><a href="#/perfil">Perfil</a></li> -->
+
+
+                    <li ng-show='isLogged'><a href="./experimento">Experimentos</a></li>
+                  <!-- <li ng-hide="user.login"><a href="./galeria">Galeria</a></li> -->
+                  <li id="profile" ng-show='isLogged'><a href="./perfil">Perfil</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <!-- <li id="login"><button  class="btn btn-warning navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Inicar sesión</button></li>
+                  <li id="register"><button class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Registrar</button></li> -->
+                  <li ng-hide='isLogged' id="login"><button   ng-click="goLogin()" class="btn btn-success navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Iniciar sesión</button></li>
+                  <li ng-hide='isLogged' id="register"><button  ng-click="goRegister()" class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Registrar</button></li>
+                  <li ng-show='isLogged'><p class="black navbar-text" style="margin-left: 15px"><strong>Bienvenido</strong></p></li>
+                  <li ng-show='isLogged' id="logout"><button   ng-click="toLogout()" class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Cerrar sesión</button></li>
                 </ul>
                 <!-- <ul class="nav navbar-nav navbar-right" ng-show="user.login">
                 <li>
@@ -101,16 +113,22 @@
     <script src="js/angular.min.js"></script>
     <!-- AngularJS route -->
     <script src="js/angular-route.min.js"></script>
+    <!-- AngularJS cookies -->
+    <script src="js/angular-cookies.min.js"></script>
     <!-- AngularJS Sanitize -->
     <script src="js/angular-sanitize.min.js"></script>
     <!-- routes.js -->
     <script src="js/app.js"></script>
     <!-- Controllers -->
     <script src="js/controllers.js"></script>
+    <!-- Services -->
+    <script src="services/service.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery.min.js"></script>
     <!-- Bootstrap js-->
     <script src="js/bootstrap.min.js"></script>
+    <!-- jquery-ui -->
+    <script src="js/jquery-ui.js"></script>
     <!-- Script js -->
     <script src="js/script.js"></script>
 </body>

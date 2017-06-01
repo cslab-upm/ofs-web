@@ -246,6 +246,25 @@ img.logo{
 .btn-red:focus{
   outline: none !important;
 }
+
+.btn-green{
+  font-family: 'Roboto-Bold';
+  font-size: 16px;
+  background-color: #fff;
+  color: #2ecc71;
+  border-color: #2ecc71;
+  border-radius: 15px;
+}
+.btn-green:hover{
+  background-color: #2ecc71 !important;
+  color: #fff !important;
+}
+
+.btn-green:focus{
+  outline: none !important;
+}
+
+
 a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover{
   border: none !important;
   outline: none !important;
@@ -300,6 +319,10 @@ font-family: 'Roboto-Bold';
 .form-control{
   font-size: 17px;
 }
+
+.alert {
+    padding: 5px
+  }
 /*==========  Non-Mobile First Method  ==========*/
 
 
@@ -317,7 +340,7 @@ h1.title{
 
 /* Small Devices, Tablets */
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1115px) {
     .navbar-text {
         float: left;
         /*margin-left: 15px;
@@ -341,7 +364,7 @@ h1.title{
 
 @media only screen and (max-width: 320px) {}
 
-@media only screen and (max-width:767px) {
+@media only screen and (max-width:1115px) {
     /*-----End Navar-----*/
     #slide-nav .container {
         margin: 0!important;
@@ -376,6 +399,7 @@ h1.title{
         width: 100%;
         margin: 0;
     }
+
     #slide-nav #slidemenu .navbar-nav .dropdown-menu li a {
         min-width: 0;
         width: 80%;
@@ -400,6 +424,9 @@ h1.title{
     #slide-nav .navbar-form .btn {
         width: 100%
     }
+    .navbar-toggle {
+    display: block;
+}
     .navbar-nav>li>a:before {
         position: absolute;
         content: '';
@@ -414,8 +441,44 @@ h1.title{
     #page-content {
         margin-top: 70px;
     }
+    .navbar-header {
+        float: none;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
 }
 
-@media only screen and (min-width:768px) {
 
+
+
+
+
+
+
+@media (min-width: 1116px){
+
+
+  .navbar-header {
+      float: left;
+  }
+.navbar-toggle {
+    display: none;
+}
+
+
+}
+
+
+
+.expSolar,.expSolar_click{
+  background-color: #ffa500;
+}
+
+.expNocturno, .expNocturno_click{
+  background-color: #758ddc
+}
+
+.padding0{
+  padding: 0px;
 }

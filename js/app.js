@@ -1,4 +1,4 @@
-var app = angular.module('observatorioapp', ['ngRoute', 'ngSanitize']);
+var app = angular.module('observatorioapp', ['ngRoute', 'ngSanitize','ngCookies']);
 
 // URL prefix
 app.config(['$locationProvider', function($locationProvider) {
@@ -36,10 +36,26 @@ app.config(function($routeProvider) {
           templateUrl: 'views/contact.html',
           controller: 'contactoController'
         })
-        // .when('/inicio', {
-        //     templateUrl: 'views/inicio.html',
-        //     controller: 'inicioController'
-        // })
+        .when('/registrar', {
+          templateUrl: 'views/register.html',
+          controller: 'registrarController'
+        })
+        .when('/iniciarsesion', {
+          templateUrl: 'views/register.html',
+          controller: 'loginController'
+        })
+        .when('/experimento', {
+          templateUrl: 'views/experiment.html',
+          controller: 'experimentoController'
+        })
+        .when('/perfil', {
+          templateUrl: 'views/profile.html',
+          controller: 'perfilController'
+        })
+        .when('/observacion', {
+          templateUrl: 'views/observation.html',
+          controller: 'observacionController'
+        })
         .otherwise({
             redirectTo: function(){
               return  '/inicio'
@@ -65,7 +81,4 @@ app.config(function($routeProvider) {
         //   templateUrl: 'views/profile.html',
         //   controller: ''
         // })
-
-
-        // $locationProvider.html5Mode(true);
 })

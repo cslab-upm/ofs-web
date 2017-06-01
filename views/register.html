@@ -1,0 +1,64 @@
+<div class="row">
+    <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+        <h1>Únete a explorar el espacio</h1>
+        <h2 id="h2_reg" style="color:#dc0032;">Regístrate ahora</h2>
+        <h2 id="h2_log" style="color:#5cb85c;">Inicia sesión</h2>
+
+        <!-- <div class="row" style="margin:40px 0px;">
+            <div class="col-md-4 col-sm-4 col-xs-6 col-md-offset-2 col-sm-offset-2 text-center">
+                <a href="./registrar"><button id="form-btn-reg" type="button" name="button" class="btn">Registar</button></a>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-6 text-center">
+                <a href="./iniciarsesion"><button id="form-btn-log" type="button" name="button" class="btn">Iniciar sesión</button></a>
+            </div>
+        </div> -->
+
+        <form id="form-register" ng-submit="toRegister()" name="form-register" role="form" style="margin:40px 0px;">
+            <div ng-show="login.errorEnvio" class="alert alert-danger">Error en el envío del formulario</div>
+            <div class="form-group">
+                <label class="control-label">Nombre de usuario</label>
+                <label ng-show="register.errorName" class="control-label" style="color:#ff0000;">¡Nombre de usuario ya existe!</label>
+                <input type="text" name="username" class="form-control" placeholder="Mínimo 5 caracteres" ng-model="user.nameRegister" minlength="5" maxlength="30" required>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <label ng-show="register.errorEmail" class="control-label" style="color:#ff0000;">¡Email ya registrado!</label>
+                <input type="email" name="email" class="form-control" placeholder="Email" ng-model="user.emailRegister" required>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Contraseña</label>
+                <label ng-show="register.errorPassword" class="control-label" style="color:#ff0000;">¡Las contraseñas no coinciden!</label>
+                <input type="password" name="password" class="form-control" placeholder="Contraseña entre 8 y 20 caracteres" ng-model="user.passwordRegister1" minlength="8" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Repetir contraseña</label>
+                <label ng-show="register.errorPassword" class="control-label" style="color:#ff0000;">¡Las contraseñas no coinciden!</label>
+                <input type="password" name="repeat_password" class="form-control" placeholder="Repetir contraseña" ng-model="user.passwordRegister2" minlength="8" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <button id="form-submit-reg" class="btn btn-danger btn-lg" name="submit" type="submit">Registrarse</button>
+            </div>
+        </form>
+
+        <form id="form-login" ng-submit="toLogin()" name="form-submit" role="form" style="margin:40px 0px;">
+            <div ng-show="login.errorEnvio" class="alert alert-danger">Error en el envío del formulario</div>
+            <div class="form-group">
+                <label class="control-label">Nombre de usuario</label>
+                <label ng-show="login.errorName" class="control-label" style="color:#ff0000;">¡No existe ese nombre de usuario!</label>
+                <input type="text" name="name" class="form-control" placeholder="Nombre" minlength="5" maxlength="30" ng-model="user.nameLogin" required>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Contraseña</label>
+                <label ng-show="login.errorPassword" class="control-label" style="color:#ff0000;">¡Contraseña incorrecta!</label>
+                <input type="password" name="password" class="form-control" placeholder="Contraseña" minlength="8" maxlength="20" ng-model="user.passwordLogin" required>
+            </div>
+
+                <p style="color:#0080ff;cursor:pointer;text-decoration: underline;" ng-click="ForgotPassword()">¿Has olvidado la contraseña?</p>
+
+            <div class="form-group">
+                <button id="form-submit-log" type="submit" class="btn btn-success btn-lg">Iniciar sesión</button>
+            </div>
+        </form>
+
+    </div>
+</div>
