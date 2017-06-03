@@ -83,8 +83,9 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
     $scope.state = {};
     $scope.state.weatherStation=true;//OK
-    $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>CERRADA</span>";
-    $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-green'>DISPONIBLE</span>"
+    $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>"
+    $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>"
+    $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>"
     $scope.state.availabilityCameras = "Estado de las cámaras: <span class='dome-green'>DISPONIBLE</span>"
     // $scope.state.busy = "El observatorio está libre. Inicie sesión o Registrese para observar el cielo."
     // $http.get('http://api.openweathermap.org/data/2.5/weather?q=Boadilladelmonte,sp&APPID=41a51db0a52c9d6db1462321b6a6a297')//7
@@ -113,10 +114,11 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
     // });
     // var url = 'http://api.openweathermap.org/data/2.5/weather';//7
     // var params = {q : 'Boadilladelmonte,sp', APPID : '41a51db0a52c9d6db1462321b6a6a297' }
-    var params = '';
-    var url = 'http://localhost:8080/things/weatherstation/state/';
-    httpFactory.async(url,'GET', params).then(function(data){
-      console.log(data);
+
+    // Estado estacion meteorologica
+    var paramsWeatherStation = '';
+    var urlWeatherStation = 'http://localhost:8080/things/weatherstation/state/';
+    httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function(data){
       if(data.operatingStatus == 'OK'){
          $scope.state.temperature = data.temperature;
          $scope.state.pressure = data.pressure;
@@ -124,10 +126,37 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
          $scope.state.rainfall = data.rainfall;
          $scope.state.windSpeed = data.windSpeed;
          $scope.state.windDirection = data.windDirection;
+         $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-green'>DISPONIBLE</span>";
       }
       else{
         $scope.state.weatherStation = false;//ERROR
-        $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>"
+        $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
+      }
+    });
+
+    // Estado montura
+    var paramsMount = '';
+    var urlMount = 'http://localhost:8080/things/mount/state/';
+    httpFactory.async(urlMount,'GET', paramsMount).then(function(data){
+      if(data.operatingStatus == 'OK'){
+         $scope.state.availabilityMount = "Estado de la montura: <span class='dome-green'>DISPONIBLE</span>";
+      }
+      else{
+        $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>";
+      }
+    });
+    // Estado Cupula
+    var paramsDome = '';
+    var urlDome = 'http://localhost:8080/things/dome/state/';
+    httpFactory.async(urlDome,'GET', paramsDome).then(function(data){
+      if(data.operatingStatus == 'OK' && data.openingElements[0].status == 'OPEN'){
+         $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, ABIERTA</span>";
+      }
+      else if(data.operatingStatus == 'OK' && data.openingElements[0].status == 'CLOSED'){
+         $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, CERRADA</span>";
+      }
+      else{
+      $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
       }
     });
 
