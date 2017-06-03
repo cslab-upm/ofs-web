@@ -124,46 +124,65 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
     // Estado estacion meteorologica
     var paramsWeatherStation = '';
     var urlWeatherStation = 'http://localhost:8080/things/weatherstation/state/';
-    httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function(data){
-      if(data.operatingStatus == 'OK'){
-         $scope.state.temperature = data.temperature;
-         $scope.state.pressure = data.pressure;
-         $scope.state.humidity = data.humidity;
-         $scope.state.rainfall = data.rainfall;
-         $scope.state.windSpeed = data.windSpeed;
-         $scope.state.windDirection = data.windDirection;
-         $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-green'>DISPONIBLE</span>";
+    httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function successCallback(response){
+      if (response.status == 200) {
+        if(response.data.operatingStatus == 'OK'){
+           $scope.state.temperature = response.data.temperature;
+           $scope.state.pressure = response.data.pressure;
+           $scope.state.humidity = response.data.humidity;
+           $scope.state.rainfall = response.data.rainfall;
+           $scope.state.windSpeed = response.data.windSpeed;
+           $scope.state.windDirection = response.data.windDirection;
+           $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-green'>DISPONIBLE</span>";
+        }
+        else{
+          $scope.state.weatherStation = false;//ERROR
+          $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
+        }
       }
-      else{
+      else {
         $scope.state.weatherStation = false;//ERROR
         $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
       }
+
     });
 
     // Estado montura
     var paramsMount = '';
     var urlMount = 'http://localhost:8080/things/mount/state/';
-    httpFactory.async(urlMount,'GET', paramsMount).then(function(data){
-      if(data.operatingStatus == 'OK'){
-         $scope.state.availabilityMount = "Estado de la montura: <span class='dome-green'>DISPONIBLE</span>";
+    httpFactory.async(urlMount,'GET', paramsMount).then(function successCallback(response){
+      if (response.status == 200){
+        if(response.data.operatingStatus == 'OK'){
+           $scope.state.availabilityMount = "Estado de la montura: <span class='dome-green'>DISPONIBLE</span>";
+        }
+        else{
+          $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>";
+        }
       }
       else{
         $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>";
       }
+
     });
     // Estado Cupula
     var paramsDome = '';
     var urlDome = 'http://localhost:8080/things/dome/state/';
-    httpFactory.async(urlDome,'GET', paramsDome).then(function(data){
-      if(data.operatingStatus == 'OK' && data.openingElements[0].status == 'OPEN'){
-         $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, ABIERTA</span>";
+    httpFactory.async(urlDome,'GET', paramsDome).then(function successCallback(response){
+      if (response.status == 200) {
+        if(response.data.operatingStatus == 'OK' && response.data.openingElements[0].status == 'OPEN'){
+           $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, ABIERTA</span>";
+        }
+        else if(response.data.operatingStatus == 'OK' && response.data.openingElements[0].status == 'CLOSED'){
+           $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, CERRADA</span>";
+        }
+        else{
+        $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
+        }
       }
-      else if(data.operatingStatus == 'OK' && data.openingElements[0].status == 'CLOSED'){
-         $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, CERRADA</span>";
+      else {
+        $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
       }
-      else{
-      $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
-      }
+
     });
 
     $scope.cameraFile = 'img/cameraObs.jpg';
@@ -268,8 +287,8 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
     $('#h2_log').hide();
     $('#h2_repass').hide();
 
-    $rootScope.user = {};
-    $rootScope.isLogged = userFactory.getIsLogged();
+    // $rootScope.user = {};
+    // $rootScope.isLogged = userFactory.getIsLogged();
 
     $scope.user = {};
     $scope.user.nameRegister = null;
@@ -293,20 +312,36 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
         $scope.register.errorPassword = false;
         userFactory.setName($scope.user.nameRegister);
         userFactory.setEmail($scope.user.emailRegister);
-        userFactory.setPassword($scope.user.nameRegister);
-        userFactory.setIsLogged(true);
+        userFactory.setPassword($scope.user.passwordRegister1);
+        $('#form-submit-reg').hide();
+        $('#register-gif').show();
 
-        $rootScope.isLogged = userFactory.getIsLogged();
-        // console.log($rootScope.isLogged);
 
-        authFactory.register($scope.user.nameRegister);
-        $scope.user.isLogged = true;
-        var var1 = $('.nav').find('.active').removeClass('active');
-        $('#init').addClass('active');
+        $http({
+          url: 'http://localhost:8080/things/gatekeeper/registerUser',
+          method: 'POST',
+          data : {name: $scope.user.nameRegister, email: $scope.user.emailRegister, password: $scope.user.passwordRegister1},
+          headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function successCallback(response) {
+          if (response.status == 201) {
+            // userFactory.setIsLogged(true);
+            // $rootScope.isLogged = userFactory.getIsLogged();
+
+            authFactory.register($scope.user.nameRegister);//cookie
+            // $scope.user.isLogged = true;
+            $('#login-gif').hide();
+            $('#form-register').hide();
+            $('#confirmEmail').show();
+          }
+          // return response;
+        }, function errorCallback(response) {
+          $('#register-gif').hide();
+          $('#form-submit-reg').show();
+          $scope.register.errorEnvio = true;
+
+        });
+
       }
-      //http -> token, rol
-      //success -> authFactory.register
-      //error -> error form envio datos
 
     }
 
@@ -346,6 +381,9 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
       userFactory.setName($scope.user.nameLogin);
       userFactory.setPassword($scope.user.passwordLogin);
       userFactory.setIsLogged(true);
+
+      // $('#form-submit-log').hide();
+      // $('#login-gif').show();
 
       $rootScope.isLogged = userFactory.getIsLogged();
       // console.log($rootScope.isLogged);

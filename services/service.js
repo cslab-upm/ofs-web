@@ -23,7 +23,7 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
           var expires = new Date();
           expires.setMinutes(expires.getMinutes() + 59);//cookie expira en 59 min
           $cookies.put('name', name, {'expires' : expires});
-          $location.path("/perfil");
+          
         },
         toLogout: function() {
             $cookies.remove('name');
@@ -110,9 +110,9 @@ app.factory('httpFactory', function($http) {
         url: url,
         method: method,
         params: params
-      }).then(function(response) {
-        return response.data;
-      }, function (response) {
+      }).then(function successCallback(response) {
+        return response;
+      }, function errorCallback(response) {
         console.log('error');
         return response;
       });
