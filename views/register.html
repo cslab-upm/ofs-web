@@ -3,6 +3,7 @@
         <h1>Únete a explorar el espacio</h1>
         <h2 id="h2_reg" style="color:#dc0032;">Regístrate ahora</h2>
         <h2 id="h2_log" style="color:#5cb85c;">Inicia sesión</h2>
+        <h2 id="h2_repass" style="color:#0089ff;">Recuperar contraseña</h2>
 
         <!-- <div class="row" style="margin:40px 0px;">
             <div class="col-md-4 col-sm-4 col-xs-6 col-md-offset-2 col-sm-offset-2 text-center">
@@ -14,7 +15,7 @@
         </div> -->
 
         <form id="form-register" ng-submit="toRegister()" name="form-register" role="form" style="margin:40px 0px;">
-            <div ng-show="login.errorEnvio" class="alert alert-danger">Error en el envío del formulario</div>
+            <div ng-show="login.errorEnvio" class="alert alert-warning">Error en el envío del formulario</div>
             <div class="form-group">
                 <label class="control-label">Nombre de usuario</label>
                 <label ng-show="register.errorName" class="control-label" style="color:#ff0000;">¡Nombre de usuario ya existe!</label>
@@ -53,10 +54,29 @@
                 <input type="password" name="password" class="form-control" placeholder="Contraseña" minlength="8" maxlength="20" ng-model="user.passwordLogin" required>
             </div>
 
-                <p style="color:#0080ff;cursor:pointer;text-decoration: underline;" ng-click="ForgotPassword()">¿Has olvidado la contraseña?</p>
+                <p style="color:#0080ff;cursor:pointer;text-decoration: underline;" ng-click="goRecoveryPassword()">¿Has olvidado la contraseña?</p>
 
             <div class="form-group">
                 <button id="form-submit-log" type="submit" class="btn btn-success btn-lg">Iniciar sesión</button>
+            </div>
+        </form>
+
+        <!-- Recuperar contraeña -->
+
+        <p class="alert alert-success" id="recoveryPassword" style="padding:15px;margin-top:10%;display:none">Se ha enviado un email a <span style="font-weight:bold;">{{user.emailRecoveryPassword}}</span> con las instruciones para recuperar la contraseña.</p>
+        <form id="form-recoveryPassword" ng-submit="toRecoveryPassword()" name="form-submit" role="form" style="margin:40px 0px;">
+            <div ng-show="recoveryPassword.error" class="alert alert-warning">Error en el envío del formulario</div>
+            <div class="form-group">
+                <label ng-show="login.errorName" class="control-label" style="color:#ff0000;">¡No existe ese nombre de usuario!</label>
+                <label class="control-label">Nombre de usuario</label>
+                <input type="text" name="name" class="form-control" placeholder="Nombre" minlength="5" maxlength="30" ng-model="user.nameRecoveryPassword" required>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Email" ng-model="user.emailRecoveryPassword" required>
+            </div>
+            <div class="form-group">
+                <button id="form-submit-recoveryPassword" type="submit" class="btn btn-primary btn-lg">Recuperar contraseña</button>
             </div>
         </form>
 

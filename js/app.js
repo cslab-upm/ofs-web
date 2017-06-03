@@ -56,6 +56,10 @@ app.config(function($routeProvider) {
           templateUrl: 'views/observation.html',
           controller: 'observacionController'
         })
+        .when('/recuperarcontrasena', {
+          templateUrl: 'views/register.html',
+          controller: 'recoverypasswordController'
+        })
         .otherwise({
             redirectTo: function(){
               return  '/inicio'

@@ -23,7 +23,7 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
           var expires = new Date();
           expires.setMinutes(expires.getMinutes() + 59);//cookie expira en 59 min
           $cookies.put('name', name, {'expires' : expires});
-          $location.path("/inicio");
+          $location.path("/perfil");
         },
         toLogout: function() {
             $cookies.remove('name');
@@ -32,7 +32,7 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
             $location.path('/inicio')
         },
         checkStatus: function() {
-            var privateRoutes = ['/perfil', '/experimento', ''];
+            var privateRoutes = ['/perfil', '/experimento', '/observacion'];
 
             // console.log($location.path());
             // console.log($rootScope.isLogged);
@@ -114,7 +114,7 @@ app.factory('httpFactory', function($http) {
         return response.data;
       }, function (response) {
         console.log('error');
-        return response.data;
+        return response;
       });
 
       return promise;

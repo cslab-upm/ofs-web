@@ -33,6 +33,12 @@ app.controller('mainController', function($rootScope, $scope, $location, authFac
   $scope.goRegister = function () {
     $location.path("/registrar");
   }
+
+  $scope.goRecoveryPassword = function () {
+    $location.path("/recuperarcontrasena");
+    // $('#init').addClass('active');
+  }
+
   $scope.goProfile = function () {
     $location.path("/perfil");
     $('.nav').find('.active').removeClass('active');
@@ -258,7 +264,9 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
     // <!-- End Google Analytics -->
 
     $('#form-login').hide();
+    $('#form-recoveryPassword').hide();
     $('#h2_log').hide();
+    $('#h2_repass').hide();
 
     $rootScope.user = {};
     $rootScope.isLogged = userFactory.getIsLogged();
@@ -275,10 +283,6 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
     $scope.register.errorEmail = false;
     $scope.register.errorPassword = false;
     $scope.register.errorEnvio = false;
-
-    $scope.toLogin = function(){
-      console.log('sdfsdfsdf');
-    };
 
     $scope.toRegister = function(){
       //validar entradas
@@ -316,7 +320,10 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
     // <!-- End Google Analytics -->
 
   $('#form-register').hide();
+  $('#form-recoveryPassword').hide();
   $('#h2_reg').hide();
+  $('#h2_repass').hide();
+
 
 
   $rootScope.user = {};
@@ -457,6 +464,8 @@ app.controller('perfilController', ['$scope', '$sce', '$http','userFactory', fun
     ga('set', 'page', '/perfil');
     ga('send', 'pageview');
     // <!-- End Google Analytics -->
+    $('.nav').find('.active').removeClass('active');
+    $('#profile').addClass('active');
 
 
     $scope.user.name = userFactory.getName();
@@ -489,5 +498,33 @@ app.controller('observacionController', ['$scope', '$sce', '$http', 'weatherStat
     // function deactivar(){
     //     clearInterval(intervalo);
     // }
+
+}]);
+
+app.controller('recoverypasswordController', ['$rootScope','$scope', '$sce', '$http', 'authFactory', 'userFactory', function($rootScope, $scope, $sce, $http, authFactory, userFactory) {
+    // <!-- Google Analytics -->
+    ga('set', 'page', '/recuperarcontrasena');
+    ga('send', 'pageview');
+    // <!-- End Google Analytics -->
+
+    $('#form-login').hide();
+    $('#form-register').hide();
+    $('#h2_log').hide();
+    $('#h2_reg').hide();
+
+    $scope.user = {};
+    $scope.user.nameRecoveryPassword = null;
+    $scope.user.emailRecoveryPassword = null;
+
+    $scope.recoveryPassword = {};
+    $scope.recoveryPassword.error = false;
+
+    $scope.toRecoveryPassword = function(){
+
+    // Peticion REST comprobar el email.
+    // to-do
+    $('#recoveryPassword').show();
+    $('#form-recoveryPassword').hide();
+    }
 
 }]);
