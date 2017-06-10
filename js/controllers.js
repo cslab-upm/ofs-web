@@ -50,6 +50,7 @@ app.controller('mainController', function($rootScope, $scope, $location, authFac
     authFactory.toLogout();
     userFactory.setIsLogged(false);
     $rootScope.isLogged = userFactory.getIsLogged();
+    $('#init').addClass('active');
 
   }
 
@@ -282,6 +283,7 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
     ga('send', 'pageview');
     // <!-- End Google Analytics -->
 
+    $('.nav').find('.active').removeClass('active');
     $('#form-login').hide();
     $('#form-recoveryPassword').hide();
     $('#h2_log').hide();
@@ -347,13 +349,14 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
 
 }]);
 
-app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','authFactory','userFactory', function($rootScope, $scope, $sce, $http, authFactory,userFactory) {
+app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','authFactory','userFactory','Base64','httpFactory', function($rootScope, $scope, $sce, $http, authFactory,userFactory, Base64, httpFactory) {
 
     // <!-- Google Analytics -->
     ga('set', 'page', '/iniciarsesion');
     ga('send', 'pageview');
     // <!-- End Google Analytics -->
 
+  $('.nav').find('.active').removeClass('active');
   $('#form-register').hide();
   $('#form-recoveryPassword').hide();
   $('#h2_reg').hide();
@@ -368,11 +371,14 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
   $scope.user.nameLogin = null;
   $scope.user.passwordLogin = null;
   $scope.user.isLogged = false;
+  $scope.user.email = null;
+  $scope.user.rol = null;
 
   $scope.login = {};
   $scope.login.errorName = false;
   $scope.login.errorPassword = false;
   $scope.login.errorEnvio = false;
+
 
   //funcion para conectar
   // TO DO
@@ -380,19 +386,82 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
     if ( $scope.user.nameLogin != null & $scope.user.passwordLogin != null) {
       userFactory.setName($scope.user.nameLogin);
       userFactory.setPassword($scope.user.passwordLogin);
-      userFactory.setIsLogged(true);
+      $('#form-submit-log').hide();
+      $('#login-gif').show();
 
-      // $('#form-submit-log').hide();
-      // $('#login-gif').show();
+      // var auth64 = Base64.encode($scope.user.nameLogin + ':' +  $scope.user.passwordLogin);
+      // var basic = 'Basic ' + auth64;
+      // console.log(basic);
+      // delete $http.defaults.headers.common['X-Requested-With'];
+      // $http.defaults.headers.common.Authorization = basic ;
+      // $http.defaults.headers.common.Authorization = 'Basic YWRtaW5pc3RyYXRvcjoxMjM0NTY3OA==';
+      // $http({
+      //   url: 'http://localhost:8080/things/gatekeeper/generateUserToken',
+      //   method: 'POST',
+      //   headers : {'Authorization': basic, 'Content-Type': 'application/x-www-form-urlencoded'}
+      // }).then(function successCallback(response) {
+      //   console.log(response);
+      //   if (response.status == 200) {
 
-      $rootScope.isLogged = userFactory.getIsLogged();
-      // console.log($rootScope.isLogged);
 
-      authFactory.toLogin($scope.user.nameLogin);
-      $scope.user.isLogged = true;
-      var var1 = $('.nav').find('.active').removeClass('active');
-      $('#init').addClass('active');
-    }
+      // una vez hecho login recuperamos los datos del usuario
+      if ($scope.user.nameLogin == 'admin') {
+        var paramsUsers = { name: 'administrator', access_token: 'z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg'};
+        var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
+        httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
+          if (response.status == 200) {
+            console.log(response.data[0].roleNames[0]);
+            authFactory.toLogin($scope.user.nameLogin);//cokie
+            $scope.user.isLogged = true;
+            userFactory.setIsLogged(true);
+            $scope.user.email = response.data[0].email;
+            userFactory.setEmail(response.data[0].email);
+            $scope.user.rol = response.data[0].roleNames[0];
+            userFactory.setRol(response.data[0].roleNames[0]);
+            $rootScope.isLogged = userFactory.getIsLogged();
+            console.log(userFactory.getRol());
+          } else {
+
+          }
+        });
+      }
+      else if ($scope.user.nameLogin == 'administrator') {
+        var paramsUsers = { name: 'administrator', access_token: 'YWRtaW5pc3RyYXRvcjoxMjM0NTY3OA=='};
+        var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
+        httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
+          if (response.status == 200) {
+            console.log(response.data[0].roleNames[0]);
+            authFactory.toLogin($scope.user.nameLogin);//cokie
+            $scope.user.isLogged = true;
+            userFactory.setIsLogged(true);
+            $scope.user.email = response.data[0].email;
+            userFactory.setEmail(response.data[0].email);
+            $scope.user.rol = response.data[0].roleNames[0];
+            userFactory.setRol(response.data[0].roleNames[0]);
+            $rootScope.isLogged = userFactory.getIsLogged();
+            console.log(userFactory.getRol());
+          } else {
+
+          }
+        });
+      }
+
+
+
+          // $('#login-gif').hide();
+          // $('#form-login').hide();
+          // $('#confirmEmail').hide();
+        // }
+        // return response;
+      // }, function errorCallback(response) {
+        $('#login-gif').hide();
+        $('#form-submit-log').show();
+        $scope.login.errorEnvio = true;
+
+      // });
+
+
+     }
 
   }
 
@@ -512,23 +581,79 @@ app.controller('perfilController', ['$scope', '$sce', '$http','userFactory', fun
 
 }]);
 
-app.controller('observacionController', ['$scope', '$sce', '$http', 'weatherStationFactory', function($scope, $sce, $http, weatherStationFactory) {
+app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory','userFactory', function($scope, $sce, $http, httpFactory, userFactory) {
 
     // <!-- Google Analytics -->
     ga('set', 'page', '/observacion');
     ga('send', 'pageview');
     // <!-- End Google Analytics -->
 
+    $('.nav').find('.active').removeClass('active');
+
     setInterval('reloadImages()', 30000); //30 sec
     $scope.state = {};
-    var url = 'http://api.openweathermap.org/data/2.5/weather?q=Madrid,sp&APPID=41a51db0a52c9d6db1462321b6a6a297'; //7
-    weatherStationFactory.async(url).then(function(data) {
-        $scope.state.temperature = data.main.temp - 273.15;
-        $scope.state.humidity = data.main.humidity;
-        $scope.state.pressure = data.main.pressure;
-        $scope.state.windSpeed = data.wind.speed;
-        $scope.state.visibility = data.visibility;
+    $scope.state.weatherStation=true;//OK
+
+    var paramsWeatherStation = '';
+    var urlWeatherStation = 'http://localhost:8080/things/weatherstation/state/';
+    httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function successCallback(response){
+      if (response.status == 200) {
+        if(response.data.operatingStatus == 'OK'){
+           $scope.state.temperature = response.data.temperature;
+           $scope.state.pressure = response.data.pressure;
+           $scope.state.humidity = response.data.humidity;
+           $scope.state.rainfall = response.data.rainfall;
+           $scope.state.windSpeed = response.data.windSpeed;
+           $scope.state.windDirection = response.data.windDirection;
+           $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-green'>DISPONIBLE</span>";
+        }
+        else{
+          $scope.state.weatherStation = false;//ERROR
+          $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
+        }
+      }
+      else {
+        $scope.state.weatherStation = false;//ERROR
+        $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
+      }
+
     });
+
+    $scope.takePhoto = function(){
+      console.log('photo');
+    }
+
+    $scope.moveUP = function(){
+      console.log('up');
+    }
+
+    $scope.moveDown = function(){
+      console.log('down');
+    }
+
+    $scope.moveRight = function(){
+      console.log('right');
+    }
+
+    $scope.moveLeft = function(){
+      console.log('left');
+    }
+
+    $scope.param = {};
+    $scope.param.brillo = 50;
+    $scope.param.calidad = 5;
+    $scope.param.ganancia = 8;
+    $scope.param.exposicion = 5;
+    $scope.param.errorEnvio = false;
+
+    $scope.confPhoto = function(){
+      // $('#confPhoto-gif').show();
+      $('#photo').css('color', '#cc185a');
+    }
+    $scope.confPhoto2 = function(){
+      // $('#confPhoto-gif2').show();
+      $('#photo').css('color', '#cc185a');
+    }
 
     // function activar(){
     //     intervalo = setInterval(restar,1000);
@@ -536,6 +661,149 @@ app.controller('observacionController', ['$scope', '$sce', '$http', 'weatherStat
     // function deactivar(){
     //     clearInterval(intervalo);
     // }
+
+    $scope.user = {};
+    $scope.user.admin = false;//para abrir o cerrar cupula necesita permitos de administrador
+    $scope.user.authenticated = false;
+
+    console.log(userFactory.getRol());
+    if(userFactory.getRol() == 'Authenticated'){
+      $scope.user.auth = true;
+    }else if(userFactory.getRol() == 'Administrator'){
+      console.log('admin OK');
+      $scope.user.admin = true;
+    }
+
+    $scope.openDome = function(){
+      console.log('openDome')
+    }
+
+    $scope.closeDome = function(){
+      console.log('closeDome');
+    }
+
+    $scope.experiment = {};
+    $scope.experiment.montura = false;
+    $scope.experiment.solar = true;
+    $scope.experiment.solarSeg = false;
+    $scope.experiment.seg = false;
+    $scope.experiment.lunar = true;
+    $scope.experiment.lunarSeg = false;
+
+    $scope.followSun = function(){
+      console.log('siguiendo al sol');
+      $scope.experiment.solar = false;
+
+      //Seguimiento de la cupula
+      $http({
+        url: 'http://localhost:8080/things/dome/activateTracking?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+        method: 'POST',
+        // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
+        headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(function successCallback(response) {
+        console.log(response);
+        if (response.status == 201 || response.status == 204) {
+
+          // Seguimiento de la montura
+          $http({
+            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+            method: 'POST',
+            // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
+            data : { "monitoredObject": "SUN", "monitoringInterval": 23},
+            headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+          }).then(function successCallback(response) {
+            console.log(response);
+            if (response.status == 201 || response.status == 204) {
+              $scope.experiment.solarSeg = true;
+              $scope.experiment.seg = true;
+              $scope.experiment.montura = true;
+            }
+          }, function errorCallback(response) {
+            $scope.experiment.solar = true;
+            console.log(response);
+          });
+          // Fin seguimiento de la montura
+        }
+        // return response;
+      }, function errorCallback(response) {
+        $scope.experiment.solar = true;
+      });
+      //Fin seguimiento de la cupula
+
+    }
+
+    $scope.followMoon = function(){
+      console.log('siguiendo a la Luna');
+      $scope.experiment.lunar = false;
+
+      //Seguimiento de la cupula
+      $http({
+        url: 'http://localhost:8080/things/dome/activateTracking?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+        method: 'POST',
+        // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
+        headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(function successCallback(response) {
+        console.log(response);
+        if (response.status == 201 || response.status == 204) {
+
+          // Seguimiento de la montura
+          $http({
+            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+            method: 'POST',
+            // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
+            data : { "monitoredObject": "MOON", "monitoringInterval": 23},
+            headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+          }).then(function successCallback(response) {
+            console.log(response);
+            if (response.status == 201 || response.status == 204) {
+              $scope.experiment.lunarSeg = true;
+              $scope.experiment.seg = true;
+              $scope.experiment.montura = true;
+            }
+          }, function errorCallback(response) {
+            $scope.experiment.lunar = true;
+            console.log(response);
+          });
+          // Fin seguimiento de la montura
+        }
+        // return response;
+      }, function errorCallback(response) {
+        $scope.experiment.lunar = true;
+      });
+      //Fin seguimiento de la cupula
+    }
+
+    $scope.stopTracking = function(){
+      if($scope.experiment.solarSeg == true){
+
+        $http({
+          url: 'http://localhost:8080/things/mount/disableMonitoring?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+          method: 'POST',
+          // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
+          // data : { "monitoredObject": "SUN", "monitoringInterval": 23},
+          headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function successCallback(response) {
+          console.log(response);
+          if (response.status == 201 || response.status == 204) {
+            $scope.experiment.solar = true;
+            $scope.experiment.solarSeg = false;
+            $scope.experiment.lunarSeg = false;
+            $scope.experiment.seg = false;
+            $scope.experiment.montura = false;
+          }
+        }, function errorCallback(response) {
+          console.log(response);
+        });
+      }else if ($scope.experiment.lunarSeg == true) {
+        $scope.experiment.lunar = true;
+        $scope.experiment.lunarSeg = false;
+        $scope.experiment.solarSeg = false;
+        $scope.experiment.seg = false;
+        $scope.experiment.montura = false;
+      }
+
+    }
+
 
 }]);
 

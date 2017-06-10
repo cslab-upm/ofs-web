@@ -22,7 +22,7 @@
 $(document).ready(function() {
     // Elemento activo Lista navbar
     $('.nav li').click(function() {
-      if((this.id == 'login') || (this.id == 'register') || (this.id == 'logout')){
+      if(this.id == 'logout'){
         var var1 = $('.nav').find('.active').removeClass('active');
         $('#init').addClass('active');
       }else {
