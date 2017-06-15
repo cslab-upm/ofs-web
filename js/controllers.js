@@ -467,7 +467,7 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
 
 }]);
 
-app.controller('experimentoController', ['$scope', '$sce', '$http','$location', function($scope, $sce, $http) {
+app.controller('experimentoController', ['$scope', '$sce', '$http','$location','httpFactory', function($scope, $sce, $http, httpFactory) {
   // <!-- Google Analytics -->
   ga('set', 'page', '/experimento');
   ga('send', 'pageview');
@@ -476,7 +476,11 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location', 
   $scope.experiment = {};
   $scope.experiment.day = false;
   $scope.experiment.night = false;
-
+  $scope.experiment.type = null;
+  $scope.experiment.date = null;
+  $scope.experiment.slot = null;
+  $scope.experiment.td1 = null;
+  $scope.experiment.td2 = null;
 
   $('#experimentoSolar').hover(function() {
     $(this).addClass('expSolar');
@@ -487,11 +491,12 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location', 
   $('#experimentoSolar').on('click',function() {
    $(this).toggleClass('expSolar_click');
    $('#experimentoNocturno').removeClass('expNocturno_click');
+   $scope.experiment.type = 'SOLAR';
    $scope.experiment.day = true;
    $scope.experiment.night = false;
-   $('#slotTime').slideUp();
+   $('.slotTime').slideUp();
    $('#summary').slideUp();
-   $('#checkBook').slideUp();
+   $('#checkBooking').slideUp();
    $('#reservas').slideDown();
   });
 
@@ -504,11 +509,12 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location', 
   $('#experimentoNocturno').click(function() {
     $(this).toggleClass('expNocturno_click');
     $('#experimentoSolar').removeClass('expSolar_click');
+    $scope.experiment.type = 'LUNAR';
     $scope.experiment.day = false;
     $scope.experiment.night = true;
-    $('#slotTime').slideUp();
+    $('.slotTime').slideUp();
     $('#summary').slideUp();
-    $('#checkBook').slideUp();
+    $('#checkBooking').slideUp();
      $('#reservas').slideDown();
   });
 
@@ -526,7 +532,7 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location', 
   dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié;', 'Juv', 'Vie', 'Sáb'],
   dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
   weekHeader: 'Sm',
-  dateFormat: 'dd/mm/yy',
+  dateFormat: 'yy-mm-dd',
   firstDay: 1,
   isRTL: false,
   showMonthAfterYear: false,
@@ -539,33 +545,238 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location', 
     minDate:0,
     maxDate:'7D'
   });
-
-  $('#datepicker').val()
+  $('#datepicker').click(function() {
+    $('.slotTime').slideUp();
+    $('#summary').slideUp();
+    $('#confirm-timeslot').slideUp();
+    $('#confirmDate').show();
+    $('#dateError').hide();
+    $('#requestError').hide();
+    $('#confirmBookingLoading').hide();
+  });
 
 // experimentSelected = function(experiment){}
-  $scope.confirmDate = function(){
+  $scope.confirmDate = function() {
+
     var datePick = $('#datepicker').val();
-    if(datePick != ""){
+    if (datePick != "") {
+      $('#confirmDate').hide();
+      $('#confirmDateLoading').show();
+
       $scope.experiment.date = datePick;
-      $('#slotTime').slideDown();
-      //LLAMADA CON FECHA PARA DEVOLUCION DEINTERVALOS
-      //RETURN INTERVALOS IMPRIMIR PANTALLA
+      //Añadimos 'T00:00:00Z' a la fecha para peticion GET de reservas disponibles
+      datePick = datePick.concat('T00:00:00Z');
+      console.log(datePick);
+
+      var currentDate = new Date();
+      var currentDayUTC = currentDate.getUTCDate();
+      var currentHourUTC = currentDate.getUTCHours();
+      var currentMinutesUTC = currentDate.getUTCMinutes();
+      var currentHour = currentDate.getHours();
+      var currentMinutes = currentDate.getMinutes();
+
+      // var diffLocalHour = abs()
+
+      console.log(currentDayUTC);
+      console.log(currentHourUTC);
+      console.log(currentMinutesUTC);
+      console.log(currentHour);
+      console.log(currentMinutes);
+
+      var paramsDate = {
+        access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+        freebusy: 'FREE',
+        startDate: datePick
+      };
+      var urlDate = 'http://localhost:8080/things/gatekeeper/calendar';
+
+      $http({
+        url: urlDate,
+        method: 'GET',
+        params: paramsDate
+      }).then(function successCallback(response) {
+        var arrData = response.data;
+        // console.log(arrData);
+        if (response.status == 200) {
+          $('#confirmDateLoading').hide();
+          //Si experimento solar
+          if ($scope.experiment.day) {
+            // var initSolar = 540;//min->9am
+            // var endSolar = 1139;//min->18:59pm
+            // var initLunar = 1140;//min->19pm
+            // var endLunar =  1439;//min->23:59pm
+            var initHourSolar = 09; //min->9am
+            var initMinSolar = 00;
+            var endHourSolar = 18; //min->18:59pm
+            var endMinSolar = 59;
+
+            var initHourLunar = 19; //min->19pm
+            var initMinLunar = 00;
+            var endHourLunar = 23; //min->23:59pm
+            var endMinLunar = 59;
+
+            for (var i = 0; i < arrData.length; i++) {
+
+              var startDay = arrData[i].startDate.slice(8, 10) //dia
+              var startDate = arrData[i].startDate.slice(-9, -4) //hora inicio formato hh:mm
+              arrData[i].startDate = startDate;
+              var endDate = arrData[i].endDate.slice(-9, -4) //hora inicio formato hh:mm
+              arrData[i].endDate = endDate;
+              //  console.log(arrData[i].startDate);
+              // console.log(endDate);
+              // console.log(arrData[i]);
+              // console.log(arrData);
+              var hourToBook = startDate.slice(0, -3);
+              var minuteToBook = startDate.slice(3);
+
+              // var hourToBook = endDate.slice(0,-3);
+              // var minuteToBook = endDate.slice(3);
+
+              //  console.log(hourToBook + ':'+minuteToBook);
+              // console.log(arrData);
+
+              //Filtrado de intervalos de timepo para experimento solar
+              if ((hourToBook < initHourSolar || (hourToBook == initHourSolar && minuteToBook < initMinSolar)) ||
+                (hourToBook > endHourSolar || (hourToBook == endHourSolar && minuteToBook > endMinSolar))) {
+                if (i !== -1) {
+                  // console.log(arrData);
+                  // console.log(i);
+                  // arrData.splice(i,1);
+                  delete arrData[i];
+                }
+              } else if (currentDayUTC == startDay) {
+                if (hourToBook < currentHourUTC || (hourToBook == currentHourUTC && minuteToBook < currentMinutesUTC)) {
+                  if (i !== -1) {
+                    delete arrData[i];
+                  }
+                }
+              }
+              //calcular horas
+              //calcular minutos
+            }
+
+          } else if ($scope.experiment.night) {
+            var initHourLunar = 21; //min->19pm
+            var initMinLunar = 00;
+            var endHourLunar = 23; //min->23:59pm
+            var endMinLunar = 59;
+            var endHourNextDay = 4;
+            var endMinNextDay = 59;
+
+            for (var i = 0; i < arrData.length; i++) {
+
+              // console.log(arrData[i].startDate);
+              var startDay = arrData[i].startDate.slice(8, 10) //dia
+              // console.log(startDay);
+              var startDate = arrData[i].startDate.slice(-9, -4) //hora inicio formato hh:mm
+              arrData[i].startDate = startDate;
+              var endDate = arrData[i].endDate.slice(-9, -4) //hora inicio formato hh:mm
+              arrData[i].endDate = endDate;
+
+              var hourToBook = startDate.slice(0, -3);
+              var minuteToBook = startDate.slice(3);
+
+              //Filtrado de intervalos de timepo para experimento nocturno
+              if (((hourToBook < initHourLunar && hourToBook > endHourNextDay) || (hourToBook == initHourLunar && minuteToBook < initMinLunar)) ||
+                (hourToBook > endHourLunar || (hourToBook == endHourLunar && minuteToBook > endMinLunar))
+              ) {
+                if (i !== -1) {
+                  delete arrData[i];
+                }
+              } else if (currentDayUTC == startDay) {
+                if (hourToBook < currentHourUTC || (hourToBook == currentHourUTC && minuteToBook < currentMinutesUTC)) {
+                  if (i !== -1) {
+                    delete arrData[i];
+                  }
+                }
+              }
+              //calcular horas
+              //calcular minutos
+            }
+          }
+
+          var myArrClean = arrData.filter(Boolean);
+          $scope.slots = myArrClean;
+          console.log($scope.slots);
+
+          //TABLA obtener valor seleccion de intervalo de tiempo
+          $('#res-table tbody').on('click', 'tr', function() {
+            $('#res-table tbody tr').removeClass('table-active');
+            $('#summary').slideUp();
+            $('#confirmBookingLoading').hide();
+            $('#request').show();
+            $(this).addClass('table-active');
+            var tds = $(this)[0];
+            var td1 = tds.children[0].textContent;
+            $scope.experiment.td1 = td1;
+            var td2 = tds.children[1].textContent;
+            $scope.experiment.td2 = td2;
+            console.log(td1 +'--'+ td2);
+            $scope.experiment.slot = $scope.experiment.td1 + ' a ' + $scope.experiment.td2;
+            $('#confirm-timeslot').slideDown();
+          });
+
+          $('.slotTime').slideDown();
+
+        }
+        else{
+          $('#confirmDateLoading').hide();
+          $('#dateError').show();
+        }
+
+      }, function errorCallback(response) {
+        console.log('error');
+        return response;
+      });
     }
   }
 
   $scope.confirmTimeSlot = function(){
     //TODO
+    $('#confirm-timeslot').slideUp();
     $('#summary').slideDown();
   }
 
-  $scope.confirmSummary = function(){
-    //TODO
-    $('#checkBook').show();
+  $scope.confirmBooking = function(){
+    $('#request').hide();
+    $('#confirmBookingLoading').show();
+    var slot = $scope.experiment.td1.slice(0, 5)
+    var datePOST = $scope.experiment.date.concat('T'+ slot + ':00.00Z');
+    console.log($scope.experiment.date);
+
+    var paramsReservation = {
+      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20'
+    };
+    var urlReservation = 'http://localhost:8080/things/gatekeeper/addUserReservation';
+
+    $http({
+      url: urlReservation,
+      method: 'POST',
+      params: paramsReservation,
+      data : {"startDate": datePOST, "experiment": $scope.experiment.type},
+      headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then(function successCallback(response) {
+      var arrData = response.data;
+      // console.log(arrData);
+      if (response.status == 201) {
+        $('#confirmBookingLoading').hide();
+        $('#checkBooking').show();
+        console.log(response);
+      }
+      else{
+        $('#confirmBookingLoading').hide();
+        $('#requestError').show();
+      }
+    }, function errorCallback(response) {
+      $('#confirmBookingLoading').hide();
+      $('#requestError').show();
+      console.log(response);
+    });
   }
 
 }]);
 
-app.controller('perfilController', ['$scope', '$sce', '$http','userFactory', function($scope, $sce, $http, userFactory) {
+app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'userFactory', function($scope, $sce, $http, $location, userFactory) {
 
     // <!-- Google Analytics -->
     ga('set', 'page', '/perfil');
@@ -574,10 +785,169 @@ app.controller('perfilController', ['$scope', '$sce', '$http','userFactory', fun
     $('.nav').find('.active').removeClass('active');
     $('#profile').addClass('active');
 
-
     $scope.user.name = userFactory.getName();
     $scope.user.email = userFactory.getEmail();
+    $scope.reservations = {};
+    $scope.reservations.experiment = null;
+    $scope.reservations.date = null;
+    $scope.reservations.hour = null;
+    $scope.reservations.deleteHour = null;
 
+
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth();//0-11
+    var currentMonth = currentMonth + 1;
+    var currentYear = currentDate.getFullYear();
+    var currentDayUTC = currentDate.getUTCDate();
+    var currentHourUTC = currentDate.getUTCHours();
+    var currentMinutesUTC = currentDate.getUTCMinutes();
+    var currentHour = currentDate.getHours();
+    var currentMinutes = currentDate.getMinutes();
+
+    var paramsProfile = {
+      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+      freebusytype: 'RESERVATION'
+    };
+    var urlReservation = 'http://localhost:8080/things/gatekeeper/calendar';
+
+    $http({
+      url: urlReservation,
+      method: 'GET',
+      params: paramsProfile
+    }).then(function successCallback(response) {
+      var arrayData = response.data;
+      // console.log(arrayData);
+      if (response.status == 200) {
+        console.log(response);
+
+        for (var i = 0; i < arrayData.length; i++) {
+
+          var fullDate = arrayData[i].startDate.slice(0, 10); //date
+          $scope.reservations.date = fullDate;
+          $scope.reservations.experiment = arrayData[i].reservation.experiment;
+          console.log(arrayData[i].reservation.experiment);
+
+          var startDay = arrayData[i].startDate.slice(8, 10); //dia
+          console.log(startDay);
+          var startMonth = arrayData[i].startDate.slice(5, 7); //month
+          console.log(startMonth);
+          var startYear = arrayData[i].startDate.slice(0, 4); //year
+          console.log(startYear);
+          var dateReservation = startYear + '-' + startMonth + '-' + startDay;
+          arrayData[i].reservation.dateCreated = dateReservation;//pisamos campo que no nos hace falta
+          var startDate = arrayData[i].startDate.slice(-9, -4); //hora inicio formato hh:mm
+          arrayData[i].startDate = startDate;
+          var endDate = arrayData[i].endDate.slice(-9, -4); //hora inicio formato hh:mm
+          arrayData[i].endDate = endDate;
+
+          $scope.reservations.hour = startDate + ' - ' + endDate;
+          if(arrayData[i].reservation.experiment == 'LUNAR'){
+            arrayData[i].reservation.experiment = 'NOCTURNO';
+          }
+
+          console.log(currentYear + '-' + currentMonth + '-' + currentDayUTC);
+
+          if( currentYear > startYear ||
+            ( currentYear == startYear && currentMonth > startMonth) ||
+            ( currentYear == startYear && currentMonth == startMonth && currentDayUTC > startDay)){
+              if (i !== -1) {
+                console.log('borrar');
+                  delete arrayData[i];
+                }
+          }
+        }
+
+        var myArrClean = arrayData.filter(Boolean);
+        $scope.slots = myArrClean;
+        console.log($scope.slots);
+
+        if (myArrClean.length > 0) {
+          // mostrar botons
+
+        }
+        //TABLA selecionar reserva
+        $('#res-table tbody').on('click', 'tr', function() {
+          $('#res-table tbody tr').removeClass('table-active');
+          $(this).addClass('table-active');
+          console.log($(this)[0].children[0].textContent);
+          var tds1 = $(this)[0].children[0].textContent;//experimento
+          var tds2 = $(this)[0].children[1].textContent;//fecha
+          var tds3 = $(this)[0].children[2].textContent;//hora
+          console.log($(this)[0].children[1].textContent);
+          console.log($(this)[0].children[2].textContent);
+          var hourToDelete = tds3.slice(0,5);
+          var toDelete = tds2.concat('T' + hourToDelete + ':00Z');
+          $scope.reservations.deleteHour = toDelete;
+        });
+
+      }
+      else{
+        console.log('error');
+      }
+    }, function errorCallback(response) {
+      console.log('error');
+    });
+//mis reservas
+//http://localhost:8080/things/gatekeeper/calendar?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg&freebusytype=RESERVATION&startDate=2017-06-11T00:00:00Z
+//http://localhost:8080/things/gatekeeper/calendar?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20&freebusytype=RESERVATION
+
+  $scope.removeReservation = function(){
+
+    var paramsDelete = {
+      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20'
+    };
+    var urlDeleteReservation = 'http://localhost:8080/things/gatekeeper/deleteUserReservation';
+
+    $http({
+      url: urlDeleteReservation,
+      method: 'POST',
+      params: paramsDelete,
+      data : {"startDate": $scope.reservations.deleteHour},
+      headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then(function successCallback(response) {
+      if (response.status == 204) {
+        console.log('ok');
+        /////////////////////////////////////////LLAMR A OBTENER RESERVA DE NUEVO
+        $location.path("/perfil");
+      }
+      else{
+        $('#confirmBookingLoading').hide();
+        $('#requestError').show();
+      }
+    }, function errorCallback(response) {
+      $('#confirmBookingLoading').hide();
+      $('#requestError').show();
+      console.log(response);
+    });
+
+  }
+
+  $scope.goToObservation = function(){
+    var paramsAck = {
+      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20'
+    };
+    var urlAckReservation = 'http://localhost:8080/things/gatekeeper/ackReservation';
+
+    $http({
+      url: urlAckReservation,
+      method: 'POST',
+      params: paramsAck
+      // data : {"startDate": $scope.reservations.deleteHour},
+      // headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then(function successCallback(response) {
+      if (response.status == 204) {
+        console.log('ok');
+        $location.path("/observacion");
+      }
+      else{
+        $('#observationError').show();
+        console.log('error');
+      }
+    }, function errorCallback(response) {
+      $('#observationError').show();
+        console.log('error');
+    });
+  }
 
 }]);
 
@@ -696,7 +1066,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
       //Seguimiento de la cupula
       $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+        url: 'http://localhost:8080/things/dome/activateTracking?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
         method: 'POST',
         // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
         headers : {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -706,7 +1076,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
           // Seguimiento de la montura
           $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
             method: 'POST',
             // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
             data : { "monitoredObject": "SUN", "monitoringInterval": 23},
@@ -738,7 +1108,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
       //Seguimiento de la cupula
       $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+        url: 'http://localhost:8080/things/dome/activateTracking?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
         method: 'POST',
         // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
         headers : {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -748,7 +1118,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
           // Seguimiento de la montura
           $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
             method: 'POST',
             // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
             data : { "monitoredObject": "MOON", "monitoringInterval": 23},
@@ -777,7 +1147,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
       if($scope.experiment.solarSeg == true){
 
         $http({
-          url: 'http://localhost:8080/things/mount/disableMonitoring?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg',
+          url: 'http://localhost:8080/things/mount/disableMonitoring?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
           method: 'POST',
           // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
           // data : { "monitoredObject": "SUN", "monitoringInterval": 23},

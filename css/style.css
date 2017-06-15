@@ -483,3 +483,9 @@ h1.title{
 .padding0{
   padding: 0px;
 }
+.table-active{
+  background-color: #4d90fe;
+}
+.table-hover>tbody>tr:hover {
+    background-color: #4d90fe;
+}
