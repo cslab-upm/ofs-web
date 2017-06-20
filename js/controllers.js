@@ -87,40 +87,12 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
     // $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/u');
     //Estado observatorio
-
     $scope.state = {};
     $scope.state.weatherStation=true;//OK
     $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>"
     $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>"
     $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>"
     $scope.state.availabilityCameras = "Estado de las cámaras: <span class='dome-green'>DISPONIBLE</span>"
-    // $scope.state.busy = "El observatorio está libre. Inicie sesión o Registrese para observar el cielo."
-    // $http.get('http://api.openweathermap.org/data/2.5/weather?q=Boadilladelmonte,sp&APPID=41a51db0a52c9d6db1462321b6a6a297')//7
-    //     .then(function successCallback(response) {
-    //         $scope.state.temperature = response.data.main.temp - 273.15;
-    //         $scope.state.humidity = response.data.main.humidity;
-    //         $scope.state.pressure = response.data.main.pressure;
-    //         $scope.state.windSpeed = response.data.wind.speed;
-    //         $scope.state.visibility = response.data.visibility;
-    //     }, function errorCallback(response) {
-    //         $scope.state.temperature = "No disponible";
-    //         $scope.state.humidity = "No disponible";
-    //         $scope.state.pressure = "No disponible";
-    //         $scope.state.windSpeed = "No disponible";
-    //         $scope.state.visibility = "No disponible";
-    //     });
-
-    // var url = 'http://api.openweathermap.org/data/2.5/weather?q=Madrid,sp&APPID=41a51db0a52c9d6db1462321b6a6a297';//7
-    // var url = 'http://api.openweathermap.org/data/2.5/weather';//7
-    // weatherStationFactory.async(url).then(function(data){
-    //   $scope.state.temperature = data.main.temp - 273.15;
-    //   $scope.state.humidity = data.main.humidity;
-    //   $scope.state.pressure = data.main.pressure;
-    //   $scope.state.windSpeed = data.wind.speed;
-    //   $scope.state.visibility = data.visibility;
-    // });
-    // var url = 'http://api.openweathermap.org/data/2.5/weather';//7
-    // var params = {q : 'Boadilladelmonte,sp', APPID : '41a51db0a52c9d6db1462321b6a6a297' }
 
     // Estado estacion meteorologica
     var paramsWeatherStation = '';
@@ -373,12 +345,16 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
   $scope.user.isLogged = false;
   $scope.user.email = null;
   $scope.user.rol = null;
+  $scope.user.token = null;
 
   $scope.login = {};
   $scope.login.errorName = false;
   $scope.login.errorPassword = false;
   $scope.login.errorEnvio = false;
 
+  // app.run(function($http) {
+  //   $http.defaults.headers.common.Authorization = 'Basic YWRtaW5pc3RyYXRvcjoxMjM0NTY3OA==';
+  // });
 
   //funcion para conectar
   // TO DO
@@ -389,28 +365,47 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
       $('#form-submit-log').hide();
       $('#login-gif').show();
 
-      // var auth64 = Base64.encode($scope.user.nameLogin + ':' +  $scope.user.passwordLogin);
-      // var basic = 'Basic ' + auth64;
+      var auth64 = Base64.encode($scope.user.nameLogin + ':' +  $scope.user.passwordLogin);
+      var basic = 'Basic ' + auth64;
+
       // console.log(basic);
-      // delete $http.defaults.headers.common['X-Requested-With'];
-      // $http.defaults.headers.common.Authorization = basic ;
-      // $http.defaults.headers.common.Authorization = 'Basic YWRtaW5pc3RyYXRvcjoxMjM0NTY3OA==';
-      // $http({
-      //   url: 'http://localhost:8080/things/gatekeeper/generateUserToken',
-      //   method: 'POST',
-      //   headers : {'Authorization': basic, 'Content-Type': 'application/x-www-form-urlencoded'}
-      // }).then(function successCallback(response) {
-      //   console.log(response);
-      //   if (response.status == 200) {
+      // userFactory.setToken('16$TR5vAd8l0VmIBC3IQAbZhf2x7UMeb9f88Adzn9sQcug');
+      // $rootScope.user.token = userFactory.getToken();
+
+      // console.log($rootScope.user.token);
+      // $httpProvider.defaults.useXDomain = true;
+      delete $http.defaults.headers.common['X-Requested-With'];
+      $http.defaults.headers.common.Authorization = basic ;
+      $http.defaults.headers.common['Access-Control-Allow-Origin'] = "*";
+      $http.defaults.headers.common['Access-Control-Allow-Methods'] = "GET,PUT,POST,DELETE,OPTIONS";
+      $http.defaults.headers.common['Access-Control-Allow-Headers'] = "Content-Type, Authorization, Content-Length, X-Requested-With";
+      $http.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
+
+
+      $http.defaults.headers.common.Authorization = 'Basic YWRtaW5pc3RyYXRvcjoxMjM0NTY3OA==';
+      $http({
+        url: 'http://localhost:8080/things/gatekeeper/generateUserToken',
+        method: 'POST',
+        headers : {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': basic},
+        crossDomain: true,
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+      }).then(function successCallback(response) {
+        console.log(response);
+        if (response.status == 200) {
+          console.log(response.data);
+          $scope.user.token = response.data.token;
+          userFactory.setToken($scope.user.token);
 
 
       // una vez hecho login recuperamos los datos del usuario
-      if ($scope.user.nameLogin == 'admin') {
-        var paramsUsers = { name: 'administrator', access_token: 'z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg'};
+      // if ($scope.user.nameLogin == 'admin') {
+        var token = userFactory.getToken();
+        // var paramsUsers = { name: 'administrator', access_token: token};
+        var paramsUsers = { name: $scope.user.nameLogin, access_token: token};
         var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
         httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
           if (response.status == 200) {
-            console.log(response.data[0].roleNames[0]);
+            // console.log(response.data[0].roleNames[0]);
             authFactory.toLogin($scope.user.nameLogin);//cokie
             $scope.user.isLogged = true;
             userFactory.setIsLogged(true);
@@ -419,55 +414,55 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
             $scope.user.rol = response.data[0].roleNames[0];
             userFactory.setRol(response.data[0].roleNames[0]);
             $rootScope.isLogged = userFactory.getIsLogged();
-            console.log(userFactory.getRol());
+            // console.log(userFactory.getRol());
           } else {
 
           }
         });
-      }
-      else if ($scope.user.nameLogin == 'administrator') {
-        var paramsUsers = { name: 'administrator', access_token: 'YWRtaW5pc3RyYXRvcjoxMjM0NTY3OA=='};
-        var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
-        httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
-          if (response.status == 200) {
-            console.log(response.data[0].roleNames[0]);
-            authFactory.toLogin($scope.user.nameLogin);//cokie
-            $scope.user.isLogged = true;
-            userFactory.setIsLogged(true);
-            $scope.user.email = response.data[0].email;
-            userFactory.setEmail(response.data[0].email);
-            $scope.user.rol = response.data[0].roleNames[0];
-            userFactory.setRol(response.data[0].roleNames[0]);
-            $rootScope.isLogged = userFactory.getIsLogged();
-            console.log(userFactory.getRol());
-          } else {
+      // }
+      // else if ($scope.user.nameLogin == 'administrator') {
+      //   var paramsUsers = { name: 'administrator', access_token: 'YWRtaW5pc3RyYXRvcjoxMjM0NTY3OA=='};
+      //   var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
+      //   httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
+      //     if (response.status == 200) {
+      //       console.log(response.data[0].roleNames[0]);
+      //       authFactory.toLogin($scope.user.nameLogin);//cokie
+      //       $scope.user.isLogged = true;
+      //       userFactory.setIsLogged(true);
+      //       $scope.user.email = response.data[0].email;
+      //       userFactory.setEmail(response.data[0].email);
+      //       $scope.user.rol = response.data[0].roleNames[0];
+      //       userFactory.setRol(response.data[0].roleNames[0]);
+      //       $rootScope.isLogged = userFactory.getIsLogged();
+      //       console.log(userFactory.getRol());
+      //     } else {
+      //
+      //     }
+      //   });
+      // }
 
-          }
-        });
-      }
-
-
-
-          // $('#login-gif').hide();
-          // $('#form-login').hide();
-          // $('#confirmEmail').hide();
+          $('#login-gif').hide();
+          $('#form-login').hide();
+          $('#confirmEmail').hide();
         // }
-        // return response;
-      // }, function errorCallback(response) {
+
+      }
+      return response;
+      }, function errorCallback(response) {
         $('#login-gif').hide();
         $('#form-submit-log').show();
         $scope.login.errorEnvio = true;
 
-      // });
+      });
 
+}
 
-     }
-
-  }
+}
+  // }
 
 }]);
 
-app.controller('experimentoController', ['$scope', '$sce', '$http','$location','httpFactory', function($scope, $sce, $http, httpFactory) {
+app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http','$location', 'httpFactory', 'userFactory', function($rootScope, $scope, $sce, $http, httpFactory, userFactory) {
   // <!-- Google Analytics -->
   ga('set', 'page', '/experimento');
   ga('send', 'pageview');
@@ -476,6 +471,7 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
   $scope.experiment = {};
   $scope.experiment.day = false;
   $scope.experiment.night = false;
+  $scope.experiment.typeR = null;
   $scope.experiment.type = null;
   $scope.experiment.date = null;
   $scope.experiment.slot = null;
@@ -492,6 +488,7 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
    $(this).toggleClass('expSolar_click');
    $('#experimentoNocturno').removeClass('expNocturno_click');
    $scope.experiment.type = 'SOLAR';
+   $scope.experiment.typeR = 'SOLAR';
    $scope.experiment.day = true;
    $scope.experiment.night = false;
    $('.slotTime').slideUp();
@@ -509,7 +506,8 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
   $('#experimentoNocturno').click(function() {
     $(this).toggleClass('expNocturno_click');
     $('#experimentoSolar').removeClass('expSolar_click');
-    $scope.experiment.type = 'LUNAR';
+    $scope.experiment.type = 'NOCTURNO';
+    $scope.experiment.typeR = 'LUNAR';
     $scope.experiment.day = false;
     $scope.experiment.night = true;
     $('.slotTime').slideUp();
@@ -566,7 +564,7 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
       $scope.experiment.date = datePick;
       //Añadimos 'T00:00:00Z' a la fecha para peticion GET de reservas disponibles
       datePick = datePick.concat('T00:00:00Z');
-      console.log(datePick);
+      // console.log(datePick);
 
       var currentDate = new Date();
       var currentDayUTC = currentDate.getUTCDate();
@@ -577,14 +575,17 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
 
       // var diffLocalHour = abs()
 
-      console.log(currentDayUTC);
-      console.log(currentHourUTC);
-      console.log(currentMinutesUTC);
-      console.log(currentHour);
-      console.log(currentMinutes);
+      // console.log(currentDayUTC);
+      // console.log(currentHourUTC);
+      // console.log(currentMinutesUTC);
+      // console.log(currentHour);
+      // console.log(currentMinutes);
+
+      var token = $rootScope.user.token;
+      // console.log(token);
 
       var paramsDate = {
-        access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+        access_token: token,
         freebusy: 'FREE',
         startDate: datePick
       };
@@ -705,13 +706,14 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
             $('#summary').slideUp();
             $('#confirmBookingLoading').hide();
             $('#request').show();
+            $('#checkBooking').hide();
             $(this).addClass('table-active');
             var tds = $(this)[0];
             var td1 = tds.children[0].textContent;
             $scope.experiment.td1 = td1;
             var td2 = tds.children[1].textContent;
             $scope.experiment.td2 = td2;
-            console.log(td1 +'--'+ td2);
+            // console.log(td1 +'--'+ td2);
             $scope.experiment.slot = $scope.experiment.td1 + ' a ' + $scope.experiment.td2;
             $('#confirm-timeslot').slideDown();
           });
@@ -742,10 +744,12 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
     $('#confirmBookingLoading').show();
     var slot = $scope.experiment.td1.slice(0, 5)
     var datePOST = $scope.experiment.date.concat('T'+ slot + ':00.00Z');
-    console.log($scope.experiment.date);
+    // console.log($scope.experiment.date);
+
+    var token = $rootScope.user.token;
 
     var paramsReservation = {
-      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20'
+      access_token: token
     };
     var urlReservation = 'http://localhost:8080/things/gatekeeper/addUserReservation';
 
@@ -753,7 +757,7 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
       url: urlReservation,
       method: 'POST',
       params: paramsReservation,
-      data : {"startDate": datePOST, "experiment": $scope.experiment.type},
+      data : {"startDate": datePOST, "experiment": $scope.experiment.typeR},
       headers : {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function successCallback(response) {
       var arrData = response.data;
@@ -761,7 +765,7 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
       if (response.status == 201) {
         $('#confirmBookingLoading').hide();
         $('#checkBooking').show();
-        console.log(response);
+        // console.log(response);
       }
       else{
         $('#confirmBookingLoading').hide();
@@ -770,7 +774,7 @@ app.controller('experimentoController', ['$scope', '$sce', '$http','$location','
     }, function errorCallback(response) {
       $('#confirmBookingLoading').hide();
       $('#requestError').show();
-      console.log(response);
+      // console.log(response);
     });
   }
 
@@ -804,8 +808,10 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
     var currentHour = currentDate.getHours();
     var currentMinutes = currentDate.getMinutes();
 
+    var token = userFactory.getToken();
+
     var paramsProfile = {
-      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+      access_token: token,
       freebusytype: 'RESERVATION'
     };
     var urlReservation = 'http://localhost:8080/things/gatekeeper/calendar';
@@ -818,21 +824,21 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
       var arrayData = response.data;
       // console.log(arrayData);
       if (response.status == 200) {
-        console.log(response);
+        // console.log(response);
 
         for (var i = 0; i < arrayData.length; i++) {
 
           var fullDate = arrayData[i].startDate.slice(0, 10); //date
           $scope.reservations.date = fullDate;
           $scope.reservations.experiment = arrayData[i].reservation.experiment;
-          console.log(arrayData[i].reservation.experiment);
+          // console.log(arrayData[i].reservation.experiment);
 
           var startDay = arrayData[i].startDate.slice(8, 10); //dia
-          console.log(startDay);
+          // console.log(startDay);
           var startMonth = arrayData[i].startDate.slice(5, 7); //month
-          console.log(startMonth);
+          // console.log(startMonth);
           var startYear = arrayData[i].startDate.slice(0, 4); //year
-          console.log(startYear);
+          // console.log(startYear);
           var dateReservation = startYear + '-' + startMonth + '-' + startDay;
           arrayData[i].reservation.dateCreated = dateReservation;//pisamos campo que no nos hace falta
           var startDate = arrayData[i].startDate.slice(-9, -4); //hora inicio formato hh:mm
@@ -845,13 +851,13 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
             arrayData[i].reservation.experiment = 'NOCTURNO';
           }
 
-          console.log(currentYear + '-' + currentMonth + '-' + currentDayUTC);
+          // console.log(currentYear + '-' + currentMonth + '-' + currentDayUTC);
 
           if( currentYear > startYear ||
             ( currentYear == startYear && currentMonth > startMonth) ||
             ( currentYear == startYear && currentMonth == startMonth && currentDayUTC > startDay)){
               if (i !== -1) {
-                console.log('borrar');
+                // console.log('borrar');
                   delete arrayData[i];
                 }
           }
@@ -859,7 +865,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
 
         var myArrClean = arrayData.filter(Boolean);
         $scope.slots = myArrClean;
-        console.log($scope.slots);
+        // console.log($scope.slots);
 
         if (myArrClean.length > 0) {
           // mostrar botons
@@ -887,14 +893,13 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
     }, function errorCallback(response) {
       console.log('error');
     });
-//mis reservas
-//http://localhost:8080/things/gatekeeper/calendar?access_token=z0fZW3UJI5SLBZZtfPYQBFSxoVy3i58H8Iy9o5slgXg&freebusytype=RESERVATION&startDate=2017-06-11T00:00:00Z
-//http://localhost:8080/things/gatekeeper/calendar?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20&freebusytype=RESERVATION
 
   $scope.removeReservation = function(){
 
+    var token = userFactory.getToken();
+
     var paramsDelete = {
-      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20'
+      access_token: token
     };
     var urlDeleteReservation = 'http://localhost:8080/things/gatekeeper/deleteUserReservation';
 
@@ -907,6 +912,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
     }).then(function successCallback(response) {
       if (response.status == 204) {
         console.log('ok');
+        $('#deleteReservationOK').show();
         /////////////////////////////////////////LLAMR A OBTENER RESERVA DE NUEVO
         $location.path("/perfil");
       }
@@ -923,8 +929,10 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
   }
 
   $scope.goToObservation = function(){
+
+    var token = userFactory.getToken();
     var paramsAck = {
-      access_token: '16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20'
+      access_token: token
     };
     var urlAckReservation = 'http://localhost:8080/things/gatekeeper/ackReservation';
 
@@ -932,8 +940,6 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
       url: urlAckReservation,
       method: 'POST',
       params: paramsAck
-      // data : {"startDate": $scope.reservations.deleteHour},
-      // headers : {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function successCallback(response) {
       if (response.status == 204) {
         console.log('ok');
@@ -1036,11 +1042,11 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
     $scope.user.admin = false;//para abrir o cerrar cupula necesita permitos de administrador
     $scope.user.authenticated = false;
 
-    console.log(userFactory.getRol());
+    // console.log(userFactory.getRol());
     if(userFactory.getRol() == 'Authenticated'){
       $scope.user.auth = true;
     }else if(userFactory.getRol() == 'Administrator'){
-      console.log('admin OK');
+      // console.log('admin OK');
       $scope.user.admin = true;
     }
 
@@ -1057,32 +1063,32 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
     $scope.experiment.solar = true;
     $scope.experiment.solarSeg = false;
     $scope.experiment.seg = false;
-    $scope.experiment.lunar = true;
+    $scope.experiment.lunar = false;
     $scope.experiment.lunarSeg = false;
 
     $scope.followSun = function(){
       console.log('siguiendo al sol');
       $scope.experiment.solar = false;
 
+      var token = userFactory.getToken();
+
       //Seguimiento de la cupula
       $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+        url: 'http://localhost:8080/things/dome/activateTracking?access_token='+token,
         method: 'POST',
-        // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
         headers : {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function successCallback(response) {
-        console.log(response);
+        // console.log(response);
         if (response.status == 201 || response.status == 204) {
 
           // Seguimiento de la montura
           $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token='+token,
             method: 'POST',
-            // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
             data : { "monitoredObject": "SUN", "monitoringInterval": 23},
             headers : {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function successCallback(response) {
-            console.log(response);
+            // console.log(response);
             if (response.status == 201 || response.status == 204) {
               $scope.experiment.solarSeg = true;
               $scope.experiment.seg = true;
@@ -1090,7 +1096,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
             }
           }, function errorCallback(response) {
             $scope.experiment.solar = true;
-            console.log(response);
+            // console.log(response);
           });
           // Fin seguimiento de la montura
         }
@@ -1105,12 +1111,11 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
     $scope.followMoon = function(){
       console.log('siguiendo a la Luna');
       $scope.experiment.lunar = false;
-
+      var token = userFactory.getToken();
       //Seguimiento de la cupula
       $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+        url: 'http://localhost:8080/things/dome/activateTracking?access_token='+token,
         method: 'POST',
-        // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
         headers : {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function successCallback(response) {
         console.log(response);
@@ -1118,13 +1123,12 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
           // Seguimiento de la montura
           $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token='+token,
             method: 'POST',
-            // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
             data : { "monitoredObject": "MOON", "monitoringInterval": 23},
             headers : {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function successCallback(response) {
-            console.log(response);
+            // console.log(response);
             if (response.status == 201 || response.status == 204) {
               $scope.experiment.lunarSeg = true;
               $scope.experiment.seg = true;
@@ -1132,7 +1136,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
             }
           }, function errorCallback(response) {
             $scope.experiment.lunar = true;
-            console.log(response);
+            // console.log(response);
           });
           // Fin seguimiento de la montura
         }
@@ -1145,15 +1149,13 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
     $scope.stopTracking = function(){
       if($scope.experiment.solarSeg == true){
-
+          var token = userFactory.getToken();
         $http({
-          url: 'http://localhost:8080/things/mount/disableMonitoring?access_token=16$Xb8QLNExJzUxYOVvALdHUi0q9gPzCmqgiVijX6V7t20',
+          url: 'http://localhost:8080/things/mount/disableMonitoring?access_token='+token,
           method: 'POST',
-          // param : {access_token: 'C69qVy2Xam5fbTMxy98BcSTLvplL2R6xVKysPUFOhhw'},
-          // data : { "monitoredObject": "SUN", "monitoringInterval": 23},
           headers : {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function successCallback(response) {
-          console.log(response);
+          // console.log(response);
           if (response.status == 201 || response.status == 204) {
             $scope.experiment.solar = true;
             $scope.experiment.solarSeg = false;
@@ -1162,7 +1164,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
             $scope.experiment.montura = false;
           }
         }, function errorCallback(response) {
-          console.log(response);
+          // console.log(response);
         });
       }else if ($scope.experiment.lunarSeg == true) {
         $scope.experiment.lunar = true;
