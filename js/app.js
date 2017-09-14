@@ -17,9 +17,6 @@ app.config(['$locationProvider', function($locationProvider) {
 // Routing
 app.config(function($routeProvider) {
     $routeProvider
-        // .when('/', {
-        //   redirectTo: '/bienvenido'
-        // })
         .when('/inicio', {
             templateUrl: 'views/inicio.html',
             controller: 'inicioController'
@@ -65,24 +62,4 @@ app.config(function($routeProvider) {
               return  '/inicio'
             }
         })
-        // .when('/experimento/nocturno', {
-        //     templateUrl: 'views/night-exp.html',
-        //     controller: ''
-        // })
-        // .when('/experimento/solar', {
-        //     templateUrl: 'views/solar-exp.html',
-        //     controller: ''
-        // })
-        // .when('/reservas', {
-        //   templateUrl: 'views/reservations.html',
-        //   controller: ''
-        // })
-        // .when('/galeria', {
-        //   templateUrl: 'views/gallery.html',
-        //   controller: ''
-        // })
-        // .when('/perfil', {
-        //   templateUrl: 'views/profile.html',
-        //   controller: ''
-        // })
 })

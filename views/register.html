@@ -15,7 +15,7 @@
         </div> -->
         <p class="alert alert-success" id="confirmEmail" style="padding:15px;margin-top:10%;display:none">Se ha enviado un email a <span style="font-weight:bold;">{{user.emailRegister}}</span> para confirmar el registro.</p>
         <form id="form-register" ng-submit="toRegister()" name="form-register" role="form" style="margin:40px 0px;">
-            <div ng-show="register.errorEnvio" class="alert alert-danger">Error en el envío del formulario</div>
+            <div ng-show="register.errorEnvio" class="alert alert-danger">Error en el envío de datos</div>
             <div class="form-group">
                 <label class="control-label">Nombre de usuario</label>
                 <label ng-show="register.errorName" class="control-label" style="color:#ff0000;">¡Nombre de usuario ya existe!</label>
@@ -43,7 +43,7 @@
         </form>
 
         <form id="form-login" ng-submit="toLogin()" name="form-submit" role="form" style="margin:40px 0px;">
-            <div ng-show="login.errorEnvio" class="alert alert-danger">Error en el envío del formulario</div>
+            <div ng-show="login.errorEnvio" class="alert alert-danger">Error en el envío de datos</div>
             <div class="form-group">
                 <label class="control-label">Nombre de usuario</label>
                 <label ng-show="login.errorName" class="control-label" style="color:#ff0000;">¡No existe ese nombre de usuario!</label>

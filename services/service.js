@@ -6,7 +6,7 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
             //Llamada API login
             // to do
             var expires = new Date();
-            expires.setMinutes(expires.getMinutes() + 59);//cookie expira en 59 minutos
+            expires.setMinutes(expires.getMinutes() + 60);//cookie expira en 59 minutos
 
 
             $cookies.put('name', name, {'expires' : expires});
@@ -21,7 +21,7 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
         },
         register: function(name) {
           var expires = new Date();
-          expires.setMinutes(expires.getMinutes() + 59);//cookie expira en 59 min
+          expires.setMinutes(expires.getMinutes() + 60);//cookie expira en 59 min
           $cookies.put('name', name, {'expires' : expires});
 
         },
