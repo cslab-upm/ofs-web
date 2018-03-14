@@ -96,7 +96,18 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
     // Estado estacion meteorologica
     var paramsWeatherStation = '';
-    var urlWeatherStation = 'http://localhost:8080/things/weatherstation/state/';
+ $http.get('
+        .then(function successCallback(response) {^M
+            $scope.state.temperature = response.data.main.temp - 273.15;^M
+            $scope.state.humidity = response.data.main.humidity;^M
+            $scope.state.pressure = response.data.main.pressure;^M
+            $scope.state.windSpeed = response.data.wind.speed;^M
+            $scope.state.visibility = response.data.visibility;^M
+        }
+    var urlWeatherStation = 'http://ofs.fi.upm.es:8080/things/weatherstation/state/';
+
+
+	urlWeatherStarion ='http://api.openweathermap.org/data/2.5/weather?id=3127958&APPID=41a51db0a52c9d6db1462321b6a6a297';
     httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function successCallback(response){
       if (response.status == 200) {
         if(response.data.operatingStatus == 'OK'){
@@ -122,7 +133,7 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
     // Estado montura
     var paramsMount = '';
-    var urlMount = 'http://localhost:8080/things/mount/state/';
+    var urlMount = 'http://ofs.fi.upm.es:8080/things/mount/state/';
     httpFactory.async(urlMount,'GET', paramsMount).then(function successCallback(response){
       if (response.status == 200){
         if(response.data.operatingStatus == 'OK'){
@@ -139,7 +150,7 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
     });
     // Estado Cupula
     var paramsDome = '';
-    var urlDome = 'http://localhost:8080/things/dome/state/';
+    var urlDome = 'http://ofs.fi.upm.es:8080/things/dome/state/';
     httpFactory.async(urlDome,'GET', paramsDome).then(function successCallback(response){
       if (response.status == 200) {
         if(response.data.operatingStatus == 'OK' && response.data.openingElements[0].status == 'OPEN'){
@@ -292,7 +303,7 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
 
 
         $http({
-          url: 'http://localhost:8080/things/gatekeeper/registerUser',
+          url: 'http://ofs.fi.upm.es:8080/things/gatekeeper/registerUser',
           method: 'POST',
           data : {name: $scope.user.nameRegister, email: $scope.user.emailRegister, password: $scope.user.passwordRegister1},
           headers : {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -375,7 +386,7 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
   $http.defaults.headers.common['Access-Control-Allow-Headers'] = "Content-Type, Authorization, Content-Length, X-Requested-With";
 
   $http({
-    url: 'http://localhost:8080/things/gatekeeper/generateUserToken',
+    url: 'http://ofs.fi.upm.es:8080/things/gatekeeper/generateUserToken',
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -397,7 +408,7 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
           name: $scope.user.nameLogin,
           access_token: token
         };
-        var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
+        var urlUsers = 'http://ofs.fi.upm.es:8080/things/gatekeeper/users';
         httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
           if (response.status == 200) {
             // console.log(response.data[0].roleNames[0]);
@@ -549,7 +560,7 @@ app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http'
         freebusy: 'FREE',
         startDate: datePick
       };
-      var urlDate = 'http://localhost:8080/things/gatekeeper/calendar';
+      var urlDate = 'http://ofs.fi.upm.es:8080/things/gatekeeper/calendar';
 
       $http({
         url: urlDate,
@@ -723,7 +734,7 @@ app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http'
     var paramsReservation = {
       access_token: token
     };
-    var urlReservation = 'http://localhost:8080/things/gatekeeper/addUserReservation';
+    var urlReservation = 'http://ofs.fi.upm.es:8080/things/gatekeeper/addUserReservation';
 
     $http({
       url: urlReservation,
@@ -787,7 +798,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
       access_token: token,
       freebusytype: 'RESERVATION'
     };
-    var urlReservation = 'http://localhost:8080/things/gatekeeper/calendar';
+    var urlReservation = 'http://ofs.fi.upm.es:8080/things/gatekeeper/calendar';
 
     $http({
       url: urlReservation,
@@ -875,7 +886,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
     var paramsDelete = {
       access_token: token
     };
-    var urlDeleteReservation = 'http://localhost:8080/things/gatekeeper/deleteUserReservation';
+    var urlDeleteReservation = 'http://ofs.fi.upm.es:8080/things/gatekeeper/deleteUserReservation';
 
     $http({
       url: urlDeleteReservation,
@@ -908,7 +919,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
     var paramsAck = {
       access_token: token
     };
-    var urlAckReservation = 'http://localhost:8080/things/gatekeeper/ackReservation';
+    var urlAckReservation = 'http://ofs.fi.upm.es:8080/things/gatekeeper/ackReservation';
 
     $http({
       url: urlAckReservation,
@@ -945,7 +956,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
     $scope.state.weatherStation=true;//OK
 
     var paramsWeatherStation = '';
-    var urlWeatherStation = 'http://localhost:8080/things/weatherstation/state/';
+    var urlWeatherStation = 'http://ofs.fi.upm.es:8080/things/weatherstation/state/';
     httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function successCallback(response){
       if (response.status == 200) {
         if(response.data.operatingStatus == 'OK'){
@@ -1048,7 +1059,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
       //Seguimiento de la cupula
       $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token='+token,
+        url: 'http://ofs.fi.upm.es:8080/things/dome/activateTracking?access_token='+token,
         method: 'POST',
         headers : {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function successCallback(response) {
@@ -1057,7 +1068,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
           // Seguimiento de la montura
           $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token='+token,
+            url: 'http://ofs.fi.upm.es:8080/things/mount/enableObjectMonitoring?access_token='+token,
             method: 'POST',
             data : { "monitoredObject": "SUN", "monitoringInterval": 23},
             headers : {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -1088,7 +1099,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
       var token = userFactory.getToken();
       //Seguimiento de la cupula
       $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token='+token,
+        url: 'http://ofs.fi.upm.es:8080/things/dome/activateTracking?access_token='+token,
         method: 'POST',
         headers : {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function successCallback(response) {
@@ -1097,7 +1108,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
 
           // Seguimiento de la montura
           $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token='+token,
+            url: 'http://ofs.fi.upm.es:8080/things/mount/enableObjectMonitoring?access_token='+token,
             method: 'POST',
             data : { "monitoredObject": "MOON", "monitoringInterval": 23},
             headers : {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -1125,7 +1136,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory'
       if($scope.experiment.solarSeg == true){
           var token = userFactory.getToken();
         $http({
-          url: 'http://localhost:8080/things/mount/disableMonitoring?access_token='+token,
+          url: 'http://ofs.fi.upm.es:8080/things/mount/disableMonitoring?access_token='+token,
           method: 'POST',
           headers : {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function successCallback(response) {
