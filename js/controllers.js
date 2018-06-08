@@ -369,20 +369,15 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
   var basic = 'Basic ' + auth64;
 
 
-  $http.defaults.headers.common.Authorization = basic;
-  $http.defaults.headers.common['Access-Control-Allow-Origin'] = "*";
-  $http.defaults.headers.common['Access-Control-Allow-Methods'] = "GET,PUT,POST,DELETE,OPTIONS";
-  $http.defaults.headers.common['Access-Control-Allow-Headers'] = "Content-Type, Authorization, Content-Length, X-Requested-With";
+  // $http.defaults.headers.common.Authorization = basic;
+  // $http.defaults.headers.common['Access-Control-Allow-Origin'] = "*";
+  // $http.defaults.headers.common['Access-Control-Allow-Methods'] = "GET,PUT,POST,DELETE,OPTIONS";
+  // $http.defaults.headers.common['Access-Control-Allow-Headers'] = "Content-Type, Authorization, Content-Length, X-Requested-With";
 
   $http({
-    url: 'http://localhost:8080/things/gatekeeper/generateUserToken',
+    url: 'http://localhost:8080/login',
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': basic
-    },
-    crossDomain: true,
-    contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+	data: {username: $scope.user.nameLogin, password: $scope.user.passwordLogin}
   }).then(function successCallback(response) {
       // console.log(response);
       if (response.status == 200) {
@@ -391,33 +386,46 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
         userFactory.setToken($scope.user.token);
 
         // una vez hecho login recuperamos los datos del usuario
+		  authFactory.toLogin($scope.user.nameLogin); //cokiee
+		  $scope.user.isLogged = true;
+		  userFactory.setIsLogged(true);
+		  // $scope.user.email = response.data[0].email;
+		  // userFactory.setEmail(response.data[0].email);
+		  // $scope.user.rol = response.data[0].roleNames[0];
+		  // userFactory.setRol(response.data[0].roleNames[0]);
+		  $rootScope.isLogged = userFactory.getIsLogged();
+
         $rootScope.user.token = userFactory.getToken();
-        var token = userFactory.getToken();
-        var paramsUsers = {
-          name: $scope.user.nameLogin,
-          access_token: token
-        };
-        var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
-        httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
-          if (response.status == 200) {
-            // console.log(response.data[0].roleNames[0]);
-            authFactory.toLogin($scope.user.nameLogin); //cokiee
-            $scope.user.isLogged = true;
-            userFactory.setIsLogged(true);
-            $scope.user.email = response.data[0].email;
-            userFactory.setEmail(response.data[0].email);
-            $scope.user.rol = response.data[0].roleNames[0];
-            userFactory.setRol(response.data[0].roleNames[0]);
-            $rootScope.isLogged = userFactory.getIsLogged();
-            // console.log(userFactory.getRol());
-          } else {
-            $('#form-submit-log').show();
-            $('#login-gif').hide();
-            $scope.login.errorEnvio = true;
-          }
-        });
+        // var token = userFactory.getToken();
+        // var paramsUsers = {
+        //   name: $scope.user.nameLogin,
+        //   access_token: token
+        // };
+        // var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
+        // httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
+        //   if (response.status == 200) {
+        //     // console.log(response.data[0].roleNames[0]);
+        //     authFactory.toLogin($scope.user.nameLogin); //cokiee
+        //     $scope.user.isLogged = true;
+        //     userFactory.setIsLogged(true);
+        //     $scope.user.email = response.data[0].email;
+        //     userFactory.setEmail(response.data[0].email);
+        //     $scope.user.rol = response.data[0].roleNames[0];
+        //     userFactory.setRol(response.data[0].roleNames[0]);
+        //     $rootScope.isLogged = userFactory.getIsLogged();
+        //     // console.log(userFactory.getRol());
+        //   } else {
+        //     $('#form-submit-log').show();
+        //     $('#login-gif').hide();
+        //     $scope.login.errorEnvio = true;
+        //   }
+        // });
       }
-    })
+    }).catch(p => {
+	  $('#form-submit-log').show();
+	  $('#login-gif').hide();
+	  $scope.login.errorEnvio = true;
+  })
   }
   }
   }]);
@@ -904,29 +912,30 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
 
   $scope.goToObservation = function(){
 
-    var token = userFactory.getToken();
-    var paramsAck = {
-      access_token: token
-    };
-    var urlAckReservation = 'http://localhost:8080/things/gatekeeper/ackReservation';
-
-    $http({
-      url: urlAckReservation,
-      method: 'POST',
-      params: paramsAck
-    }).then(function successCallback(response) {
-      if (response.status == 204) {
-        // console.log('ok');
-        $location.path("/observacion");
-      }
-      else{
-        $('#observationError').show();
-        // console.log('error');
-      }
-    }, function errorCallback(response) {
-      $('#observationError').show();
-        // console.log('error');
-    });
+	  $location.path("/observacion");
+    // var token = userFactory.getToken();
+    // var paramsAck = {
+    //   access_token: token
+    // };
+    // var urlAckReservation = 'http://localhost:8080/things/gatekeeper/ackReservation';
+	//
+    // $http({
+    //   url: urlAckReservation,
+    //   method: 'POST',
+    //   params: paramsAck
+    // }).then(function successCallback(response) {
+    //   if (response.status == 204) {
+    //     // console.log('ok');
+    //     $location.path("/observacion");
+    //   }
+    //   else{
+    //     $('#observationError').show();
+    //     // console.log('error');
+    //   }
+    // }, function errorCallback(response) {
+    //   $('#observationError').show();
+    //     // console.log('error');
+    // });
   }
 
 }]);
