@@ -165,9 +165,9 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
       var time = date.getTime();
       // var intervalOut ='';
       // var intervalIn = '';
-        if ($scope.camera == 'interior') {
+        if ($scope.camera === 'interior') {
             // $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/FM7MFYoylVs');
-            $scope.cameraFile = '/moobotix.jpg' + '?timestamp=' + time;
+            $scope.cameraFile = '/api/internalCamera/1';
             // if (contIn == 0){
             //   console.log(intervalOut);
             //   clearInterval(intervalOut);
@@ -176,8 +176,8 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
             // } else {
             // $scope.cameraFile = '/moobotix.jpg' + '?timestamp=' + time;
             // }
-        } else if ($scope.camera == 'exterior') {
-          $scope.cameraFile = '/philips.jpg' + '?timestamp=' + time;
+        } else if ($scope.camera === 'exterior') {
+          $scope.cameraFile = '/api/externalCamera';
             // if (contOut == 0){
             //   console.log(intervalIn);
             //   clearInterval(intervalIn);
