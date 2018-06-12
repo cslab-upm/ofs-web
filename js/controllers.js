@@ -760,7 +760,7 @@ app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http'
 
 }]);
 
-app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'userFactory', function($scope, $sce, $http, $location, userFactory) {
+app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'httpFactory', 'userFactory', function($scope, $sce, $http, $location, httpFactory, userFactory) {
 
     // <!-- Google Analytics -->
     ga('set', 'page', '/perfil');
@@ -769,8 +769,9 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
     $('.nav').find('.active').removeClass('active');
     $('#profile').addClass('active');
 
-    $scope.user.name = userFactory.getName();
-    $scope.user.email = userFactory.getEmail();
+    $scope.user = {};
+    $scope.user.name = '';
+    $scope.user.email = '';
     $scope.reservations = {};
     $scope.reservations.experiment = null;
     $scope.reservations.date = null;
@@ -789,6 +790,16 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'use
     var currentMinutes = currentDate.getMinutes();
 
     var token = userFactory.getToken();
+
+	// Obtener datos usuario
+	httpFactory.auth('http://localhost:8080/users/logged', 'GET')
+		.then(function success(response) {
+			userFactory.setEmail(response.data.email);
+			userFactory.setName(response.data.username);
+
+			$scope.user.name = userFactory.getName();
+			$scope.user.email = userFactory.getEmail();
+		});
 
     var paramsProfile = {
       access_token: token,
