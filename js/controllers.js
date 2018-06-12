@@ -96,20 +96,24 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
     // Estado estacion meteorologica
     var paramsWeatherStation = '';
-    var urlWeatherStation = 'http://localhost:8080/things/weatherstation/state/';
+    var urlWeatherStation = 'api/weatherstation/status';
     httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function successCallback(response){
       if (response.status == 200) {
-        if(response.data.operatingStatus == 'OK'){
-           $scope.state.temperature = response.data.temperature;
-           $scope.state.pressure = response.data.pressure;
-           $scope.state.humidity = response.data.humidity;
-           $scope.state.rainfall = response.data.rainfall;
-           $scope.state.windSpeed = response.data.windSpeed;
-           $scope.state.windDirection = response.data.windDirection;
+        var status = response.data;
+        if(status.active){
+           $scope.state.weatherStation = true;
+           $scope.state.temperature = status.temperature;
+           $scope.state.pressure = status.pressure;
+           $scope.state.humidity = status.humidity;
+           $scope.state.rainfall = status.rainFall;
+           $scope.state.windSpeed = status.windSpeed;
+           $scope.state.windDirection = status.windDirection;
+           $scope.state.timestamp = status.timestamp;
            $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-green'>DISPONIBLE</span>";
         }
         else{
           $scope.state.weatherStation = false;//ERROR
+		  $scope.state.timestamp = status.timestamp;
           $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
         }
       }
