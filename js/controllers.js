@@ -321,7 +321,7 @@ app.controller('registrarController', ['$rootScope','$scope', '$sce', '$http', '
 
 }]);
 
-app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','authFactory','userFactory','Base64','httpFactory', function($rootScope, $scope, $sce, $http, authFactory,userFactory, Base64, httpFactory) {
+app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http', '$location', 'authFactory','userFactory','Base64','httpFactory', function($rootScope, $scope, $sce, $http, $location, authFactory,userFactory, Base64, httpFactory) {
 
     // <!-- Google Analytics -->
     ga('set', 'page', '/iniciarsesion');
@@ -382,20 +382,19 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http','auth
       // console.log(response);
       if (response.status == 200) {
         // console.log(response.data);
-        $scope.user.token = response.data.token;
-        userFactory.setToken($scope.user.token);
-
-        // una vez hecho login recuperamos los datos del usuario
-		  authFactory.toLogin($scope.user.nameLogin); //cokiee
+        userFactory.setToken(response.data.token);
+		  authFactory.toLogin(userFactory.getToken()); //cokiee
+		  $rootScope.user.isLogged = true;
 		  $scope.user.isLogged = true;
 		  userFactory.setIsLogged(true);
-		  // $scope.user.email = response.data[0].email;
-		  // userFactory.setEmail(response.data[0].email);
-		  // $scope.user.rol = response.data[0].roleNames[0];
-		  // userFactory.setRol(response.data[0].roleNames[0]);
-		  $rootScope.isLogged = userFactory.getIsLogged();
 
-        $rootScope.user.token = userFactory.getToken();
+		  // una vez hecho login recuperamos los datos del usuario
+		  httpFactory.auth('http://localhost:8080/users/logged', 'GET')
+			  .then(function success(response) {
+				  userFactory.setEmail(response.data.email);
+				  userFactory.setName(response.data.username);
+				  $location.path("/perfil");
+			  });
         // var token = userFactory.getToken();
         // var paramsUsers = {
         //   name: $scope.user.nameLogin,
