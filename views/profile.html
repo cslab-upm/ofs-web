@@ -38,7 +38,7 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:20px;">
           <p class="alert alert-danger" id="observationError" ng-show="reservations.length == 0" style="padding:15px">Ahora mismo no tienes ninguna reserva pendiente.<br/>Haz una reserva para acceder al experimento.</p>
-          <p class="alert alert-success" id="deleteReservationOK" style="padding:15px;display:none">Reserva eliminada correctamente.</p>
+          <p class="alert alert-danger" ng-show="reservationActualError" style="padding:15px">La reserva no está activa en este momento.</p>
         </div>
       </div>
     </div>

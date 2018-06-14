@@ -740,7 +740,7 @@ app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http'
 
 }]);
 
-app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$route', 'httpFactory', 'userFactory', function($scope, $sce, $http, $location, $route, httpFactory, userFactory) {
+app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$route', 'httpFactory', 'userFactory', function ($scope, $sce, $http, $location, $route, httpFactory, userFactory) {
 	$scope.user = {};
 	$scope.user.name = '';
 	$scope.user.email = '';
@@ -748,6 +748,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 	$scope.reservations = [];
 	$scope.selectedReservationId = 0;
 	$scope.selectedReservation = {};
+	$scope.reservationActualError = false;
 
 	$scope.reservationStatus = {
 		1: 'Pendiente',
@@ -777,6 +778,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 		$scope.selectedReservation = $scope.reservations.filter(r => r.id === id)[0];
 	};
 
+	// Cancelar reserva
 	$scope.removeReservation = function () {
 		const url = 'http://localhost:8080/reservations/' + $scope.selectedReservationId + '/cancel';
 		httpFactory.auth(url, 'PUT')
@@ -787,33 +789,20 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 			});
 	};
 
-  $scope.goToObservation = function(){
-
-	  $location.path("/observacion");
-    // var token = userFactory.getToken();
-    // var paramsAck = {
-    //   access_token: token
-    // };
-    // var urlAckReservation = 'http://localhost:8080/things/gatekeeper/ackReservation';
-	//
-    // $http({
-    //   url: urlAckReservation,
-    //   method: 'POST',
-    //   params: paramsAck
-    // }).then(function successCallback(response) {
-    //   if (response.status == 204) {
-    //     // console.log('ok');
-    //     $location.path("/observacion");
-    //   }
-    //   else{
-    //     $('#observationError').show();
-    //     // console.log('error');
-    //   }
-    // }, function errorCallback(response) {
-    //   $('#observationError').show();
-    //     // console.log('error');
-    // });
-  }
+	// Ir a reserva si es la actual
+	$scope.goToObservation = function () {
+		$scope.reservationActualError = false;
+		httpFactory.auth('http://localhost:8080/reservations/actual', 'GET')
+			.then(function success(response) {
+				if (response.status === 200 && response.data.id === $scope.selectedReservationId) {
+					$location.path("/observacion");
+				} else {
+					$scope.reservationActualError = true;
+				}
+			}, function error() {
+				$scope.reservationActualError = true;
+			});
+	}
 
 }]);
 
