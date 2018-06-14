@@ -399,30 +399,6 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http', '$lo
 				  userFactory.setName(response.data.username);
 				  $location.path("/perfil");
 			  });
-        // var token = userFactory.getToken();
-        // var paramsUsers = {
-        //   name: $scope.user.nameLogin,
-        //   access_token: token
-        // };
-        // var urlUsers = 'http://localhost:8080/things/gatekeeper/users';
-        // httpFactory.async(urlUsers, 'GET', paramsUsers).then(function successCallback(response) {
-        //   if (response.status == 200) {
-        //     // console.log(response.data[0].roleNames[0]);
-        //     authFactory.toLogin($scope.user.nameLogin); //cokiee
-        //     $scope.user.isLogged = true;
-        //     userFactory.setIsLogged(true);
-        //     $scope.user.email = response.data[0].email;
-        //     userFactory.setEmail(response.data[0].email);
-        //     $scope.user.rol = response.data[0].roleNames[0];
-        //     userFactory.setRol(response.data[0].roleNames[0]);
-        //     $rootScope.isLogged = userFactory.getIsLogged();
-        //     // console.log(userFactory.getRol());
-        //   } else {
-        //     $('#form-submit-log').show();
-        //     $('#login-gif').hide();
-        //     $scope.login.errorEnvio = true;
-        //   }
-        // });
       }
     }).catch(p => {
 	  $('#form-submit-log').show();
@@ -764,36 +740,20 @@ app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http'
 
 }]);
 
-app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'httpFactory', 'userFactory', function($scope, $sce, $http, $location, httpFactory, userFactory) {
+app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$route', 'httpFactory', 'userFactory', function($scope, $sce, $http, $location, $route, httpFactory, userFactory) {
+	$scope.user = {};
+	$scope.user.name = '';
+	$scope.user.email = '';
 
-    // <!-- Google Analytics -->
-    ga('set', 'page', '/perfil');
-    ga('send', 'pageview');
-    // <!-- End Google Analytics -->
-    $('.nav').find('.active').removeClass('active');
-    $('#profile').addClass('active');
+	$scope.reservations = [];
+	$scope.selectedReservationId = 0;
+	$scope.selectedReservation = {};
 
-    $scope.user = {};
-    $scope.user.name = '';
-    $scope.user.email = '';
-    $scope.reservations = {};
-    $scope.reservations.experiment = null;
-    $scope.reservations.date = null;
-    $scope.reservations.hour = null;
-    $scope.reservations.deleteHour = null;
-
-
-    var currentDate = new Date();
-    var currentMonth = currentDate.getMonth();//0-11
-    var currentMonth = currentMonth + 1;
-    var currentYear = currentDate.getFullYear();
-    var currentDayUTC = currentDate.getUTCDate();
-    var currentHourUTC = currentDate.getUTCHours();
-    var currentMinutesUTC = currentDate.getUTCMinutes();
-    var currentHour = currentDate.getHours();
-    var currentMinutes = currentDate.getMinutes();
-
-    var token = userFactory.getToken();
+	$scope.reservationStatus = {
+		1: 'Pendiente',
+		2: 'Completada',
+		3: 'Cancelada'
+	};
 
 	// Obtener datos usuario
 	httpFactory.auth('http://localhost:8080/users/logged', 'GET')
@@ -805,124 +765,27 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', 'htt
 			$scope.user.email = userFactory.getEmail();
 		});
 
-    var paramsProfile = {
-      access_token: token,
-      freebusytype: 'RESERVATION'
-    };
-    var urlReservation = 'http://localhost:8080/things/gatekeeper/calendar';
+	httpFactory.auth('http://localhost:8080/reservations/own', 'GET')
+		.then(function success(response) {
+			if (response.status === 200) {
+				$scope.reservations = response.data;
+			}
+		});
 
-    $http({
-      url: urlReservation,
-      method: 'GET',
-      params: paramsProfile
-    }).then(function successCallback(response) {
-      var arrayData = response.data;
-      // console.log(arrayData);
-      if (response.status == 200) {
-        // console.log(response);
+	$scope.selectElement = function (id) {
+		$scope.selectedReservationId = id;
+		$scope.selectedReservation = $scope.reservations.filter(r => r.id === id)[0];
+	};
 
-        for (var i = 0; i < arrayData.length; i++) {
-
-          var fullDate = arrayData[i].startDate.slice(0, 10); //date
-          $scope.reservations.date = fullDate;
-          $scope.reservations.experiment = arrayData[i].reservation.experiment;
-          // console.log(arrayData[i].reservation.experiment);
-
-          var startDay = arrayData[i].startDate.slice(8, 10); //dia
-          // console.log(startDay);
-          var startMonth = arrayData[i].startDate.slice(5, 7); //month
-          // console.log(startMonth);
-          var startYear = arrayData[i].startDate.slice(0, 4); //year
-          // console.log(startYear);
-          var dateReservation = startYear + '-' + startMonth + '-' + startDay;
-          arrayData[i].reservation.dateCreated = dateReservation;//pisamos campo que no nos hace falta
-          var startDate = arrayData[i].startDate.slice(-9, -4); //hora inicio formato hh:mm
-          arrayData[i].startDate = startDate;
-          var endDate = arrayData[i].endDate.slice(-9, -4); //hora inicio formato hh:mm
-          arrayData[i].endDate = endDate;
-
-          $scope.reservations.hour = startDate + ' - ' + endDate;
-          if(arrayData[i].reservation.experiment == 'LUNAR'){
-            arrayData[i].reservation.experiment = 'NOCTURNO';
-          }
-
-          // console.log(currentYear + '-' + currentMonth + '-' + currentDayUTC);
-
-          if( currentYear > startYear ||
-            ( currentYear == startYear && currentMonth > startMonth) ||
-            ( currentYear == startYear && currentMonth == startMonth && currentDayUTC > startDay)){
-              if (i !== -1) {
-                // console.log('borrar');
-                  delete arrayData[i];
-                }
-          }
-        }
-
-        var myArrClean = arrayData.filter(Boolean);
-        $scope.slots = myArrClean;
-        // console.log($scope.slots);
-
-        if (myArrClean.length > 0) {
-          // mostrar botons
-
-        }
-        //TABLA selecionar reserva
-        $('#res-table tbody').on('click', 'tr', function() {
-          $('#res-table tbody tr').removeClass('table-active');
-          $(this).addClass('table-active');
-          // console.log($(this)[0].children[0].textContent);
-          var tds1 = $(this)[0].children[0].textContent;//experimento
-          var tds2 = $(this)[0].children[1].textContent;//fecha
-          var tds3 = $(this)[0].children[2].textContent;//hora
-          // console.log($(this)[0].children[1].textContent);
-          // console.log($(this)[0].children[2].textContent);
-          var hourToDelete = tds3.slice(0,5);
-          var toDelete = tds2.concat('T' + hourToDelete + ':00Z');
-          $scope.reservations.deleteHour = toDelete;
-        });
-
-      }
-      else{
-        // console.log('error');
-      }
-    }, function errorCallback(response) {
-      // console.log('error');
-    });
-
-  $scope.removeReservation = function(){
-    $('#deleteReservationOK').hide();
-    $('#requestError').hide();
-    var token = userFactory.getToken();
-
-    var paramsDelete = {
-      access_token: token
-    };
-    var urlDeleteReservation = 'http://localhost:8080/things/gatekeeper/deleteUserReservation';
-
-    $http({
-      url: urlDeleteReservation,
-      method: 'POST',
-      params: paramsDelete,
-      data : {"startDate": $scope.reservations.deleteHour},
-      headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).then(function successCallback(response) {
-      if (response.status == 204) {
-        // console.log('ok');
-        $('#deleteReservationOK').show();
-        /////////////////////////////////////////LLAMR A OBTENER RESERVA DE NUEVO
-        $location.path("/perfil");
-      }
-      else{
-        $('#confirmBookingLoading').hide();
-        $('#requestError').show();
-      }
-    }, function errorCallback(response) {
-      $('#confirmBookingLoading').hide();
-      $('#requestError').show();
-      // console.log(response);
-    });
-
-  }
+	$scope.removeReservation = function () {
+		const url = 'http://localhost:8080/reservations/' + $scope.selectedReservationId + '/cancel';
+		httpFactory.auth(url, 'PUT')
+			.then(function success(response) {
+				if (response.status === 200) {
+					$route.reload();
+				}
+			});
+	};
 
   $scope.goToObservation = function(){
 

@@ -15,28 +15,29 @@
       <div class="" style="max-height:285px;overflow:auto;">
         <table class="table table-hover table-condensed text-center" id="res-table">
           <thead>
-            <td style="font-weight: bold;font-size: 20px;">Experimento</td>
-            <td style="font-weight: bold;font-size: 20px;">Fecha</td>
-            <td style="font-weight: bold;font-size: 20px;">Hora</td>
+            <td style="font-weight: bold;font-size: 20px;">Estado</td>
+            <td style="font-weight: bold;font-size: 20px;">Hora inicio</td>
+            <td style="font-weight: bold;font-size: 20px;">Hora fin</td>
           </thead>
           <tbody>
-            <tr ng-repeat="slot in slots">
-              <td>{{slot.reservation.experiment}}</td>
-              <td>{{slot.reservation.dateCreated}}</td>
-              <td>{{slot.startDate}} - {{slot.endDate}} UTC</td>
+            <tr ng-repeat="reservation in reservations" ng-class="{'table-active': reservation.id == selectedReservationId, 'table-disabled': reservation.status != 1}"
+                ng-click="selectElement(reservation.id)">
+              <td>{{reservationStatus[reservation.status]}}</td>
+              <td>{{reservation.startDate | date: "dd/MM/yyyy - HH:mm:ss"}}</td>
+              <td>{{reservation.endDate | date: "dd/MM/yyyy - HH:mm:ss"}}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="row" style="margin-top:30px;">
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
-          <button type="button" class="btn btn-green" ng-click="goToObservation()" name="button">Ir a Experimento</button>
+          <button type="button" class="btn btn-green" ng-disabled="selectedReservationId == 0" ng-click="goToObservation()" name="button">Ir a la Reserva</button>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
-          <button type="button" class="btn btn-red" ng-click="removeReservation()" name="button">Eliminar Reserva</button>
+          <button type="button" class="btn btn-red" ng-disabled="selectedReservationId == 0" name="button" data-toggle="modal" data-target="#modal-cancel">Cancelar Reserva</button>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:20px;">
-          <p class="alert alert-danger" id="observationError" style="padding:15px;display:none">Ahora mismo no tienes ninguna reserva pendiente.<br/>Haz una reserva para acceder al experimento.</p>
+          <p class="alert alert-danger" id="observationError" ng-show="reservations.length == 0" style="padding:15px">Ahora mismo no tienes ninguna reserva pendiente.<br/>Haz una reserva para acceder al experimento.</p>
           <p class="alert alert-success" id="deleteReservationOK" style="padding:15px;display:none">Reserva eliminada correctamente.</p>
         </div>
       </div>
@@ -66,4 +67,25 @@
     </div> -->
 
   <!-- </div> -->
+</div>
+
+<!--Modal confirmación cancelar-->
+
+<!--ng-click="removeReservation()"-->
+<div id="modal-cancel" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Cancelar Reserva</h3>
+      </div>
+      <div class="modal-body">
+        <p>{{selectedReservation.startDate | date: "dd/MM/yyyy - HH:mm:ss"}}
+          - {{selectedReservation.endDate | date: "dd/MM/yyyy - HH:mm:ss"}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="removeReservation()">Cancelar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
 </div>
