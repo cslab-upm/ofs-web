@@ -409,334 +409,141 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http', '$lo
   }
   }]);
 
-app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http','$location', 'httpFactory', 'userFactory', function($rootScope, $scope, $sce, $http, httpFactory, userFactory) {
-  // <!-- Google Analytics -->
-  ga('set', 'page', '/experimento');
-  ga('send', 'pageview');
-  // <!-- End Google Analytics -->
+app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http', 'httpFactory', 'userFactory', function ($rootScope, $scope, $sce, $http, httpFactory, userFactory) {
+	//Calendario
+	$.datepicker.regional['es'] = {
+		closeText: 'Cerrar',
+		prevText: 'Sig',
+		currentText: 'Hoy',
+		monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+			'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+			'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+		dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié;', 'Juv', 'Vie', 'Sáb'],
+		dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+		weekHeader: 'Sm',
+		dateFormat: 'yy-mm-dd',
+		firstDay: 1,
+		isRTL: false,
+		showMonthAfterYear: false,
+		yearSuffix: ''
+	};
 
-  $scope.experiment = {};
-  $scope.experiment.day = false;
-  $scope.experiment.night = false;
-  $scope.experiment.typeR = null;
-  $scope.experiment.type = null;
-  $scope.experiment.date = null;
-  $scope.experiment.slot = null;
-  $scope.experiment.td1 = null;
-  $scope.experiment.td2 = null;
+	$.datepicker.setDefaults($.datepicker.regional["es"]);
+	$("#datepicker").datepicker({
+		firstDay: 1,
+		minDate: 0,
+		maxDate: '14D'
+	});
 
-  $('#experimentoSolar').hover(function() {
-    $(this).addClass('expSolar');
-  }, function() {
-    $(this).removeClass('expSolar');
-  });
+	// Variables del template
+	$scope.daySelected = undefined;
+	$scope.reservationError = false;
+	$scope.reservationOk = false;
+	$scope.showSlots = false;
+	$scope.slots = [];
+	$scope.slotsSelected = [];
+	// Tiempo reserva
+	$scope.startTime = undefined;
+	$scope.endTime = undefined;
+	$scope.totalTime = 0;
 
-  $('#experimentoSolar').on('click',function() {
-   $(this).toggleClass('expSolar_click');
-   $('#experimentoNocturno').removeClass('expNocturno_click');
-   $scope.experiment.type = 'SOLAR';
-   $scope.experiment.typeR = 'SOLAR';
-   $scope.experiment.day = true;
-   $scope.experiment.night = false;
-   $('.slotTime').slideUp();
-   $('#summary').slideUp();
-   $('#checkBooking').slideUp();
-   $('#reservas').slideDown();
-  });
+	$scope.confirmDate = function () {
+		$scope.slots = [];
+		$scope.slotsSelected = [];
+		$scope.dayError = false;
+		$scope.startTime = undefined;
+		$scope.endTime = undefined;
+		$scope.totalTime = 0;
+		$scope.daySelected = $('#datepicker').val();
 
-  $('#experimentoNocturno').hover(function() {
-    $(this).addClass('expNocturno');
-  }, function() {
-    $(this).removeClass('expNocturno');
-  });
+		// Comrpobar que hay un día seleccionado
+		if (!$scope.daySelected) {
+			$scope.dayError = true;
+			return;
+		}
 
-  $('#experimentoNocturno').click(function() {
-    $(this).toggleClass('expNocturno_click');
-    $('#experimentoSolar').removeClass('expSolar_click');
-    $scope.experiment.type = 'NOCTURNO';
-    $scope.experiment.typeR = 'LUNAR';
-    $scope.experiment.day = false;
-    $scope.experiment.night = true;
-    $('.slotTime').slideUp();
-    $('#summary').slideUp();
-    $('#checkBooking').slideUp();
-     $('#reservas').slideDown();
-  });
+		// Reservations from 22h to 06h
+		const startReservation = moment($scope.daySelected).hour(22).minute(0).second(0);
+		const endReservation = moment($scope.daySelected).add(1, 'days').hour(6).minute(0).second(0);
 
+		// Format date
+		const endDateStr = moment($scope.daySelected).add(1, 'days').format('YYYY-MM-DD');
 
-  //Calendario
-  $.datepicker.regional['es'] = {
-  closeText: 'Cerrar',
-  prevText: 'Sig',
-  currentText: 'Hoy',
-  monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-  monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-  'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-  dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-  dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié;', 'Juv', 'Vie', 'Sáb'],
-  dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
-  weekHeader: 'Sm',
-  dateFormat: 'yy-mm-dd',
-  firstDay: 1,
-  isRTL: false,
-  showMonthAfterYear: false,
-  yearSuffix: ''
-  };
+		// Pedir reservas del día seleccionado y el siguiente
+		$scope.loading = true;
+		const url = 'http://localhost:8080/reservations?start=' + $scope.daySelected + '&end=' + endDateStr;
+		httpFactory.auth(url, 'GET')
+			.then(function success(response) {
+				if (response.status === 200) {
+					$scope.showSlots = true;
 
-  $.datepicker.setDefaults($.datepicker.regional["es"]);
-  $("#datepicker").datepicker({
-    firstDay:1,
-    minDate:0,
-    maxDate:'7D'
-  });
-  $('#datepicker').click(function() {
-    $('.slotTime').slideUp();
-    $('#summary').slideUp();
-    $('#confirm-timeslot').slideUp();
-    $('#confirmDate').show();
-    $('#dateError').hide();
-    $('#requestError').hide();
-    $('#confirmBookingLoading').hide();
-  });
+					const reservationList = response.data.filter(r => r.status === 1);
+					let contId = 1;
 
-// experimentSelected = function(experiment){}
-  $scope.confirmDate = function() {
+					// Ver rangos disponibles
+					while (!startReservation.isSame(endReservation)) {
+						let slot = {
+							startDate: moment(startReservation),
+							endDate: moment(startReservation.add(15, 'm'))
+						};
 
-    var datePick = $('#datepicker').val();
-    if (datePick != "") {
-      $('#confirmDate').hide();
-      $('#confirmDateLoading').show();
+						// Evitar solapes
+						if (!reservationList.some(r => slot.startDate.isBetween(r.startDate, r.endDate, null, '[)')
+							|| slot.endDate.isBetween(r.startDate, r.endDate, null, '(]'))) {
 
-      $scope.experiment.date = datePick;
-      //Añadimos 'T00:00:00Z' a la fecha para peticion GET de reservas disponibles
-      datePick = datePick.concat('T00:00:00Z');
-      // console.log(datePick);
+							// Convertir a Date para mostrar en el front
+							slot.startDate = slot.startDate.toDate();
+							slot.endDate = slot.endDate.toDate();
+							slot.id = contId++;
+							$scope.slots.push(slot);
+						}
+					}
+				}
+			});
+	};
 
-      var currentDate = new Date();
-      var currentDayUTC = currentDate.getUTCDate();
-      var currentHourUTC = currentDate.getUTCHours();
-      var currentMinutesUTC = currentDate.getUTCMinutes();
-      var currentHour = currentDate.getHours();
-      var currentMinutes = currentDate.getMinutes();
+	$scope.selectSlot = function (slot) {
+		if ($scope.slotsSelected.length === 0) {
+			$scope.slotsSelected.push(slot);
+			$scope.startTime = slot.startDate;
+			$scope.endTime = slot.endDate;
+			$scope.totalTime = -moment(slot.startDate).diff(slot.endDate, 'm')
+		} else {
+			const last = $scope.slotsSelected[$scope.slotsSelected.length - 1];
+			const duration = -moment($scope.startTime).diff(slot.endDate, 'm');
 
-      // var diffLocalHour = abs()
+			// Comprobar que el slot es consecutivo y que no supera las 3 horas de duración
+			if (moment(last.endDate).isSame(moment(slot.startDate)) && duration <= 180) {
+				$scope.slotsSelected.push(slot);
+				$scope.endTime = slot.endDate;
+				$scope.totalTime = duration;
+			}
+		}
+	};
 
-      // console.log(currentDayUTC);
-      // console.log(currentHourUTC);
-      // console.log(currentMinutesUTC);
-      // console.log(currentHour);
-      // console.log(currentMinutes);
+	$scope.confirmReservation = function () {
+		$scope.reservationError = false;
+		$scope.reservationOk = false;
 
-      var token = $rootScope.user.token;
-      // console.log(token);
+		const body = {
+			startDate: moment($scope.startTime).format('YYYY-MM-DDTHH:mm'),
+			endDate: moment($scope.endTime).format('YYYY-MM-DDTHH:mm')
+		};
 
-      var paramsDate = {
-        access_token: token,
-        freebusy: 'FREE',
-        startDate: datePick
-      };
-      var urlDate = 'http://localhost:8080/things/gatekeeper/calendar';
+		httpFactory.auth('http://localhost:8080/reservations', 'POST', body)
+			.then(function success(response) {
+				if (response.status === 201) {
+					$scope.reservationOk = true;
+				} else {
+					$scope.reservationError = true;
+				}
+			}, function error() {
+				$scope.reservationError = true;
+			});
 
-      $http({
-        url: urlDate,
-        method: 'GET',
-        params: paramsDate
-      }).then(function successCallback(response) {
-        var arrData = response.data;
-        // console.log(arrData);
-        if (response.status == 200) {
-          $('#confirmDateLoading').hide();
-          //Si experimento solar
-          if ($scope.experiment.day) {
-            // var initSolar = 540;//min->9am
-            // var endSolar = 1139;//min->18:59pm
-            // var initLunar = 1140;//min->19pm
-            // var endLunar =  1439;//min->23:59pm
-            var initHourSolar = 09; //min->9am
-            var initMinSolar = 00;
-            var endHourSolar = 19; //min->18:59pm
-            var endMinSolar = 59;
-
-            var initHourLunar = 19; //min->19pm
-            var initMinLunar = 00;
-            var endHourLunar = 23; //min->23:59pm
-            var endMinLunar = 59;
-
-            for (var i = 0; i < arrData.length; i++) {
-
-              var startDay = arrData[i].startDate.slice(8, 10) //dia
-              var startDate = arrData[i].startDate.slice(-9, -4) //hora inicio formato hh:mm
-              // arrData[i].startDate = startDate;
-              var endDate = arrData[i].endDate.slice(-9, -4) //hora inicio formato hh:mm
-              // arrData[i].endDate = endDate;
-              //  console.log(arrData[i].startDate);
-              // console.log(endDate);
-              // console.log(arrData[i]);
-              // console.log(arrData);
-
-              //La API devuelve reservas en hora Local, pasar a hora UTC -2h
-              var hourToBook = startDate.slice(0, -3);
-              var minuteToBook = startDate.slice(3);
-              hourToBook = hourToBook - 2;
-              arrData[i].startDate = hourToBook + ':' + minuteToBook;
-              console.log(hourToBook);
-
-              //La API devuelve reservas en hora Local, pasar a hora UTC -2h
-              var hourToBook_end = endDate.slice(0, -3);
-              var minuteToBook_end = endDate.slice(3);
-              hourToBook_end = hourToBook_end - 2;
-              arrData[i].endDate = hourToBook_end + ':' + minuteToBook_end;
-
-
-              // var hourToBook = endDate.slice(0,-3);
-              // var minuteToBook = endDate.slice(3);
-
-              //  console.log(hourToBook + ':'+minuteToBook);
-              // console.log(arrData);
-
-              //Filtrado de intervalos de timepo para experimento solar
-              if ((hourToBook < initHourSolar || (hourToBook == initHourSolar && minuteToBook < initMinSolar)) ||
-                (hourToBook > endHourSolar || (hourToBook == endHourSolar && minuteToBook > endMinSolar))) {
-                if (i !== -1) {
-                  // console.log(arrData);
-                  // console.log(i);
-                  // arrData.splice(i,1);
-                  delete arrData[i];
-                }
-              } else if (currentDayUTC == startDay) {
-                if (hourToBook < currentHourUTC || (hourToBook == currentHourUTC && minuteToBook < currentMinutesUTC)) {
-                  if (i !== -1) {
-                    delete arrData[i];
-                  }
-                }
-              }
-              //calcular horas
-              //calcular minutos
-            }
-
-          } else if ($scope.experiment.night) {
-            var initHourLunar = 21; //min->19pm
-            var initMinLunar = 00;
-            var endHourLunar = 23; //min->23:59pm
-            var endMinLunar = 59;
-            var endHourNextDay = 4;
-            var endMinNextDay = 59;
-
-            for (var i = 0; i < arrData.length; i++) {
-
-              // console.log(arrData[i].startDate);
-              var startDay = arrData[i].startDate.slice(8, 10) //dia
-              // console.log(startDay);
-              var startDate = arrData[i].startDate.slice(-9, -4) //hora inicio formato hh:mm
-              arrData[i].startDate = startDate;
-              var endDate = arrData[i].endDate.slice(-9, -4) //hora inicio formato hh:mm
-              arrData[i].endDate = endDate;
-
-              var hourToBook = startDate.slice(0, -3);
-              var minuteToBook = startDate.slice(3);
-
-              //Filtrado de intervalos de timepo para experimento nocturno
-              if (((hourToBook < initHourLunar && hourToBook > endHourNextDay) || (hourToBook == initHourLunar && minuteToBook < initMinLunar)) ||
-                (hourToBook > endHourLunar || (hourToBook == endHourLunar && minuteToBook > endMinLunar))
-              ) {
-                if (i !== -1) {
-                  delete arrData[i];
-                }
-              } else if (currentDayUTC == startDay) {
-                if (hourToBook < currentHourUTC || (hourToBook == currentHourUTC && minuteToBook < currentMinutesUTC)) {
-                  if (i !== -1) {
-                    delete arrData[i];
-                  }
-                }
-              }
-              //calcular horas
-              //calcular minutos
-            }
-          }
-
-          var myArrClean = arrData.filter(Boolean);
-          $scope.slots = myArrClean;
-          // console.log($scope.slots);
-
-          //TABLA obtener valor seleccion de intervalo de tiempo
-          $('#res-table tbody').on('click', 'tr', function() {
-            $('#res-table tbody tr').removeClass('table-active');
-            $('#summary').slideUp();
-            $('#confirmBookingLoading').hide();
-            $('#request').show();
-            $('#checkBooking').hide();
-            $(this).addClass('table-active');
-            var tds = $(this)[0];
-            var td1 = tds.children[0].textContent;
-            $scope.experiment.td1 = td1;
-            var td2 = tds.children[1].textContent;
-            $scope.experiment.td2 = td2;
-            // console.log(td1 +'--'+ td2);
-            $scope.experiment.slot = $scope.experiment.td1 + ' a ' + $scope.experiment.td2;
-            $('#confirm-timeslot').slideDown();
-          });
-
-          $('.slotTime').slideDown();
-
-        }
-        else{
-          $('#confirmDateLoading').hide();
-          $('#dateError').show();
-        }
-
-      }, function errorCallback(response) {
-        // console.log('error');
-        return response;
-      });
-    }
-  }
-
-  $scope.confirmTimeSlot = function(){
-    //TODO
-    $('#confirm-timeslot').slideUp();
-    $('#summary').slideDown();
-  }
-
-  $scope.confirmBooking = function(){
-    $('#request').hide();
-    $('#confirmBookingLoading').show();
-    var slot = $scope.experiment.td1.slice(0, 5);
-    var datePOST = $scope.experiment.date.concat('T'+ slot + ':00.00Z');
-    // console.log($scope.experiment.date);
-
-    var token = $rootScope.user.token;
-
-    var paramsReservation = {
-      access_token: token
-    };
-    var urlReservation = 'http://localhost:8080/things/gatekeeper/addUserReservation';
-
-    $http({
-      url: urlReservation,
-      method: 'POST',
-      params: paramsReservation,
-      data : {"startDate": datePOST, "experiment": $scope.experiment.typeR},
-      headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).then(function successCallback(response) {
-      var arrData = response.data;
-      // console.log(arrData);
-      if (response.status == 201) {
-        $('#confirmBookingLoading').hide();
-        $('#checkBooking').show();
-        $('#requestError').hide();
-        // console.log(response);
-      }
-      else{
-        $('#confirmBookingLoading').hide();
-        $('#requestError').show();
-      }
-    }, function errorCallback(response) {
-      $('#confirmBookingLoading').hide();
-      $('#requestError').show();
-      // console.log(response);
-    });
-  }
+	}
 
 }]);
 

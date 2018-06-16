@@ -1,66 +1,65 @@
 <div class="row">
-  <div class="col-md-12">
-    <h1>Elige un experimento</h1>
-    <div class="col-md-6 text-center" ng-click="experimentSelected('solar')">
-      <p id="experimentoSolar" style="border: 2px solid #ffa500;margin-top:10px;border-radius: 10px;cursor: pointer;">Experimiento SOLAR</p>
+    <div class="col-md-12 col-xs-12" id="reservas">
+        <h2>Haz tu reserva</h2>
+        <p>Para poder utilizar el telescopio es necesario hacer una reserva. Se reservará un día a una hora, siempre que
+            esté disponible, y tendrás el telescopio en exclusiva para ti. Se reserva en franjas de 15 minutos y por un máximo de 3 horas.
+            Comienza ahora:</p>
+        <div class="col-md-4 col-xs-10" style="margin-bottom:25px;">
+            <div class="">
+                <label for="">Fecha:</label>
+                <!-- <input type="text" id="mydate" style="width:100%;max-width:500px;"/> -->
+                <input type="text" name="" value="" id="datepicker">
+            </div>
+            <div class="" style="margin-top:10px;">
+                <button type="button" class="btn btn-primary" id="confirmDate" ng-click="confirmDate()" name="button"
+                        style="margin: 8px 10px;">Confirmar
+                </button>
+                <p class="alert alert-danger" id="dateError" ng-show="dayError" style="padding:15px">Selecciona un día.</p>
+            </div>
+
+
+        </div>
     </div>
-    <div class="col-md-6 text-center" ng-click="experimentSelected('nocturno')">
-      <p id="experimentoNocturno" style="border: 2px solid #758ddc;margin-top:10px;border-radius: 10px;cursor: pointer;">Experimento NOCTURNO</p>
+
+    <div class="row" ng-show="showSlots">
+        <div class="col-md-6 slotTime">
+            <p><span style="font-weight:bold;">Seleciona un intervalo para la fecha:</span><span
+                    style="font-weight:bold;font-size:20px;color:#337ab7"> {{daySelected | date: "dd/MM/yyyy"}}</span></p>
+            <p>Elige franjas de 15 minutos consecutivas hasta un máximo de 180 minutos.</p>
+        </div>
     </div>
-  </div>
-  <div class="col-md-12 col-xs-12" id="reservas" style="display:none">
-    <h2>Haz tu reserva</h2>
-    <p>Para poder utilizar el telescopio es necesario hacer una reserva. Se reservará un día a una hora, siempre que esté disponible, y tendrás el telescopio en exclusiva para ti. Comienza ahora:</p>
-    <div class="col-md-4 col-xs-10" style="margin-bottom:25px;">
-      <div class="">
-        <label for="">Fecha:</label>
-        <!-- <input type="text" id="mydate" style="width:100%;max-width:500px;"/> -->
-        <input type="text" name="" value="" id="datepicker">
-      </div>
-      <div class="" style="margin-top:10px;">
-        <button type="button" class="btn btn-primary" id="confirmDate" ng-click="confirmDate()" name="button" style="margin: 8px 10px;">Confirmar</button>
-        <img id="confirmDateLoading" src="./img/loading.gif" alt="loading" style="display:none">
-        <p class="alert alert-danger" id="dateError" style="padding:15px;display:none">Su solicitud no se ha podido procesar. Intente otra vez.</p>
-      </div>
+    <div class="row" ng-show="showSlots">
 
+        <div class="col-md-6 col-xs-12 slotTime" style="max-height:285px;overflow:auto;">
 
+            <table class="table table-hover table-condensed text-center" id="res-table">
+                <thead>
+                <td style="font-weight: bold;font-size: 20px;">Hora de Inicio</td>
+                <td style="font-weight: bold;font-size: 20px;">Hora de Fin</td>
+                </thead>
+                <tbody>
+                <tr ng-repeat="slot in slots" ng-class="{'table-active': slotsSelected.indexOf(slot) !== -1}"
+                    ng-click="selectSlot(slot)">
+                    <td class="startHour">{{slot.startDate | date: "HH:mm"}}</td>
+                    <td class="endHour">{{slot.endDate | date: "HH:mm"}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6 slotTime" style="display:none">
-    <p><span style="font-weight:bold;">Seleciona un intervalo para la fecha:</span><span style="font-weight:bold;font-size:20px;color:#337ab7"> {{experiment.date}}</span></p>
-  </div>
-</div>
-<div class="row">
+    <div class="col-md-12 col-xs-12" id="summary" ng-show="startTime">
+        <h2>Resumen de la reserva</h2>
 
-  <div class="col-md-6 col-xs-12 slotTime" style="display:none;max-height:285px;overflow:auto;">
+        <p>Inicio de reserva: {{startTime | date: "dd/MM/yyyy - HH:mm"}}</p>
+        <p>Fin de reserva: {{endTime | date: "dd/MM/yyyy - HH:mm"}}</p>
+        <p>Tiempo de reserva total: {{totalTime}} minutos</p>
 
-    <table class="table table-hover table-condensed text-center" id="res-table">
-      <thead>
-        <td style="font-weight: bold;font-size: 20px;">Hora de Inicio</td>
-        <td style="font-weight: bold;font-size: 20px;">Hora de Fin</td>
-      </thead>
-      <tbody>
-        <tr ng-repeat="slot in slots">
-          <td class="startHour">{{slot.startDate}} UTC</td>
-          <td class="endHour">{{slot.endDate}} UTC</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6 text-center slotTime" style="margin-top:10px;display:none">
-    <button type="button" class="btn btn-primary" id="confirm-timeslot" ng-click="confirmTimeSlot()" name="button" style=" margin: 8px 10px;display:none;">Confirmar</button>
-  </div>
-</div>
-<div class="col-md-12 col-xs-12" id="summary" style="display:none">
-  <h2>Resumen de la reserva</h2>
-
-  <p>Tu reserva es: experimento <span style="font-weight:bold">{{experiment.type}}</span>, el día <span style="font-weight:bold">{{experiment.date}}</span> de <span style="font-weight:bold">{{experiment.slot}}</span></p>
-  <button type="button" class="btn btn-primary" id="request" ng-click="confirmBooking()" name="button" style="margin: 8px 10px;">Solicitar</button>
-  <img id="confirmBookingLoading" src="./img/loading.gif" alt="loading" style="display:none">
-  <p id="checkBooking" style="display:none">Tu reserva se ha realizado correctamente, revisela <span style="color:#047bf9;text-decoration: underline;cursor: pointer;" ng-click="goProfile()">aquí</span></p>
-  <p class="alert alert-danger" id="requestError" style="padding:15px;display:none">Su solicitud no se ha podido procesar. Intente hacer una nueva reserva.</p>
+        <button type="button" class="btn btn-primary" id="request" ng-click="confirmReservation()" name="button"
+                style="margin: 8px 10px;">Solicitar
+        </button>
+        <p id="checkBooking" ng-show="reservationOk">Tu reserva se ha realizado correctamente, revisela <span
+                style="color:#047bf9;text-decoration: underline;cursor: pointer;" ng-click="goProfile()">aquí</span></p>
+        <p class="alert alert-danger" id="requestError" ng-show="reservationError" style="padding:15px">Su solicitud no se ha podido
+            procesar. Intente hacer una nueva reserva.</p>
+    </div>
 </div>
