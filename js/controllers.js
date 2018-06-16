@@ -613,43 +613,43 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 
 }]);
 
-app.controller('observacionController', ['$scope', '$sce', '$http','httpFactory','userFactory', function($scope, $sce, $http, httpFactory, userFactory) {
+app.controller('observacionController', ['$scope', '$sce', '$http', '$interval', 'httpFactory', 'userFactory', function ($scope, $sce, $http, $interval, httpFactory, userFactory) {
+	// Estado estacion meteorologica
+	$scope.state = {};
+	$scope.state.weatherStation = false;
 
-    // <!-- Google Analytics -->
-    ga('set', 'page', '/observacion');
-    ga('send', 'pageview');
-    // <!-- End Google Analytics -->
+	httpFactory.async('http://localhost:8080/weatherstation/status', 'GET', '').then(function successCallback(response) {
+		if (response.status === 200) {
+			var status = response.data;
+			if (status.active) {
+				$scope.state.weatherStation = true;
+				$scope.state.temperature = status.temperature;
+				$scope.state.pressure = status.pressure;
+				$scope.state.humidity = status.humidity;
+				$scope.state.rainfall = status.rainFall;
+				$scope.state.windSpeed = status.windSpeed;
+				$scope.state.windDirection = status.windDirection;
+				$scope.state.timestamp = status.timestamp;
+			}
+			else {
+				$scope.state.weatherStation = false;
+				$scope.state.timestamp = status.timestamp;
+			}
+		}
+		else {
+			$scope.state.weatherStation = false;
+		}
+	});
 
-    $('.nav').find('.active').removeClass('active');
-    $(window).scrollTop(0);
-    setInterval('reloadImages()', 30000); //30 sec
-    $scope.state = {};
-    $scope.state.weatherStation=true;//OK
+	// Recarga de imágenes de camaras
+	$scope.externalCamera = 'http://ofs.fi.upm.es/api/externalCamera';
+	$scope.internalCamera = 'http://ofs.fi.upm.es/api/internalCamera/1';
 
-    var paramsWeatherStation = '';
-    var urlWeatherStation = 'http://localhost:8080/things/weatherstation/state/';
-    httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function successCallback(response){
-      if (response.status == 200) {
-        if(response.data.operatingStatus == 'OK'){
-           $scope.state.temperature = response.data.temperature;
-           $scope.state.pressure = response.data.pressure;
-           $scope.state.humidity = response.data.humidity;
-           $scope.state.rainfall = response.data.rainfall;
-           $scope.state.windSpeed = response.data.windSpeed;
-           $scope.state.windDirection = response.data.windDirection;
-           $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-green'>DISPONIBLE</span>";
-        }
-        else{
-          $scope.state.weatherStation = false;//ERROR
-          $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
-        }
-      }
-      else {
-        $scope.state.weatherStation = false;//ERROR
-        $scope.state.availabilityWeatherStation = "Estado de la estación meteorológica: <span class='dome-red'>NO DISPONIBLE</span>";
-      }
-
-    });
+	$interval(reloadImages, 30000); //30 sec
+	function reloadImages() {
+		$scope.externalCamera = 'http://ofs.fi.upm.es/api/externalCamera' + '?timestamp=' + moment();
+		$scope.internalCamera = 'http://ofs.fi.upm.es/api/internalCamera/1' + '?timestamp=' + moment();
+	}
 
     $scope.takePhoto = function(){
       console.log('photo');
