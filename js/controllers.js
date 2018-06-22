@@ -162,36 +162,19 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
     });
 
-    $scope.cameraFile = 'img/cameraObs.jpg';
-    // Seleccion de camara
-    $scope.SelectCamera = function() {
-      var date = new Date();
-      var time = date.getTime();
-      // var intervalOut ='';
-      // var intervalIn = '';
-        if ($scope.camera === 'interior') {
-            // $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/FM7MFYoylVs');
-            $scope.cameraFile = '/api/internalCamera/1';
-            // if (contIn == 0){
-            //   console.log(intervalOut);
-            //   clearInterval(intervalOut);
-            //   intervalIn = setInterval( 'reloadImgIn()', 2000 );//2 sec
-            //   contIn++;
-            // } else {
-            // $scope.cameraFile = '/moobotix.jpg' + '?timestamp=' + time;
-            // }
-        } else if ($scope.camera === 'exterior') {
-          $scope.cameraFile = '/api/externalCamera';
-            // if (contOut == 0){
-            //   console.log(intervalIn);
-            //   clearInterval(intervalIn);
-            //   intervalOut = setInterval( 'reloadImgOut()', 2000 );//2 sec
-            //   contOut++;
-            // } else {
-            // $scope.cameraFile = '/philips.jpg' + '?timestamp=' + time;
-            // }
-        }
-    }
+	$scope.cameraFile = 'img/cameraObs.jpg';
+	// Seleccion de camara
+	$scope.SelectCamera = function () {
+		var date = new Date();
+		var time = date.getTime();
+		if ($scope.camera === 'interior1') {
+			$scope.cameraFile = '/api/internalCamera/1';
+		} else if ($scope.camera === 'interior2') {
+			$scope.cameraFile = '/api/internalCamera/2';
+		} else if ($scope.camera === 'exterior') {
+			$scope.cameraFile = '/api/externalCamera';
+		}
+	};
 
     //Modal imagen
     if ($(window).width() > 767) {
