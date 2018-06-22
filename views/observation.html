@@ -1,4 +1,9 @@
 <div class="row">
+    <div style="position: absolute; top: 0; right: 0; margin-top: 75px; padding: 15px">
+        <p>
+            Tiempo restante de reserva: {{timeLeft}}
+        </p>
+    </div>
 
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center padding0">
@@ -125,11 +130,11 @@
                 </button>
             </div>
             <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
-                <button ng-show="user.admin" type="button" class="btn btn-green" ng-click="openDome()"
+                <button type="button" class="btn btn-green" ng-click="openDome()"
                         style="width: 150px;margin-top:20px"><strong>Abrir cúpula</strong></button>
             </div>
             <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
-                <button ng-show="user.admin" type="button" class="btn btn-red" ng-click="closeDome()"
+                <button type="button" class="btn btn-red" ng-click="closeDome()"
                         style="width: 150px;margin-top:15px;"><strong>Cerrar cúpula</strong></button>
             </div>
 
@@ -150,7 +155,8 @@
                     </div>
                     <div class="">
                         <label class="control-label" style="display:block">- Gamma</label>
-                        <input type="range" style="display:inline-block;width:70%;" value="50" min="0" max="100" step="1"
+                        <input type="range" style="display:inline-block;width:70%;" value="50" min="0" max="100"
+                               step="1"
                                ng-model="param.gamma">
                         <input type="text" style="display:inline-block;width:25%;" name="" value=""
                                ng-model="param.gamma">
@@ -191,11 +197,11 @@
                     </button>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
-                    <button ng-show="user.admin" type="button" class="btn btn-green" ng-click="openDome()"
+                    <button type="button" class="btn btn-green" ng-click="openDome()"
                             style="width: 150px;margin-top:20px"><strong>Abrir cúpula</strong></button>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
-                    <button ng-show="user.admin" type="button" class="btn btn-red" ng-click="closeDome()"
+                    <button type="button" class="btn btn-red" ng-click="closeDome()"
                             style="width: 150px;margin-top:15px;"><strong>Cerrar cúpula</strong></button>
                 </div>
             </div>

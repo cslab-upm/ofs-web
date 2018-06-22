@@ -573,6 +573,28 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 }]);
 
 app.controller('observacionController', ['$scope', '$sce', '$http', '$interval', 'httpFactory', 'userFactory', function ($scope, $sce, $http, $interval, httpFactory, userFactory) {
+	// Tiempo restante reserva
+	$scope.timeLeft = '';
+	let stopInterval;
+	let endReservation;
+
+	httpFactory.auth('http://localhost:8080/reservations/actual', 'GET')
+		.then(function success(response) {
+			if (response.status === 200) {
+				endReservation = moment(response.data.endDate);
+				stopInterval = $interval(updateTime, 1000)
+			}
+		});
+
+	function updateTime() {
+		const duration = moment.duration(endReservation.diff(moment()));
+		$scope.timeLeft = duration.hours() + ':' + duration.minutes() + ':' + duration.seconds();
+		if (duration < 0) {
+			$interval.cancel(stopInterval);
+			$scope.timeLeft = 'FINALIZADA';
+		}
+	}
+
 	// Estado estacion meteorologica
 	$scope.state = {};
 	$scope.state.weatherStation = false;
@@ -610,43 +632,52 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
 		$scope.internalCamera = 'http://ofs.fi.upm.es/api/internalCamera/1' + '?timestamp=' + moment();
 	}
 
-    $scope.takePhoto = function(){
-      console.log('photo');
-    }
+	// Obtener foto
+	$scope.takePhoto = function () {
+		httpFactory.auth('http://localhost:8080/camera/takePhoto', 'POST').then(function successCallback(response) {
+			if (response.status === 200) {
+				console.log('Id de la foto: ' + response.data.id);
+				// TODO: Obtener foto
+			}
+		});
+	};
 
-    $scope.moveUP = function(){
-      console.log('up');
-    }
+	// Movimiento montura
+	$scope.moveUP = function () {
+		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Up'});
+	};
 
-    $scope.moveDown = function(){
-      console.log('down');
-    }
+	$scope.moveDown = function () {
+		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Down'});
+	};
 
-    $scope.moveRight = function(){
-      console.log('right');
-    }
+	$scope.moveRight = function () {
+		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Right'});
+	};
 
-    $scope.moveLeft = function(){
-      console.log('left');
-    }
+	$scope.moveLeft = function () {
+		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Left'});
+	};
 
-    // Parametros de la camara
-    $scope.param = {};
-    $scope.param.brightness = 50;
-    $scope.param.gamma = 50;
-    $scope.param.exposure = 1;
+	// Parametros de la camara
+	$scope.param = {};
+	$scope.param.brightness = 50;
+	$scope.param.gamma = 50;
+	$scope.param.exposure = 1;
 
-    $scope.confPhoto = function(){
-    	httpFactory.auth('http://localhost:8080/camera/status','PUT', $scope.param);
-    };
+	$scope.confPhoto = function () {
+		httpFactory.auth('http://localhost:8080/camera/status', 'PUT', $scope.param);
+	};
 
-    $scope.openDome = function(){
-      console.log('openDome')
-    }
+	// Abrir cupula
+	$scope.openDome = function () {
+		httpFactory.auth('http://localhost:8080/dome/open', 'PUT');
+	};
 
-    $scope.closeDome = function(){
-      console.log('closeDome');
-    }
+	// Cerrar cupula
+	$scope.closeDome = function () {
+		httpFactory.auth('http://localhost:8080/dome/close', 'PUT');
+	};
 
 }]);
 
