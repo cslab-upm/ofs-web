@@ -630,40 +630,15 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
       console.log('left');
     }
 
+    // Parametros de la camara
     $scope.param = {};
-    $scope.param.brillo = 50;
-    $scope.param.calidad = 5;
-    $scope.param.ganancia = 8;
-    $scope.param.exposicion = 5;
-    $scope.param.errorEnvio = false;
+    $scope.param.brightness = 50;
+    $scope.param.gamma = 50;
+    $scope.param.exposure = 1;
 
     $scope.confPhoto = function(){
-      // $('#confPhoto-gif').show();
-      $('#photo').css('color', '#cc185a');
-    }
-    $scope.confPhoto2 = function(){
-      // $('#confPhoto-gif2').show();
-      $('#photo').css('color', '#cc185a');
-    }
-
-    // function activar(){
-    //     intervalo = setInterval(restar,1000);
-    // }
-    // function deactivar(){
-    //     clearInterval(intervalo);
-    // }
-
-    $scope.user = {};
-    $scope.user.admin = false;//para abrir o cerrar cupula necesita permitos de administrador
-    $scope.user.authenticated = false;
-
-    // console.log(userFactory.getRol());
-    if(userFactory.getRol() == 'Authenticated'){
-      $scope.user.auth = true;
-    }else if(userFactory.getRol() == 'Administrator'){
-      // console.log('admin OK');
-      $scope.user.admin = true;
-    }
+    	httpFactory.auth('http://localhost:8080/camera/status','PUT', $scope.param);
+    };
 
     $scope.openDome = function(){
       console.log('openDome')
@@ -672,125 +647,6 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
     $scope.closeDome = function(){
       console.log('closeDome');
     }
-
-    $scope.experiment = {};
-    $scope.experiment.montura = false;
-    $scope.experiment.solar = true;
-    $scope.experiment.solarSeg = false;
-    $scope.experiment.seg = false;
-    $scope.experiment.lunar = false;
-    $scope.experiment.lunarSeg = false;
-
-    $scope.followSun = function(){
-      console.log('siguiendo al sol');
-      $scope.experiment.solar = false;
-
-      var token = userFactory.getToken();
-
-      //Seguimiento de la cupula
-      $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token='+token,
-        method: 'POST',
-        headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).then(function successCallback(response) {
-        // console.log(response);
-        if (response.status == 201 || response.status == 204) {
-
-          // Seguimiento de la montura
-          $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token='+token,
-            method: 'POST',
-            data : { "monitoredObject": "SUN", "monitoringInterval": 23},
-            headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-          }).then(function successCallback(response) {
-            // console.log(response);
-            if (response.status == 201 || response.status == 204) {
-              $scope.experiment.solarSeg = true;
-              $scope.experiment.seg = true;
-              $scope.experiment.montura = true;
-            }
-          }, function errorCallback(response) {
-            $scope.experiment.solar = true;
-            // console.log(response);
-          });
-          // Fin seguimiento de la montura
-        }
-        // return response;
-      }, function errorCallback(response) {
-        $scope.experiment.solar = true;
-      });
-      //Fin seguimiento de la cupula
-
-    }
-
-    $scope.followMoon = function(){
-      console.log('siguiendo a la Luna');
-      $scope.experiment.lunar = false;
-      var token = userFactory.getToken();
-      //Seguimiento de la cupula
-      $http({
-        url: 'http://localhost:8080/things/dome/activateTracking?access_token='+token,
-        method: 'POST',
-        headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).then(function successCallback(response) {
-        console.log(response);
-        if (response.status == 201 || response.status == 204) {
-
-          // Seguimiento de la montura
-          $http({
-            url: 'http://localhost:8080/things/mount/enableObjectMonitoring?access_token='+token,
-            method: 'POST',
-            data : { "monitoredObject": "MOON", "monitoringInterval": 23},
-            headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-          }).then(function successCallback(response) {
-            // console.log(response);
-            if (response.status == 201 || response.status == 204) {
-              $scope.experiment.lunarSeg = true;
-              $scope.experiment.seg = true;
-              $scope.experiment.montura = true;
-            }
-          }, function errorCallback(response) {
-            $scope.experiment.lunar = true;
-            // console.log(response);
-          });
-          // Fin seguimiento de la montura
-        }
-        // return response;
-      }, function errorCallback(response) {
-        $scope.experiment.lunar = true;
-      });
-      //Fin seguimiento de la cupula
-    }
-
-    $scope.stopTracking = function(){
-      if($scope.experiment.solarSeg == true){
-          var token = userFactory.getToken();
-        $http({
-          url: 'http://localhost:8080/things/mount/disableMonitoring?access_token='+token,
-          method: 'POST',
-          headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function successCallback(response) {
-          // console.log(response);
-          if (response.status == 201 || response.status == 204) {
-            $scope.experiment.solar = true;
-            $scope.experiment.solarSeg = false;
-            $scope.experiment.lunarSeg = false;
-            $scope.experiment.seg = false;
-            $scope.experiment.montura = false;
-          }
-        }, function errorCallback(response) {
-          // console.log(response);
-        });
-      }else if ($scope.experiment.lunarSeg == true) {
-        $scope.experiment.lunar = true;
-        $scope.experiment.lunarSeg = false;
-        $scope.experiment.solarSeg = false;
-        $scope.experiment.seg = false;
-        $scope.experiment.montura = false;
-      }
-
-    }
-
 
 }]);
 
