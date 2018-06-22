@@ -79,13 +79,6 @@ $rootScope.isLogged = userFactory.getIsLogged();
 
 
 app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', function($scope, $sce, $http, httpFactory) {
-
-  // <!-- Google Analytics -->
-  ga('set', 'page', '/inicio');
-  ga('send', 'pageview');
-  // <!-- End Google Analytics -->
-
-    // $scope.cameraFile = $sce.trustAsResourceUrl('https://www.youtube.com/embed/u');
     //Estado observatorio
     $scope.state = {};
     $scope.state.weatherStation=true;//OK
@@ -95,11 +88,9 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
     $scope.state.availabilityCameras = "Estado de las cámaras: <span class='dome-green'>DISPONIBLE</span>"
 
     // Estado estacion meteorologica
-    var paramsWeatherStation = '';
-    var urlWeatherStation = 'api/weatherstation/status';
-    httpFactory.async(urlWeatherStation,'GET', paramsWeatherStation).then(function successCallback(response){
-      if (response.status == 200) {
-        var status = response.data;
+    httpFactory.async('api/weatherstation/status','GET').then(function successCallback(response){
+      if (response.status === 200) {
+        const status = response.data;
         if(status.active){
            $scope.state.weatherStation = true;
            $scope.state.temperature = status.temperature;
@@ -124,43 +115,38 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
     });
 
-    // Estado montura
-    var paramsMount = '';
-    var urlMount = 'http://localhost:8080/things/mount/state/';
-    httpFactory.async(urlMount,'GET', paramsMount).then(function successCallback(response){
-      if (response.status == 200){
-        if(response.data.operatingStatus == 'OK'){
-           $scope.state.availabilityMount = "Estado de la montura: <span class='dome-green'>DISPONIBLE</span>";
-        }
-        else{
-          $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>";
-        }
-      }
-      else{
-        $scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>";
-      }
+	// Estado montura
+	httpFactory.async('api/mount/status', 'GET').then(function successCallback(response) {
+		if (response.status === 200) {
+			if (response.data.active) {
+				$scope.state.availabilityMount = "Estado de la montura: <span class='dome-green'>DISPONIBLE</span>";
+			}
+			else {
+				$scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>";
+			}
+		}
+		else {
+			$scope.state.availabilityMount = "Estado de la montura: <span class='dome-red'>NO DISPONIBLE</span>";
+		}
+	});
 
-    });
-    // Estado Cupula
-    var paramsDome = '';
-    var urlDome = 'http://localhost:8080/things/dome/state/';
-    httpFactory.async(urlDome,'GET', paramsDome).then(function successCallback(response){
-      if (response.status == 200) {
-        if(response.data.operatingStatus == 'OK' && response.data.openingElements[0].status == 'OPEN'){
-           $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, ABIERTA</span>";
-        }
-        else if(response.data.operatingStatus == 'OK' && response.data.openingElements[0].status == 'CLOSED'){
-           $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, CERRADA</span>";
-        }
-        else{
-        $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
-        }
-      }
-      else {
-        $scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
-      }
-
-    });
+	// Estado Cupula
+	httpFactory.async('api/dome/status', 'GET').then(function successCallback(response) {
+		if (response.status === 200) {
+			if (response.data.status && response.data.shutter === 'open') {
+				$scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, ABIERTA</span>";
+			}
+			else if (response.data.status && response.data.shutter === 'closed') {
+				$scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-green'>DISPONIBLE, CERRADA</span>";
+			}
+			else {
+				$scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
+			}
+		}
+		else {
+			$scope.state.availabilityDome = "Estado de la cúpula: <span class='dome-red'>NO DISPONIBLE</span>";
+		}
+	});
 
 	$scope.cameraFile = 'img/cameraObs.jpg';
 	// Seleccion de camara
@@ -206,7 +192,6 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
         $('.thumbnail').removeAttr('data-toggle');
     }
 
-    // http://api.openweathermap.org/data/2.5/weather?q=Madrid,sp&APPID=41a51db0a52c9d6db1462321b6a6a297
 }]);
 
 
