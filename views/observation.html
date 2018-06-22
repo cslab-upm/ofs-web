@@ -130,6 +130,16 @@
                 </button>
             </div>
             <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
+                <h4 class="text-center" style="margin-bottom:30px;">Coordenadas telescopio</h4>
+                <p>Ascensión recta</p>
+                <input type="text" ng-model="coordinates.rightAscension" placeholder="HH:MM">
+                <p>Declinación</p>
+                <input type="text" ng-model="coordinates.declination" placeholder="DD:MM">
+                <button type="button" class="btn btn-primary btn-lg" style="margin: 20px 0" ng-click="sendCoordinates()">
+                    Enviar
+                </button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
                 <button type="button" class="btn btn-green" ng-click="openDome()"
                         style="width: 150px;margin-top:20px"><strong>Abrir cúpula</strong></button>
             </div>
@@ -194,6 +204,16 @@
                                                                                               alt=""></p>
                     <button ng-show="experiment.seg" class="btn btn-primary" ng-click="stopTracking()" type="button"
                             name="button">Detener
+                    </button>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
+                    <h4 class="text-center" style="margin-bottom:30px;">Coordenadas telescopio</h4>
+                    <p>Ascensión recta</p>
+                    <input type="text" ng-model="coordinates.rightAscension" placeholder="HH:MM">
+                    <p>Declinación</p>
+                    <input type="text" ng-model="coordinates.declination" placeholder="DD:MM">
+                    <button type="button" class="btn btn-primary btn-lg" style="margin: 20px 0" ng-click="sendCoordinates()">
+                        Enviar
                     </button>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">

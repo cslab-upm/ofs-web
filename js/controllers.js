@@ -643,6 +643,14 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
 	};
 
 	// Movimiento montura
+	$scope.coordinates = {};
+	$scope.coordinates.rightAscension = '';
+	$scope.coordinates.declination = '';
+
+	$scope.sendCoordinates = function () {
+		httpFactory.auth('http://localhost:8080/mount/move', 'PUT', $scope.coordinates);
+	};
+
 	$scope.moveUP = function () {
 		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Up'});
 	};
