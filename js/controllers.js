@@ -197,27 +197,15 @@ app.controller('inicioController', ['$scope', '$sce', '$http','httpFactory', fun
 
 app.controller('equipamientoController', ['$scope', '$sce', '$http', function($scope, $sce, $http) {
 
-    // <!-- Google Analytics -->
-    ga('set', 'page', '/equipamiento');
-    ga('send', 'pageview');
-    // <!-- End Google Analytics -->
 
 }]);
 app.controller('acercaController', ['$scope', '$sce', '$http', function($scope, $sce, $http) {
 
-    // <!-- Google Analytics -->
-    ga('set', 'page', '/acerca');
-    ga('send', 'pageview');
-    // <!-- End Google Analytics -->
 
 }]);
 
 app.controller('contactoController', ['$scope', '$sce', '$http', function($scope, $sce, $http) {
 
-    // <!-- Google Analytics -->
-    ga('set', 'page', '/contacto');
-    ga('send', 'pageview');
-    // <!-- End Google Analytics -->
 
 }]);
 
@@ -259,7 +247,7 @@ app.controller('registrarController', ['$rootScope', '$scope', '$sce', '$http', 
 
 
 			$http({
-				url: 'http://localhost:8080/register',
+				url: 'api/register',
 				method: 'POST',
 				data: {
 					username: $scope.user.nameRegister,
@@ -285,12 +273,6 @@ app.controller('registrarController', ['$rootScope', '$scope', '$sce', '$http', 
 }]);
 
 app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http', '$location', 'authFactory','userFactory','Base64','httpFactory', function($rootScope, $scope, $sce, $http, $location, authFactory,userFactory, Base64, httpFactory) {
-
-    // <!-- Google Analytics -->
-    ga('set', 'page', '/iniciarsesion');
-    ga('send', 'pageview');
-    // <!-- End Google Analytics -->
-
   $('.nav').find('.active').removeClass('active');
   $('#form-register').hide();
   $('#form-recoveryPassword').hide();
@@ -338,7 +320,7 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http', '$lo
   // $http.defaults.headers.common['Access-Control-Allow-Headers'] = "Content-Type, Authorization, Content-Length, X-Requested-With";
 
   $http({
-    url: 'http://localhost:8080/login',
+    url: 'api/login',
     method: 'POST',
 	data: {username: $scope.user.nameLogin, password: $scope.user.passwordLogin}
   }).then(function successCallback(response) {
@@ -352,7 +334,7 @@ app.controller('loginController', ['$rootScope', '$scope', '$sce', '$http', '$lo
 		  userFactory.setIsLogged(true);
 
 		  // una vez hecho login recuperamos los datos del usuario
-		  httpFactory.auth('http://localhost:8080/users/logged', 'GET')
+		  httpFactory.auth('api/users/logged', 'GET')
 			  .then(function success(response) {
 				  userFactory.setEmail(response.data.email);
 				  userFactory.setName(response.data.username);
@@ -432,7 +414,7 @@ app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http'
 
 		// Pedir reservas del día seleccionado y el siguiente
 		$scope.loading = true;
-		const url = 'http://localhost:8080/reservations?start=' + $scope.daySelected + '&end=' + endDateStr;
+		const url = 'api/reservations?start=' + $scope.daySelected + '&end=' + endDateStr;
 		httpFactory.auth(url, 'GET')
 			.then(function success(response) {
 				if (response.status === 200) {
@@ -491,7 +473,7 @@ app.controller('experimentoController', ['$rootScope', '$scope', '$sce', '$http'
 			endDate: moment($scope.endTime).format('YYYY-MM-DDTHH:mm')
 		};
 
-		httpFactory.auth('http://localhost:8080/reservations', 'POST', body)
+		httpFactory.auth('api/reservations', 'POST', body)
 			.then(function success(response) {
 				if (response.status === 201) {
 					$scope.reservationOk = true;
@@ -523,7 +505,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 	};
 
 	// Obtener datos usuario
-	httpFactory.auth('http://localhost:8080/users/logged', 'GET')
+	httpFactory.auth('api/users/logged', 'GET')
 		.then(function success(response) {
 			userFactory.setEmail(response.data.email);
 			userFactory.setName(response.data.username);
@@ -532,7 +514,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 			$scope.user.email = userFactory.getEmail();
 		});
 
-	httpFactory.auth('http://localhost:8080/reservations/own', 'GET')
+	httpFactory.auth('api/reservations/own', 'GET')
 		.then(function success(response) {
 			if (response.status === 200) {
 				$scope.reservations = response.data;
@@ -546,7 +528,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 
 	// Cancelar reserva
 	$scope.removeReservation = function () {
-		const url = 'http://localhost:8080/reservations/' + $scope.selectedReservationId + '/cancel';
+		const url = 'api/reservations/' + $scope.selectedReservationId + '/cancel';
 		httpFactory.auth(url, 'PUT')
 			.then(function success(response) {
 				if (response.status === 200) {
@@ -558,7 +540,7 @@ app.controller('perfilController', ['$scope', '$sce', '$http', '$location', '$ro
 	// Ir a reserva si es la actual
 	$scope.goToObservation = function () {
 		$scope.reservationActualError = false;
-		httpFactory.auth('http://localhost:8080/reservations/actual', 'GET')
+		httpFactory.auth('api/reservations/actual', 'GET')
 			.then(function success(response) {
 				if (response.status === 200 && response.data.id === $scope.selectedReservationId) {
 					$location.path("/observacion");
@@ -578,7 +560,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
 	let stopInterval;
 	let endReservation;
 
-	httpFactory.auth('http://localhost:8080/reservations/actual', 'GET')
+	httpFactory.auth('api/reservations/actual', 'GET')
 		.then(function success(response) {
 			if (response.status === 200) {
 				endReservation = moment(response.data.endDate);
@@ -599,7 +581,7 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
 	$scope.state = {};
 	$scope.state.weatherStation = false;
 
-	httpFactory.async('http://localhost:8080/weatherstation/status', 'GET', '').then(function successCallback(response) {
+	httpFactory.async('api/weatherstation/status', 'GET', '').then(function successCallback(response) {
 		if (response.status === 200) {
 			var status = response.data;
 			if (status.active) {
@@ -623,18 +605,18 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
 	});
 
 	// Recarga de imágenes de camaras
-	$scope.externalCamera = 'http://ofs.fi.upm.es/api/externalCamera';
-	$scope.internalCamera = 'http://ofs.fi.upm.es/api/internalCamera/1';
+	$scope.externalCamera = 'api/externalCamera';
+	$scope.internalCamera = 'api/internalCamera/1';
 
 	$interval(reloadImages, 30000); //30 sec
 	function reloadImages() {
-		$scope.externalCamera = 'http://ofs.fi.upm.es/api/externalCamera' + '?timestamp=' + moment();
-		$scope.internalCamera = 'http://ofs.fi.upm.es/api/internalCamera/1' + '?timestamp=' + moment();
+		$scope.externalCamera = 'api/externalCamera' + '?timestamp=' + moment();
+		$scope.internalCamera = 'api/internalCamera/1' + '?timestamp=' + moment();
 	}
 
 	// Obtener foto
 	$scope.takePhoto = function () {
-		httpFactory.auth('http://localhost:8080/camera/takePhoto', 'POST').then(function successCallback(response) {
+		httpFactory.auth('api/camera/takePhoto', 'POST').then(function successCallback(response) {
 			if (response.status === 200) {
 				console.log('Id de la foto: ' + response.data.id);
 				// TODO: Obtener foto
@@ -648,23 +630,23 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
 	$scope.coordinates.declination = '';
 
 	$scope.sendCoordinates = function () {
-		httpFactory.auth('http://localhost:8080/mount/move', 'PUT', $scope.coordinates);
+		httpFactory.auth('api/mount/move', 'PUT', $scope.coordinates);
 	};
 
 	$scope.moveUP = function () {
-		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Up'});
+		httpFactory.auth('api/mount/step', 'POST', {direction: 'Up'});
 	};
 
 	$scope.moveDown = function () {
-		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Down'});
+		httpFactory.auth('api/mount/step', 'POST', {direction: 'Down'});
 	};
 
 	$scope.moveRight = function () {
-		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Right'});
+		httpFactory.auth('api/mount/step', 'POST', {direction: 'Right'});
 	};
 
 	$scope.moveLeft = function () {
-		httpFactory.auth('http://localhost:8080/mount/step', 'POST', {direction: 'Left'});
+		httpFactory.auth('api/mount/step', 'POST', {direction: 'Left'});
 	};
 
 	// Parametros de la camara
@@ -674,27 +656,22 @@ app.controller('observacionController', ['$scope', '$sce', '$http', '$interval',
 	$scope.param.exposure = 1;
 
 	$scope.confPhoto = function () {
-		httpFactory.auth('http://localhost:8080/camera/status', 'PUT', $scope.param);
+		httpFactory.auth('api/camera/status', 'PUT', $scope.param);
 	};
 
 	// Abrir cupula
 	$scope.openDome = function () {
-		httpFactory.auth('http://localhost:8080/dome/open', 'PUT');
+		httpFactory.auth('api/dome/open', 'PUT');
 	};
 
 	// Cerrar cupula
 	$scope.closeDome = function () {
-		httpFactory.auth('http://localhost:8080/dome/close', 'PUT');
+		httpFactory.auth('api/dome/close', 'PUT');
 	};
 
 }]);
 
 app.controller('recoverypasswordController', ['$rootScope','$scope', '$sce', '$http', 'authFactory', 'userFactory', function($rootScope, $scope, $sce, $http, authFactory, userFactory) {
-    // <!-- Google Analytics -->
-    ga('set', 'page', '/recuperarcontrasena');
-    ga('send', 'pageview');
-    // <!-- End Google Analytics -->
-
     $('#form-login').hide();
     $('#form-register').hide();
     $('#h2_log').hide();
