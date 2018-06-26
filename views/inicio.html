@@ -31,8 +31,8 @@
                         <select class="form-control" name="" ng-model="camera">
               <option value="" selected disabled hidden></option>
               <option value="exterior">Cámara exterior</option>
-              <option value="interior">Cámara interior</option>
-              <!-- <option value="ccd">Cámara ccd</option> -->
+              <option value="interior1">Cámara interior 1</option>
+              <option value="interior2">Cámara interior 2</option>
             </select>
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-3">
@@ -73,6 +73,10 @@
                     <td><strong>Dirección del viento</strong></td>
                     <td>{{state.windDirection}}</td>
                 </tr>
+                <tr>
+                    <td><strong>Última actualización</strong></td>
+                    <td>{{state.timestamp | date: "dd/MM/yyyy - HH:mm:ss"}}</td>
+                </tr>
             </tbody>
         </table>
 
@@ -93,7 +97,7 @@
     <div class="modal-dialog">
         <button type="button" class="close hidden" data-dismiss="modal" aria-hidden="true">×</button>
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body-img">
                 <img src="" alt="" />
             </div>
         </div>

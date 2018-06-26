@@ -13,7 +13,7 @@
                 <a href="./iniciarsesion"><button id="form-btn-log" type="button" name="button" class="btn">Iniciar sesión</button></a>
             </div>
         </div> -->
-        <p class="alert alert-success" id="confirmEmail" style="padding:15px;margin-top:10%;display:none">Se ha enviado un email a <span style="font-weight:bold;">{{user.emailRegister}}</span> para confirmar el registro.</p>
+        <p class="alert alert-success" id="confirmEmail" style="padding:15px;margin-top:10%;display:none">Registrado correctamente, cuando un administrador active su cuenta podrá acceder al control del observatorio.</p>
         <form id="form-register" ng-submit="toRegister()" name="form-register" role="form" style="margin:40px 0px;">
             <div ng-show="register.errorEnvio" class="alert alert-danger">Error en el envío de datos</div>
             <div class="form-group">
@@ -29,12 +29,12 @@
             <div class="form-group">
                 <label class="control-label">Contraseña</label>
                 <label ng-show="register.errorPassword" class="control-label" style="color:#ff0000;">¡Las contraseñas no coinciden!</label>
-                <input type="password" name="password" class="form-control" placeholder="Contraseña entre 8 y 20 caracteres" ng-model="user.passwordRegister1" minlength="8" maxlength="20" required>
+                <input type="password" name="password" class="form-control" placeholder="Contraseña" ng-model="user.passwordRegister1" required>
             </div>
             <div class="form-group">
                 <label class="control-label">Repetir contraseña</label>
                 <label ng-show="register.errorPassword" class="control-label" style="color:#ff0000;">¡Las contraseñas no coinciden!</label>
-                <input type="password" name="repeat_password" class="form-control" placeholder="Repetir contraseña" ng-model="user.passwordRegister2" minlength="8" maxlength="20" required>
+                <input type="password" name="repeat_password" class="form-control" placeholder="Repetir contraseña" ng-model="user.passwordRegister2"required>
             </div>
             <div class="form-group">
                 <button id="form-submit-reg" class="btn btn-danger btn-lg" name="submit" type="submit">Registrarse</button>
@@ -47,12 +47,12 @@
             <div class="form-group">
                 <label class="control-label">Nombre de usuario</label>
                 <label ng-show="login.errorName" class="control-label" style="color:#ff0000;">¡No existe ese nombre de usuario!</label>
-                <input type="text" name="name" class="form-control" placeholder="Nombre" minlength="5" maxlength="30" ng-model="user.nameLogin" required>
+                <input type="text" name="name" class="form-control" placeholder="Nombre" ng-model="user.nameLogin" required>
             </div>
             <div class="form-group">
                 <label class="control-label">Contraseña</label>
                 <label ng-show="login.errorPassword" class="control-label" style="color:#ff0000;">¡Contraseña incorrecta!</label>
-                <input type="password" name="password" class="form-control" placeholder="Contraseña" minlength="8" maxlength="20" ng-model="user.passwordLogin" required>
+                <input type="password" name="password" class="form-control" placeholder="Contraseña"  ng-model="user.passwordLogin" required>
             </div>
 
                 <p style="color:#0080ff;cursor:pointer;text-decoration: underline;" ng-click="goRecoveryPassword()">¿Has olvidado la contraseña?</p>

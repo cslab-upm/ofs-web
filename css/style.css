@@ -275,7 +275,7 @@ a.thumbnail{
   border: none;
 }
 
-.modal-body{
+.modal-body-img{
   padding: 5px;
 }
 
@@ -488,4 +488,7 @@ h1.title{
 }
 .table-hover>tbody>tr:hover {
     background-color: #4d90fe;
+}
+.table-disabled{
+    pointer-events:none;
 }

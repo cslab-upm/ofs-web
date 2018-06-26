@@ -1,272 +1,351 @@
 <div class="row">
+    <div style="position: absolute; top: 0; right: 0; margin-top: 75px; padding: 15px">
+        <p>
+            Tiempo restante de reserva: {{timeLeft}}
+        </p>
+    </div>
 
-  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center padding0">
-      <h4 class="hidden-xs">Vista exteriror</h4>
-      <img id="exterior" src="/moobotix.jpg" alt="" class="img-responsive center-block padding0" style="max-width:70%">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center padding0">
+            <h4 class="hidden-xs">Vista exteriror</h4>
+            <img id="exterior" ng-src="{{externalCamera}}" alt="" class="img-responsive center-block padding0"
+                 style="max-width:70%">
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center padding0">
+            <h4 class="hidden-xs">Vista interior</h4>
+            <img id="interior" ng-src="{{internalCamera}}" alt="" class="img-responsive center-block padding0"
+                 style="max-width:70%">
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center padding0">
+            <h4 class="hidden-xs">Cámara telescopio</h4>
+            <img id="telescopio" src="img/i5.jpg" alt="" class="img-responsive center-block padding0"
+                 style="max-width:52%">
+        </div>
+        <!-- <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="margin-top: 45px">
+          <div class="col-md-12 text-center hidden-sm hidden-md hidden-lg">
+            <button type="button" class="btn btn-green" ng-click="SelectCamera()" style="width: 150px;margin: 15px;"><strong>Abrir cúpula</strong></button>
+          </div>
+          <div class="col-md-12 text-center hidden-sm hidden-md hidden-lg">
+            <button type="button" class="btn btn-red" ng-click="SelectCamera()" style="width: 150px;margin: 15px;"><strong>Cerrar cúpula</strong></button>
+          </div>
+        </div> -->
     </div>
-    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center padding0">
-      <h4 class="hidden-xs">Vista interior</h4>
-      <img id="interior" src="/philips.jpg" alt="" class="img-responsive center-block padding0" style="max-width:70%">
-    </div>
-    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center padding0">
-      <h4 class="hidden-xs">Cámara telescopio</h4>
-      <img id="interior" src="img/i5.jpg" alt="" class="img-responsive center-block padding0" style="max-width:52%">
-    </div>
-    <!-- <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="margin-top: 45px">
-      <div class="col-md-12 text-center hidden-sm hidden-md hidden-lg">
-        <button type="button" class="btn btn-green" ng-click="SelectCamera()" style="width: 150px;margin: 15px;"><strong>Abrir cúpula</strong></button>
-      </div>
-      <div class="col-md-12 text-center hidden-sm hidden-md hidden-lg">
-        <button type="button" class="btn btn-red" ng-click="SelectCamera()" style="width: 150px;margin: 15px;"><strong>Cerrar cúpula</strong></button>
-      </div>
-    </div> -->
-  </div>
 </div>
-
 
 
 <div class="row" style="margin-top:30px;">
-  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-    <div class="col-xs-5 col-md-3 col-lg-3 hidden-sm hidden-xs">
-      <h4 style="padding-bottom:20px;">Parámetros cámara</h4>
-      <form class="form" id="form-confPhoto" ng-submit="confPhoto()" name="form-confPhoto" role="form" style="">
-        <div ng-show="param.errorEnvio" class="alert alert-danger">Error en el envío parametros</div>
-        <div class="">
-          <label class=" control-label" style="display:block">- Brillo</label>
-          <input class="" style="display:inline-block;width:70%;" type="range"  value="50" min="0" max="100" step="10" ng-model="param.brillo">
-          <input class="" style="display:inline-block;width:25%;" type="text" name="" value="" ng-model="param.brillo">
-        </div>
-        <div class="">
-          <label class="control-label" style="display:block">- Calidad de imagen</label>
-          <input type="range" style="display:inline-block;width:70%;"  value="5" min="0" max="10" step="1" ng-model="param.calidad">
-          <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.calidad">
-        </div>
-        <div class="">
-          <label class="control-label" style="display:block">- Ganancia</label>
-          <input type="range" style="display:inline-block;width:70%;" value="7" min="0" max="15" step="1" ng-model="param.ganancia">
-          <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.ganancia">
-        </div>
-        <div class="">
-          <label class="control-label" style="display:block">- Tiempo de exposicion (segundos)</label>
-          <input type="range" style="display:inline-block;width:70%;" value="1" min="1" max="10" step="1" ng-model="param.exposicion">
-          <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.exposicion">
+        <div class="col-xs-5 col-md-3 col-lg-3 hidden-sm hidden-xs">
+            <h4 style="padding-bottom:20px;">Parámetros cámara</h4>
+            <form class="form" id="form-confPhoto" ng-submit="confPhoto()" name="form-confPhoto" role="form" style="">
+                <div ng-show="param.errorEnvio" class="alert alert-danger">Error en el envío parametros</div>
+                <div class="">
+                    <label class=" control-label" style="display:block">- Brillo</label>
+                    <input class="" style="display:inline-block;width:70%;" type="range" value="50" min="0" max="100"
+                           step="1" ng-model="param.brightness">
+                    <input class="" style="display:inline-block;width:25%;" type="text" name="" value=""
+                           ng-model="param.brightness">
+                </div>
+                <div class="">
+                    <label class="control-label" style="display:block">- Gamma</label>
+                    <input type="range" style="display:inline-block;width:70%;" value="50" min="0" max="100" step="1"
+                           ng-model="param.gamma">
+                    <input type="text" style="display:inline-block;width:25%;" name="" value=""
+                           ng-model="param.gamma">
+                </div>
+                <div class="">
+                    <label class="control-label" style="display:block">- Tiempo de exposicion (segundos)</label>
+                    <input type="range" style="display:inline-block;width:70%;" value="1" min="1" max="120" step="1"
+                           ng-model="param.exposure">
+                    <input type="text" style="display:inline-block;width:25%;" name="" value=""
+                           ng-model="param.exposure">
+                </div>
+
+                <div class="" style="margin-top:20px;">
+                    <button id="form-submit-confPhoto" type="submit" class="btn btn-primary btn-lg">Aceptar</button>
+                </div>
+            </form>
         </div>
 
-        <div class="" style="margin-top:20px;">
-          <button id="form-submit-confPhoto" type="submit" class="btn btn-primary btn-lg">Aceptar</button>
-          <img id="confPhoto-gif" src="./img/loading.gif" alt="loading" style="display:none">
+
+        <div class="col-xs-12 col-sm-9 col-md-7 text-center" style="/*border: 2px solid #758ddc;*/display:table-cell;"
+             height=100%>
+            <h4 class="text-center" style="margin-bottom:30px;">Vista telescopio</h4>
+            <div class="" style="position:relative;">
+                <img src="img/i5.jpg" alt="" class="img-responsive center-block" style="width: 100%;position:inherit;">
+                <i class="fa fa-camera fa-3x" id="photo" ng-click="takePhoto()" aria-hidden="true"
+                   style="margin-top:30px;cursor:pointer;top: 10%;left: 47%;"></i>
+                <div class="visible-xs">
+                    <i class="fa fa-caret-up fa-3x" ng-click="moveUP()" aria-hidden="true"
+                       style="position:absolute;color:white;top: 0%;right: 0%;width:100%;cursor: pointer;"></i>
+                    <i class="fa fa-caret-right fa-3x" ng-click="moveRight()" aria-hidden="true"
+                       style="position:absolute;color:white;top: 33%;right: 5%;cursor: pointer;"></i>
+                    <i class="fa fa-caret-left fa-3x" ng-click="moveLeft()" aria-hidden="true"
+                       style="position:absolute;color:white;top: 33%;left: 5%;cursor: pointer;"></i>
+                    <i class="fa fa-caret-down fa-3x" ng-click="moveDown()" aria-hidden="true"
+                       style="position:absolute;color:white;bottom: 20%; right: 0%;width:100%;cursor: pointer;"></i>
+
+                </div>
+            </div>
         </div>
-      </form>
+
+        <div class="col-sm-3 col-md-2 center-block">
+            <h4 class="text-center hidden-xs" style="margin-bottom:30px;">Controles</h4>
+            <div class="col-sm-12 col-mg-12 col-lg-12 padding0 text-center hidden-xs">
+                <i class="fa fa-chevron-circle-up  fa-3x" ng-click="moveUP()" aria-hidden="true"
+                   style="cursor: pointer;"></i>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6  padding0 text-left hidden-xs">
+                <span class="text-left"><i class="fa fa-chevron-circle-left fa-3x" ng-click="moveLeft()"
+                                           aria-hidden="true" style="cursor: pointer;"></i></span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6  padding0 text-right hidden-xs">
+                <span><i class="fa fa-chevron-circle-right  fa-3x text-right" ng-click="moveRight()" aria-hidden="true"
+                         style="cursor: pointer;"></i></span>
+            </div>
+            <div class="col-sm-12 col-mg-12 col-lg-12 padding0 text-center hidden-xs">
+                <i class="fa fa-chevron-circle-down  fa-3x" ng-click="moveDown()" aria-hidden="true"
+                   style="cursor: pointer;"></i>
+
+            </div>
+            <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 padding0 text-center hidden-xs">
+                <p ng-show="experiment.solar" style="padding-top:20px;cursor:pointer" ng-click="followSun()">SEGUIR <i
+                        style="background-color:#ffa500;vertical-align: middle;border-radius:30px;cursor:pointer "
+                        class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
+                <p ng-show="experiment.solarSeg" style="padding-top:20px;">Siguiendo... <i
+                        style="background-color:#ffa500;vertical-align: middle;border-radius:30px;"
+                        class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
+                <p ng-show="experiment.lunar" style="padding-top:20px;cursor:pointer" ng-click="followMoon()">SEGUIR <i
+                        style="background-color:#758ddc;vertical-align: middle;border-radius:30px;cursor:pointer "
+                        class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
+                <p ng-show="experiment.lunarSeg" style="padding-top:20px;">Siguiendo... <i
+                        style="background-color:#758ddc;vertical-align: middle;border-radius:30px;"
+                        class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
+                <p ng-show="experiment.montura" style="padding-top:20px">Moviendo... <img src="./img/montura.png"
+                                                                                          style="" width="40px" alt="">
+                </p>
+                <button ng-show="experiment.seg" class="btn btn-primary" ng-click="stopTracking()" type="button"
+                        name="button">Detener
+                </button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
+                <h4 class="text-center" style="margin-bottom:30px;">Coordenadas telescopio</h4>
+                <p>Ascensión recta</p>
+                <input type="text" ng-model="coordinates.rightAscension" placeholder="HH:MM">
+                <p>Declinación</p>
+                <input type="text" ng-model="coordinates.declination" placeholder="DD:MM">
+                <button type="button" class="btn btn-primary btn-lg" style="margin: 20px 0" ng-click="sendCoordinates()">
+                    Enviar
+                </button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
+                <button type="button" class="btn btn-green" ng-click="openDome()"
+                        style="width: 150px;margin-top:20px"><strong>Abrir cúpula</strong></button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
+                <button type="button" class="btn btn-red" ng-click="closeDome()"
+                        style="width: 150px;margin-top:15px;"><strong>Cerrar cúpula</strong></button>
+            </div>
+
+        </div>
+
+        <div class="col-xs-12 visible-xs" style="padding-top:20px;">
+            <div class="col-xs-6">
+                <h4 class="" style="padding-bottom:20px;">Parámetros cámara</h4>
+                <form class="form" id="form-confPhoto" ng-submit="confPhoto()" name="form-confPhoto" role="form"
+                      style="">
+                    <div ng-show="param.errorEnvio" class="alert alert-danger">Error en el envío parametros</div>
+                    <div class="">
+                        <label class=" control-label" style="display:block">- Brillo</label>
+                        <input class="" style="display:inline-block;width:70%;" type="range" value="50" min="0"
+                               max="100" step="10" ng-model="param.brightness">
+                        <input class="" style="display:inline-block;width:25%;" type="text" name="" value=""
+                               ng-model="param.brightness">
+                    </div>
+                    <div class="">
+                        <label class="control-label" style="display:block">- Gamma</label>
+                        <input type="range" style="display:inline-block;width:70%;" value="50" min="0" max="100"
+                               step="1"
+                               ng-model="param.gamma">
+                        <input type="text" style="display:inline-block;width:25%;" name="" value=""
+                               ng-model="param.gamma">
+                    </div>
+                    <div class="">
+                        <label class="control-label" style="display:block">- Tiempo de exposicion (segundos)</label>
+                        <input type="range" style="display:inline-block;width:70%;" value="1" min="1" max="120" step="1"
+                               ng-model="param.exposure">
+                        <input type="text" style="display:inline-block;width:25%;" name="" value=""
+                               ng-model="param.exposure">
+                    </div>
+
+                    <div class="" style="margin-top:20px;">
+                        <button id="form-submit-confPhoto" type="submit" class="btn btn-primary btn-lg">Aceptar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-6">
+                <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 padding0 text-center">
+
+                    <p ng-show="experiment.solar" style="padding-top:20px;cursor:pointer" ng-click="followSun()">SEGUIR
+                        <i style="background-color:#ffa500;vertical-align: middle;border-radius:30px;cursor:pointer "
+                           class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
+                    <p ng-show="experiment.solarSeg" style="padding-top:20px;">Siguiendo... <i
+                            style="background-color:#ffa500;vertical-align: middle;border-radius:30px;"
+                            class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
+                    <p ng-show="experiment.lunar" style="padding-top:20px;cursor:pointer" ng-click="followMoon()">SEGUIR
+                        <i style="background-color:#758ddc;vertical-align: middle;border-radius:30px;cursor:pointer "
+                           class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
+                    <p ng-show="experiment.lunarSeg" style="padding-top:20px;">Siguiendo... <i
+                            style="background-color:#758ddc;vertical-align: middle;border-radius:30px;"
+                            class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
+                    <p ng-show="experiment.montura" style="padding-top:20px">Moviendo... <img src="./img/montura.png"
+                                                                                              style="" width="40px"
+                                                                                              alt=""></p>
+                    <button ng-show="experiment.seg" class="btn btn-primary" ng-click="stopTracking()" type="button"
+                            name="button">Detener
+                    </button>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
+                    <h4 class="text-center" style="margin-bottom:30px;">Coordenadas telescopio</h4>
+                    <p>Ascensión recta</p>
+                    <input type="text" ng-model="coordinates.rightAscension" placeholder="HH:MM">
+                    <p>Declinación</p>
+                    <input type="text" ng-model="coordinates.declination" placeholder="DD:MM">
+                    <button type="button" class="btn btn-primary btn-lg" style="margin: 20px 0" ng-click="sendCoordinates()">
+                        Enviar
+                    </button>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
+                    <button type="button" class="btn btn-green" ng-click="openDome()"
+                            style="width: 150px;margin-top:20px"><strong>Abrir cúpula</strong></button>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
+                    <button type="button" class="btn btn-red" ng-click="closeDome()"
+                            style="width: 150px;margin-top:15px;"><strong>Cerrar cúpula</strong></button>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-
-    <div class="col-xs-12 col-sm-9 col-md-7 text-center" style="/*border: 2px solid #758ddc;*/display:table-cell;" height=100%>
-      <h4 class="text-center" style="margin-bottom:30px;">Vista telescopio</h4>
-      <div class="" style="position:relative;">
-        <img src="img/i5.jpg" alt="" class="img-responsive center-block" style="width: 100%;position:inherit;">
-        <i class="fa fa-camera fa-3x" id="photo"  ng-click="takePhoto()"aria-hidden="true" style="margin-top:30px;cursor:pointer;top: 10%;left: 47%;"></i>
-        <div class="visible-xs">
-          <i class="fa fa-caret-up fa-3x" ng-click="moveUP()" aria-hidden="true" style="position:absolute;color:white;top: 0%;right: 0%;width:100%;cursor: pointer;"></i>
-          <i class="fa fa-caret-right fa-3x" ng-click="moveRight()" aria-hidden="true" style="position:absolute;color:white;top: 33%;right: 5%;cursor: pointer;"></i>
-          <i class="fa fa-caret-left fa-3x" ng-click="moveLeft()" aria-hidden="true" style="position:absolute;color:white;top: 33%;left: 5%;cursor: pointer;"></i>
-          <i class="fa fa-caret-down fa-3x" ng-click="moveDown()" aria-hidden="true" style="position:absolute;color:white;bottom: 20%; right: 0%;width:100%;cursor: pointer;"></i>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-3 col-md-2 center-block">
-      <h4 class="text-center hidden-xs" style="margin-bottom:30px;">Controles</h4>
-      <div class="col-sm-12 col-mg-12 col-lg-12 padding0 text-center hidden-xs">
-        <i class="fa fa-chevron-circle-up  fa-3x" ng-click="moveUP()" aria-hidden="true" style="cursor: pointer;"></i>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-6  padding0 text-left hidden-xs">
-        <span class="text-left"><i class="fa fa-chevron-circle-left fa-3x" ng-click="moveLeft()" aria-hidden="true" style="cursor: pointer;"></i></span>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-6  padding0 text-right hidden-xs">
-        <span><i class="fa fa-chevron-circle-right  fa-3x text-right" ng-click="moveRight()" aria-hidden="true" style="cursor: pointer;"></i></span>
-      </div>
-      <div class="col-sm-12 col-mg-12 col-lg-12 padding0 text-center hidden-xs">
-        <i class="fa fa-chevron-circle-down  fa-3x" ng-click="moveDown()" aria-hidden="true" style="cursor: pointer;"></i>
-
-      </div>
-      <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 padding0 text-center hidden-xs">
-        <p ng-show="experiment.solar" style="padding-top:20px;cursor:pointer" ng-click="followSun()">SEGUIR  <i style="background-color:#ffa500;vertical-align: middle;border-radius:30px;cursor:pointer " class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
-        <p ng-show="experiment.solarSeg" style="padding-top:20px;">Siguiendo...  <i style="background-color:#ffa500;vertical-align: middle;border-radius:30px;" class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
-        <p ng-show="experiment.lunar"style="padding-top:20px;cursor:pointer" ng-click="followMoon()">SEGUIR <i style="background-color:#758ddc;vertical-align: middle;border-radius:30px;cursor:pointer " class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
-        <p ng-show="experiment.lunarSeg"style="padding-top:20px;">Siguiendo... <i style="background-color:#758ddc;vertical-align: middle;border-radius:30px;" class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
-        <p ng-show="experiment.montura" style="padding-top:20px">Moviendo... <img src="./img/montura.png" style="" width="40px" alt=""></p>
-        <button ng-show="experiment.seg" class="btn btn-primary" ng-click="stopTracking()" type="button" name="button">Detener</button>
-      </div>
-      <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
-        <button ng-show="user.admin" type="button" class="btn btn-green" ng-click="openDome()" style="width: 150px;margin-top:20px"><strong>Abrir cúpula</strong></button>
-      </div>
-      <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0 hidden-xs">
-        <button ng-show="user.admin" type="button" class="btn btn-red" ng-click="closeDome()" style="width: 150px;margin-top:15px;"><strong>Cerrar cúpula</strong></button>
-      </div>
-
-    </div>
-
-    <div class="col-xs-12 visible-xs" style="padding-top:20px;">
-      <div class="col-xs-6">
-        <h4 class="" style="padding-bottom:20px;">Parámetros cámara</h4>
-        <form class="form" id="form-confPhoto" ng-submit="confPhoto2()" name="form-confPhoto" role="form" style="">
-          <div ng-show="param.errorEnvio" class="alert alert-danger">Error en el envío parametros</div>
-          <div class="">
-            <label class=" control-label" style="display:block">- Brillo</label>
-            <input class="" style="display:inline-block;width:70%;" type="range"  value="50" min="0" max="100" step="10" ng-model="param.brillo">
-            <input class="" style="display:inline-block;width:25%;" type="text" name="" value="" ng-model="param.brillo">
-          </div>
-          <div class="">
-            <label class="control-label" style="display:block">- Calidad de imagen</label>
-            <input type="range" style="display:inline-block;width:70%;"  value="5" min="0" max="10" step="1" ng-model="param.calidad">
-            <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.calidad">
-          </div>
-          <div class="">
-            <label class="control-label" style="display:block">- Ganancia</label>
-            <input type="range" style="display:inline-block;width:70%;" value="7" min="0" max="15" step="1" ng-model="param.ganancia">
-            <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.ganancia">
-          </div>
-          <div class="">
-            <label class="control-label" style="display:block">- Tiempo de exposicion (segundos)</label>
-            <input type="range" style="display:inline-block;width:70%;" value="1" min="1" max="10" step="1" ng-model="param.exposicion">
-            <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.exposicion">
-          </div>
-
-          <div class="" style="margin-top:20px;">
-            <button id="form-submit-confPhoto" type="submit" class="btn btn-primary btn-lg">Aceptar</button>
-            <img id="confPhoto-gif2" src="./img/loading.gif" alt="loading" style="display:none">
-          </div>
-        </form>
-      </div>
-      <div class="col-xs-6">
-        <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 padding0 text-center">
-
-          <p ng-show="experiment.solar" style="padding-top:20px;cursor:pointer" ng-click="followSun()">SEGUIR  <i style="background-color:#ffa500;vertical-align: middle;border-radius:30px;cursor:pointer " class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
-          <p ng-show="experiment.solarSeg" style="padding-top:20px;">Siguiendo...  <i style="background-color:#ffa500;vertical-align: middle;border-radius:30px;" class="fa fa-sun-o fa-3x" aria-hidden="true"></i></p>
-          <p ng-show="experiment.lunar"style="padding-top:20px;cursor:pointer" ng-click="followMoon()">SEGUIR <i style="background-color:#758ddc;vertical-align: middle;border-radius:30px;cursor:pointer " class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
-          <p ng-show="experiment.lunarSeg"style="padding-top:20px;">Siguiendo... <i style="background-color:#758ddc;vertical-align: middle;border-radius:30px;" class="fa fa-moon-o fa-3x" aria-hidden="true"></i></p>
-          <p ng-show="experiment.montura" style="padding-top:20px">Moviendo... <img src="./img/montura.png" style="" width="40px" alt=""></p>
-          <button ng-show="experiment.seg" class="btn btn-primary" ng-click="stopTracking()" type="button" name="button">Detener</button>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
-          <button ng-show="user.admin" type="button" class="btn btn-green" ng-click="openDome()" style="width: 150px;margin-top:20px"><strong>Abrir cúpula</strong></button>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-mg-12 col-lg-12 text-center padding0">
-          <button ng-show="user.admin" type="button" class="btn btn-red" ng-click="closeDome()" style="width: 150px;margin-top:15px;"><strong>Cerrar cúpula</strong></button>
-        </div>
-      </div>
-    </div>
-
-  </div>
 </div>
 
 <div class="row" style="padding-top:20px;">
-  <div class="col-sm-6 visible-sm center-block">
-    <div class="col-sm-8 col-sm-offset-2">
-    <h4 style="padding-bottom:20px;">Parámetros cámara</h4>
-    <form class="form" id="form-confPhoto" ng-submit="confPhoto()" name="form-confPhoto" role="form" style="">
-      <div ng-show="param.errorEnvio" class="alert alert-danger">Error en el envío parametros</div>
-      <div class="">
-        <label class=" control-label" style="display:block">- Brillo</label>
-        <input class="" style="display:inline-block;width:70%;" type="range"  value="50" min="0" max="100" step="10" ng-model="param.brillo">
-        <input class="" style="display:inline-block;width:25%;" type="text" name="" value="" ng-model="param.brillo">
-      </div>
-      <div class="">
-        <label class="control-label" style="display:block">- Calidad de imagen</label>
-        <input type="range" style="display:inline-block;width:70%;"  value="5" min="0" max="10" step="1" ng-model="param.calidad">
-        <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.calidad">
-      </div>
-      <div class="">
-        <label class="control-label" style="display:block">- Ganancia</label>
-        <input type="range" style="display:inline-block;width:70%;" value="7" min="0" max="15" step="1" ng-model="param.ganancia">
-        <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.ganancia">
-      </div>
-      <div class="">
-        <label class="control-label" style="display:block">- Tiempo de exposicion (segundos)</label>
-        <input type="range" style="display:inline-block;width:70%;" value="1" min="1" max="10" step="1" ng-model="param.exposicion">
-        <input type="text" style="display:inline-block;width:25%;" name="" value="" ng-model="param.exposicion">
-      </div>
+    <div class="col-sm-6 visible-sm center-block">
+        <div class="col-sm-8 col-sm-offset-2">
+            <h4 style="padding-bottom:20px;">Parámetros cámara</h4>
+            <form class="form" id="form-confPhoto" ng-submit="confPhoto()" name="form-confPhoto" role="form" style="">
+                <div ng-show="param.errorEnvio" class="alert alert-danger">Error en el envío parametros</div>
+                <div class="">
+                    <label class=" control-label" style="display:block">- Brillo</label>
+                    <input class="" style="display:inline-block;width:70%;" type="range" value="50" min="0" max="100"
+                           step="1" ng-model="param.brightness">
+                    <input class="" style="display:inline-block;width:25%;" type="text" name="" value=""
+                           ng-model="param.brightness">
+                </div>
+                <div class="">
+                    <label class="control-label" style="display:block">- Gamma</label>
+                    <input type="range" style="display:inline-block;width:70%;" value="50" min="0" max="100" step="1"
+                           ng-model="param.gamma">
+                    <input type="text" style="display:inline-block;width:25%;" name="" value=""
+                           ng-model="param.gamma">
+                </div>
+                <div class="">
+                    <label class="control-label" style="display:block">- Tiempo de exposicion (segundos)</label>
+                    <input type="range" style="display:inline-block;width:70%;" value="1" min="1" max="120" step="1"
+                           ng-model="param.exposure">
+                    <input type="text" style="display:inline-block;width:25%;" name="" value=""
+                           ng-model="param.exposure">
+                </div>
 
-      <div class="" style="margin-top:20px;">
-        <button id="form-submit-confPhoto" type="submit" class="btn btn-primary btn-lg">Aceptar</button>
-        <img id="confPhoto-gif" src="./img/loading.gif" alt="loading" style="display:none">
-      </div>
-    </form>
-  </div>
-  </div>
-
-  <div class="col-sm-6  text-center visible-sm center-block">
-    <div class="col-sm-12">
-      <h4 class="text-center" style="margin-bottom:30px;">Tiempo Meteorológico</h4>
-      <div ng-hide="state.weatherStation" class="alert alert-danger text-center" style="width:80%;margin:auto;margin-bottom:20px;font-weight:bold;">Estación meteorológica no disponible</div>
-      <table class="table table-bordered table-striped" style="margin:auto;">
-        <tbody>
-            <tr>
-                <td><strong>Temperatura</strong></td>
-                <td>{{(state.temperature | number:1) + " °C"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Presión</strong></td>
-                <td>{{state.pressure + " hPa"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Humedad</strong></td>
-                <td>{{state.humidity + " %"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Precipitación</strong></td>
-                <td>{{state.rainfall + " "}}</td>
-            </tr>
-            <tr>
-                <td><strong>Viento</strong></td>
-                <td>{{state.windSpeed + " m/s"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Dirección del viento</strong></td>
-                <td>{{state.windDirection}}</td>
-            </tr>
-        </tbody>
-      </table>
+                <div class="" style="margin-top:20px;">
+                    <button id="form-submit-confPhoto" type="submit" class="btn btn-primary btn-lg">Aceptar</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+
+    <div class="col-sm-6  text-center visible-sm center-block">
+        <div class="col-sm-12">
+            <h4 class="text-center" style="margin-bottom:30px;">Tiempo Meteorológico</h4>
+            <div ng-hide="state.weatherStation" class="alert alert-danger text-center"
+                 style="width:80%;margin:auto;margin-bottom:20px;font-weight:bold;">Estación meteorológica no disponible
+            </div>
+            <table class="table table-bordered table-striped" style="width:80%;margin:auto;">
+                <tbody>
+                <tr>
+                    <td><strong>Temperatura</strong></td>
+                    <td>{{(state.temperature | number:1) + " °C"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Presión</strong></td>
+                    <td>{{state.pressure + " hPa"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Humedad</strong></td>
+                    <td>{{state.humidity + " %"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Precipitación</strong></td>
+                    <td>{{state.rainfall + " "}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Viento</strong></td>
+                    <td>{{state.windSpeed + " m/s"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Dirección del viento</strong></td>
+                    <td>{{state.windDirection}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Última actualización</strong></td>
+                    <td>{{state.timestamp | date: "dd/MM/yyyy - HH:mm:ss"}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <div class="row" style="padding-top:20px;">
-  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center hidden-sm center-block">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 col-sm-offset-1 col-md-offset-2 col-lg-offset-3 ">
-      <h4 class="text-center" style="margin-bottom:30px;">Tiempo Meteorológico</h4>
-      <div ng-hide="state.weatherStation" class="alert alert-danger text-center" style="width:80%;margin:auto;margin-bottom:20px;font-weight:bold;">Estación meteorológica no disponible</div>
-      <table class="table table-bordered table-striped" style="width:80%;margin:auto;">
-        <tbody>
-            <tr>
-                <td><strong>Temperatura</strong></td>
-                <td>{{(state.temperature | number:1) + " °C"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Presión</strong></td>
-                <td>{{state.pressure + " hPa"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Humedad</strong></td>
-                <td>{{state.humidity + " %"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Precipitación</strong></td>
-                <td>{{state.rainfall + " "}}</td>
-            </tr>
-            <tr>
-                <td><strong>Viento</strong></td>
-                <td>{{state.windSpeed + " m/s"}}</td>
-            </tr>
-            <tr>
-                <td><strong>Dirección del viento</strong></td>
-                <td>{{state.windDirection}}</td>
-            </tr>
-        </tbody>
-      </table>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center hidden-sm center-block">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 col-sm-offset-1 col-md-offset-2 col-lg-offset-3 ">
+            <h4 class="text-center" style="margin-bottom:30px;">Tiempo Meteorológico</h4>
+            <div ng-hide="state.weatherStation" class="alert alert-danger text-center"
+                 style="width:80%;margin:auto;margin-bottom:20px;font-weight:bold;">Estación meteorológica no disponible
+            </div>
+            <table class="table table-bordered table-striped" style="width:80%;margin:auto;">
+                <tbody>
+                <tr>
+                    <td><strong>Temperatura</strong></td>
+                    <td>{{(state.temperature | number:1) + " °C"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Presión</strong></td>
+                    <td>{{state.pressure + " hPa"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Humedad</strong></td>
+                    <td>{{state.humidity + " %"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Precipitación</strong></td>
+                    <td>{{state.rainfall + " "}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Viento</strong></td>
+                    <td>{{state.windSpeed + " m/s"}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Dirección del viento</strong></td>
+                    <td>{{state.windDirection}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Última actualización</strong></td>
+                    <td>{{state.timestamp | date: "dd/MM/yyyy - HH:mm:ss"}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
 </div>

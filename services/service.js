@@ -1,15 +1,14 @@
 //Factoria que controla la autenticación y devuelve un objeto
 app.factory("authFactory", function($cookies, $location, $rootScope, userFactory) {
     return {
-        toLogin: function(name) {
+        toLogin: function(token) {
 
             //Llamada API login
             // to do
             var expires = new Date();
-            expires.setMinutes(expires.getMinutes() + 60);//cookie expira en 59 minutos
+            expires.setDate(expires.getDate() + 30); //cookie expira en 30 dias
 
-
-            $cookies.put('name', name, {'expires' : expires});
+            $cookies.put('token', token, {'expires' : expires});
             // $cookies.put('password', password);
 
             //comprobacion ROLE admin
@@ -17,7 +16,7 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
             //     //mandamos a la home
             //     $location.path("/inicio");
             // }
-            $location.path("/perfil");
+
         },
         register: function(name) {
           var expires = new Date();
@@ -26,7 +25,7 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
 
         },
         toLogout: function() {
-            $cookies.remove('name');
+            $cookies.remove('token');
             // $cookies.remove('password');
 
             $location.path('/inicio')
@@ -34,20 +33,27 @@ app.factory("authFactory", function($cookies, $location, $rootScope, userFactory
         checkStatus: function() {
             var privateRoutes = ['/perfil', '/experimento', '/observacion'];
 
+            // Comprobar si hay cookie de sesion
+            if($cookies.get('token') !== undefined) {
+                userFactory.setToken($cookies.get('token'));
+                userFactory.setIsLogged(true);
+                $rootScope.isLogged = true;
+            }
+
             // console.log($location.path());
             // console.log($rootScope.isLogged);
             if(this.in_array($location.path(), privateRoutes) && !$rootScope.isLogged){
               $location.path('/iniciarsesion');
             }
-            if ($location.path() == '/iniciarsesion' && typeof($cookies.get('name')) != "undefined") {
+            if ($location.path() == '/iniciarsesion' && typeof($cookies.get('token')) != "undefined") {
                 // $location.path("/inicio");
             }
             // console.log('name : ' + $cookies.get('name'));
-            if (this.in_array($location.path(), privateRoutes) && typeof($cookies.get('name')) == 'undefined') {
+            if (this.in_array($location.path(), privateRoutes) && typeof($cookies.get('token')) == 'undefined') {
 
                 $location.path('/iniciarsesion');
             }
-            if(typeof($cookies.get('name')) == 'undefined'){
+            if(typeof($cookies.get('token')) == 'undefined'){
               userFactory.setIsLogged(false);
               $rootScope.isLogged = userFactory.getIsLogged();
             }
@@ -107,23 +113,36 @@ app.run(function($rootScope, authFactory) {
 // });
 
 // Factoria peticiones http
-app.factory('httpFactory', function($http) {
+app.factory('httpFactory', function($http, userFactory) {
   return {
-    async: function(url,method,params) {
-      var promise = $http({
-        url: url,
-        method: method,
-        params: params
-      }).then(function successCallback(response) {
-        return response;
-      }, function errorCallback(response) {
-        console.log('error');
-        return response;
-      });
+	  async: function (url, method, params) {
+		  var promise = $http({
+			  url: url,
+			  method: method,
+			  params: params
+		  }).then(function successCallback(response) {
+			  return response;
+		  }, function errorCallback(response) {
+			  console.log('error');
+			  return response;
+		  });
 
-      return promise;
+		  return promise;
+	  },
+	  auth: function (url, method, body) {
+		  return $http({
+			  url: url,
+			  method: method,
+			  headers: {'Authorization': 'Bearer ' + userFactory.getToken()},
+              data: body
+		  }).then(function successCallback(response) {
+			  return response;
+		  }, function errorCallback(response) {
+			  console.log('error auth call');
+			  return response;
+		  });
+	  }
     }
-  };
 });
 
 //Usuario

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <base href="/web-observatorio/">
+    <base href="/">
     <!--Poner / en venus-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,8 +23,8 @@
             (ga.q = ga.q || []).push(arguments)
         };
         ga.l = +new Date;
-        ga('create', 'UA-97133305-1', 'auto');
-        ga('send', 'pageview');
+        // ga('create', 'UA-97133305-1', 'auto');
+        // ga('send', 'pageview');
     </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
     <!-- EndGoogle Analytics -->
@@ -63,7 +63,7 @@
                     <li id="contact"><a href="./contacto">Contacto</a></li>
 
 
-                    <li ng-show='isLogged'><a href="./experimento">Experimentos</a></li>
+                    <li ng-show='isLogged'><a href="./experimento">Nueva Reserva</a></li>
                   <!-- <li ng-hide="user.login"><a href="./galeria">Galeria</a></li> -->
                   <li id="profile" ng-show='isLogged'><a href="./perfil">Perfil</a></li>
                 </ul>
@@ -130,6 +130,8 @@
     <script src="js/jquery-ui.js"></script>
     <!-- Script js -->
     <script src="js/script.js"></script>
+    <!-- Moment.js -->
+    <script src="js/moment.min.js"></script>
 </body>
 
 </html>
