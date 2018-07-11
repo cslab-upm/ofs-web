@@ -57,9 +57,13 @@ app.config(function($routeProvider) {
           templateUrl: 'views/register.html',
           controller: 'recoverypasswordController'
         })
+        .when('/images', {
+          templateUrl: 'views/images.html',
+          controller: 'imagesController'
+        })
         .otherwise({
             redirectTo: function(){
-              return  '/inicio'
+              return  '/images'
             }
         })
 })

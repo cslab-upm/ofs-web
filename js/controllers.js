@@ -693,3 +693,24 @@ app.controller('recoverypasswordController', ['$rootScope','$scope', '$sce', '$h
     }
 
 }]);
+
+
+app.controller('imagesController', ['$scope', '$sce', '$http', function($scope, $sce, $http) {
+	
+	// Get test pictures
+	// Resolution: 1280 * 960
+	pictures = []
+	for(let i = 1; i <= 11; i++){
+		pictures[i - 1] = `img_test/img (${i}).jpg`
+	}
+	$scope.pictures = pictures
+	$scope.showImg = false
+	$scope.openImg = (event, index) => {
+		$scope.showImg = true
+	}
+
+	$scope.closeImg = () => {
+		console.log("adfsklfajdsl")
+		$scope.showImg = false
+	}
+}]);
