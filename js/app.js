@@ -57,6 +57,14 @@ app.config(function($routeProvider) {
           templateUrl: 'views/register.html',
           controller: 'recoverypasswordController'
         })
+        .when('/galeria', {
+            templateUrl: 'views/galeria.html',
+            controller: 'galeriaController'
+        })
+        .when('/video', {
+            templateUrl: 'views/video.html',
+            controller: 'videoController'
+        })
         .otherwise({
             redirectTo: function(){
               return  '/inicio'

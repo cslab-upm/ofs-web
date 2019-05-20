@@ -492,3 +492,247 @@ h1.title{
 .table-disabled{
     pointer-events:none;
 }
+
+/* codigo añadido oscar */
+
+/* Style the search field */
+form.barraBusqueda input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+/* Style the submit button */
+form.barraBusqueda button {
+  float: left;
+  width: 20%;
+  padding: 10px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none; /* Prevent double borders */
+  cursor: pointer;
+}
+
+form.barraBusqueda button:hover {
+  background: #0b7dda;
+}
+
+/* Clear floats */
+form.barraBusqueda::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+  /* background-color: #111; */
+}
+
+.right {
+  right: 0;
+/*   background-color: red; */
+}
+
+.outer { display: flex; }
+
+.flex { display: flex; }
+.flexCentered{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex .btnVideoController{
+  margin:  4px 0;
+  width: 100%;
+}
+.flex .grow1 {
+  flex-grow: 1;
+  width: 50%;
+}
+
+@media only screen and (max-width: 1024px) {
+  .flex { flex-direction: column; }
+  .flex.buttonContainer { flex-direction: row; }
+  .flex .grow1 {
+    display: block;
+    flex-grow: inherit;
+    margin: 0 0 20px;
+    width: 100%;
+  }
+}
+
+.controllerContainer{ margin-bottom: 20px;}
+
+@media only screen and (max-width: 768px) {
+  .controllerContainer input[type=range] { width: 100%; }
+  .controllerContainer input[type=number] { width: 85%; }
+}
+
+#modalVideo{
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-width: 50%;
+  background-color: #fff;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+  z-index: 9000;
+  transform: translate(-50%, -50%);
+}
+
+#modalError{
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-width: 50%;
+  background-color: #fff;
+  border: 2px solid #e03a61;
+  border-radius: 5px;
+  z-index: 9000;
+  transform: translate(-50%, -50%);
+}
+
+#modalExito{
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-width: 50%;
+  background-color: #fff;
+  border: 2px solid lightgreen;
+  border-radius: 5px;
+  z-index: 9000;
+  transform: translate(-50%, -50%);
+}
+
+#veloModal{
+  width: 100vw;
+  height: 300vh;
+  background-color: #000;
+  opacity: 0.3;
+  display: none;
+  position: absolute;
+  top:0;
+  left: 0;
+  z-index: 5;
+}
+
+#modalVideo label{
+  display: block;
+}
+
+#modalVideo input{
+  display: block;
+  margin-bottom: 12px;
+}
+
+.imgError{
+    border: 0;
+    width: 100px;
+    margin-left: 120px;
+}
+
+#streamingPlayer{
+  width: 100%;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+}
+
+@media only screen and (max-width: 1024px) {
+  #streamingPlayer{
+    max-width: 500px;
+    border: 0;
+    margin: 0 auto 20px;
+    display: block !important;
+  }
+}
+
+input[type=range] {
+  display: block;
+  width: 60%;
+}
+
+/* Estilo para la galeria */
+
+div.gallery {
+  border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.responsive {
+  padding: 0 6px;
+  float: left;
+  width: 24.99999%;
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 49.99999%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.buttonBelow {
+  margin: 45%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+
+.parameters > div{ margin-bottom: 20px;}
+.parameters h3{
+  font-size: 18px;
+  margin: 0 0 5px;
+}.parameters input[type=range]{ margin: 0 0 5px; }
+
+@media only screen and (min-width: 1024px) {
+  .parameters:first-child{padding-left: 0;}
+  .parameters:last-child{padding-right: 0;}
+}

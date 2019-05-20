@@ -1,0 +1,191 @@
+<div class="container" ng-controller="videoController">
+    <div class="row">
+        <h1 class="text-center" style="margin-bottom:50px">Cámara en Directo</h1>
+        
+        <div class="outer flex">
+            <div class="inner grow1 row flexCentered">
+                <div class="col-md-11 col-sm-12 col-xs-12">
+                    <img src="../img/stoppedVideo.jpeg" id="streamingPlayer" style ="{{hiddenStopped}}"> </img>
+                    <img src="{{video}}" id="streamingPlayer" style="{{hidden}}"></img>
+                    <div class="text-center flex row buttonContainer">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button ng-click="obtainVideo()" class="btn btn-success btn-lg btnVideoController" type="button" name="button" aria-pressed="true">
+                                    Iniciar/Parar video
+                            </button>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button ng-click="abrirModal('modalVideo');cerrarVideo()" class="btn btn-primary btn-lg btnVideoController" aria-pressed="true">Guardar secuencia</button>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="col-md-offset-1"></div>
+            </div> 
+            <div class="inner grow1 row">
+                <div class="parameters col-md-12 col-sm-12 col-xs-12" > 
+                       
+        <!--  <div class="parameters" ng-repeat="range in ranges">   
+                    <h3>{{range.nombre}}(min: {{range.min}} max: {{range.max}})</h3>
+                    <input type="range" class="brightnessPointer" name="range" ng-model="range.valueNum" ng-value="range.valueNum" 
+                    ng-change="range.changeFunction(range.value)" min="{{range.min}}" max="{{range.max}}" step="1"></input>
+                    <input type="number" class="brightness" ng-model="range.valueNum" ng-value="range.valueNum" ng-keypress="range.keyPressFunction(range.valueNum, $event)"></input>
+                </div> -->
+                    <div class="row">
+
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableBrightness}}>Brightness(min: {{brightnessMin}} max: {{brightnessMax}})</h3>
+                            <input type="range" class="brightnessPointer" name="range" ng-model="brightnessSlider" ng-change="putBrightness(brightnessSlider)"
+                            min="{{brightnessMin}}" max="{{brightnessMax}}" step="1" style={{unableBrightness}}></input>
+                            <input type="number" class="brightness" ng-model="brightnessNumber" ng-keypress="putBrightnessNum(brightnessNumber, $event)" style={{unableBrightness}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableBrightness}}>Default</button>
+                        </div>
+                
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableGamma}}>Gamma (min: {{gammaMin}} max: {{gammaMax}})</h3>
+                            <input type="range" name="range" ng-model="gammaSlider" ng-change="putGamma(gammaSlider)"
+                            min="{{gammaMin}}" max="{{gammaMax}}" step="1" style={{unableGamma}}></input>
+                            <input type="number" class="gamma" ng-model="gammaNumber" ng-keypress="putGammaNum(gammaNumber, $event)" style={{unableGamma}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableGamma}}>Default</button>
+                        </div>
+                
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableGain}}>Gain (min: {{gainMin}} max: {{gainMax}})</h3>
+                            <input type="range" name="range" ng-model="gainSlider" ng-change="putGain(gainSlider)"
+                            min="{{gainMin}}" max="{{gainMax}}" step="1" style={{unableGain}}></input>
+                            <input type="number" class="gain" ng-model="gainNumber" ng-keypress="putGainNum(gainNumber, $event)" style={{unableGain}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableGain}}>Default</button>
+                        </div>
+                        
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableExposure}}>Exposure (min: {{exposureMin}} max: {{exposureMax}})</h3>
+                            <input type="range" name="range" ng-model="exposureSlider" ng-change="putExposure(exposureSlider)"
+                            min="0" max="100" style={{unableExposure}}></input>
+                            <input type="number" class="exposure" ng-model="exposureNumber" ng-keypress="putExposureNum(exposureNumber, $event)" style={{unableExposure}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableExposure}}>Default</button>
+                        </div>
+
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableSaturation}}>Saturation (min: {{saturationMin}} max: {{saturationMax}})</h3>
+                            <input type="range" name="range" ng-model="saturationSlider" ng-change="putSaturation(saturationSlider)"
+                            min="{{saturationMin}}" max="{{saturationMax}}"  style={{unableSaturation}}></input>
+                            <input type="number" class="saturation" ng-model="saturationNumber" ng-keypress="putSaturationNum(saturationNumber, $event)"  style={{unableSaturation}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableSaturation}}>Default</button>
+                        </div>
+                
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableHue}}>Hue (min: {{hueMin}} max: {{hueMax}})</h3>
+                            <input type="range" name="range" ng-model="hueSlider"  ng-change="putHue(hueSlider)"
+                            min="{{hueMin}}" max="{{hueMax}}" style={{unableHue}}></input>
+                            <input type="number" class="hue" ng-model="hueNumber" ng-keypress="putHueNum(hueNumber, $event)" style={{unableHue}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableHue}}>Default</button>
+                        </div>
+                
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableWhiteBalanceRed}}>Whitebalance Red (min: {{whitebalanceredMin}} max: {{whitebalanceredMax}})</h3>
+                            <input type="range" name="range" ng-model="whitebalanceredSlider" ng-change="putWhitebalanceRed(whitebalanceredSlider)"
+                            min="{{whitebalanceredMin}}" max="{{whitebalanceredMax}}" style={{unableWhiteBalanceRed}}></input>
+                            <input type="number" class="hue" ng-model="whitebalanceredNumber" ng-keypress="putWhitebalanceRedNum(whitebalanceredNumber, $event)" style={{unableWhiteBalanceRed}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableWhiteBalanceRed}}>Default</button>
+                        </div>
+                
+                        <div class="controllerContainer col-md-6 col-sm-6 col-xs-12">
+                            <h3 style={{unableWhiteBalanceBlue}}>Whitebalance Blue (min: {{whitebalanceblueMin}} max: {{whitebalanceblueMax}})</h3>
+                            <input type="range" name="range" ng-model="whitebalanceblueSlider"  ng-change="putWhitebalanceBlue(whitebalanceblueSlider)"
+                            min="{{whitebalanceblueMin}}" max="{{whitebalanceblueMax}}" style={{unableWhiteBalanceBlue}}></input>
+                            <input type="number" class="hue" ng-model="whitebalanceblueNumber" ng-keypress="putWhitebalanceBlueNum(whitebalanceblueNumber, $event)" style={{unableWhiteBalanceBlue}}>
+                            </input>
+                            <button class="defaultparameters" style={{unableWhiteBalanceBlue}}>Default</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+<div class="modal-container" id="modalVideo">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cerrarModal('modalVideo')" data-dismiss="modal" aria-hidden="true">
+            &times;
+        </button>
+        <h1>Tomar secuencia de imágenes</h1>
+    </div>
+    <div class="modal-body">
+        <label>Número de fotos que queremos guardar(máximo 1000)</label><input class="number" type="number" ng-model="amountNum"
+        ng-keypress="getAmountNum(amountNum, $event)" min="1" max="1000"></input>
+        <label>Número de tags</label><input class="list" list="tags" name="tag" placeholder="Numero de Tags" 
+        onfocus="this.value=''" ng-model="amountTags" ng-change="getTags(amountTags)">
+            <datalist id="tags">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+            </datalist>
+        </input>
+        <label>Introduce los tags uno a uno</label><input class="text" type="text" placeholder="Nombre tag{{listSize+1}}"
+        ng-model="nameTag" ng-keypress="getNameTag(nameTag, $event)">
+        </input>
+    </div>
+    <div class="modal-footer">
+        <button ng-click="setElements()" class="btn btn-success btn-lg" type="button" name="button"
+        style="margin:4px 5px" aria-pressed="true">
+            Guardar
+        </button>
+        <button ng-click="cerrarModal('modalVideo')" class="btn btn-primary btn-lg" type="button" name="button"
+        style="margin:4px 5px" aria-pressed="true">
+            Salir
+        </button>
+    </div>
+</div>
+
+
+<!-- MODAL DE ERROR -->
+<div class="modal-container" id="modalError">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cerrarModal('modalError')" data-dismiss="modal" aria-hidden="true">
+            &times;
+        </button>
+        <h1>Vaya! Ha ocurrido un error</h1>
+    </div>
+    <div class="modal-body">
+        <img src="../img/error-icon.png" class="imgError">
+       <p> Ha habido un error al intentar guardar la secuencia.</p>
+    </div>
+    <div class="modal-footer">
+        <button ng-click="cerrarModal('modalError')" class="btn btn-danger btn-lg" type="button" name="button"
+        style="margin:4px 5px" aria-pressed="true">
+            Cerrar
+        </button>
+    </div>
+</div>
+
+<!-- MODAL DE EXITO -->
+<div class="modal-container" id="modalExito">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cerrarModal('modalExito')" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h1>¡Secuencia guardada!</h1>
+        </div>
+        <div class="modal-body">
+            <p>Id de la secuencia guardada: {{ID}}</p>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="cerrarModal('modalExito')" class="btn btn-success btn-lg" type="button" name="button"
+            style="margin:4px 5px" aria-pressed="true">
+                Aceptar
+            </button>
+        </div>
+    </div>
+
+<div id="veloModal"></div>
