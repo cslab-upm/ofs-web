@@ -2,17 +2,8 @@ var app = angular.module('observatorioapp', ['ngRoute', 'ngSanitize','ngCookies'
 
 // URL prefix
 app.config(['$locationProvider', function($locationProvider) {
-  // $locationProvider.hashPrefix('');
   $locationProvider.html5Mode(true);
 }]);
-
-// URL WhiteList
-// app.config(['$sceDelegateProvider',function($sceDelegateProvider){
-//   $sceDelegateProvider.resourceUrlWhitelist([
-//     'self',
-//     'https://www.youtube.com/**'
-//   ]);
-// }]);
 
 // Routing
 app.config(function($routeProvider) {
@@ -59,7 +50,22 @@ app.config(function($routeProvider) {
         })
         .when('/galeria', {
             templateUrl: 'views/galeria.html',
-            controller: 'galeriaController'
+            controller: 'galeriaController',
+            resolve: {
+              photos: function(){
+                var urlGetInfoUser = "https://ofs.fi.upm.es/api/users/loged";
+                $http.get(urlGetInfoUser).then(function(userInfo){
+                  $http({
+                    method: 'GET',
+                    url: 'http://192.168.43.23:1723' + '/Task/' + userInfo.data.username,
+                    }).then(function successCallback(response){
+                      return response.data;
+                    }), function errorCallback(response){
+                      console.log(response.statusText);
+                    }
+                })
+            }
+          }
         })
         .when('/video', {
             templateUrl: 'views/video.html',
@@ -69,5 +75,5 @@ app.config(function($routeProvider) {
             redirectTo: function(){
               return  '/inicio'
             }
-        })
+  })
 })

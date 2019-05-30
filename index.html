@@ -23,81 +23,47 @@
             (ga.q = ga.q || []).push(arguments)
         };
         ga.l = +new Date;
-        // ga('create', 'UA-97133305-1', 'auto');
-        // ga('send', 'pageview');
     </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
     <!-- EndGoogle Analytics -->
 </head>
 
 <body ng-controller="mainController">
-
-
     <nav class="navbar navbar-invers navbar-fixed-top" role="navigation" id="slide-nav">
         <div class="container">
             <div class="navbar-header">
-                <!-- <a href="#"><img src="img/logo.png" width="50" height="50" alt=""> Observatorio</a> -->
-
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ext1-collapse" aria-expanded="true" aria-controls="navbar">
-    <span class="sr-only">Toggle navigation</span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"> </span>
-    <span class="icon-bar"></span>
-    </button>
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"> </span>
+                    <span class="icon-bar"></span>
+                </button>
                 <a href="./inicio" id="logo" class="navbar-text"><strong>Observatorio Astronómico <br> Francisco Manuel Sánchez</strong></a>
             </div>
 
-            <!-- home -->
             <div class="" id="slidemenu">
                 <ul class="nav navbar-nav" ng-hide="user.login">
                     <li class="active" id="init"><a href="./inicio">Inicio</a></li>
-                    <!-- <li class="dropdown">
-                      <a href="" class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;">Experimentos<b class="caret"></b></a>
-                      <ul class="dropdown-menu">
-                          <li><a href="#/experimento/nocturno">Nocturno</a></li>
-                          <li><a href="#/experimento/solar">Solar</a></li>
-                      </ul>
-                  </li> -->
                     <li id="equip"><a href="./equipamiento">Equipamiento</a></li>
                     <li id="about"><a href="./acerca">Acerca de</a></li>
                     <li id="contact"><a href="./contacto">Contacto</a></li>
-
-                    <!-- Botones para la galeria y el video en directo(por realocar) -->
-                    <li id="gallery"><a href="./galeria">Galeria</a></li>
-                    <li id="video"><a href="./video">Video</a></li>
-
+                    <li id="gallery" ng-show='isLogged'><a href="./galeria">Galeria</a></li>
+                    <li id="video" ng-show='enReserva() && isLogged'><a href="./video">Video</a></li>
                     <li ng-show='isLogged'><a href="./experimento">Nueva Reserva</a></li>
-                  <!-- <li ng-hide="user.login"><a href="./galeria">Galeria</a></li> -->
-                  <li id="profile" ng-show='isLogged'><a href="./perfil">Perfil</a></li>
+                    <li id="profile" ng-show='isLogged'><a href="./perfil">Perfil</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                  <!-- <li id="login"><button  class="btn btn-warning navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Inicar sesión</button></li>
-                  <li id="register"><button class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Registrar</button></li> -->
-                  <li ng-hide='isLogged' id="login"><button   ng-click="goLogin()" class="btn btn-success navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Iniciar sesión</button></li>
-                  <li ng-hide='isLogged' id="register"><button  ng-click="goRegister()" class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Registrar</button></li>
-                  <li ng-show='isLogged'><p class="black navbar-text" style="margin-left: 15px"><strong>¡Bienvenido!</strong></p></li>
-                  <li ng-show='isLogged' id="logout"><button   ng-click="toLogout()" class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Cerrar sesión</button></li>
+                    <li ng-hide='isLogged' id="login"><button   ng-click="goLogin()" class="btn btn-success navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Iniciar sesión</button></li>
+                    <li ng-hide='isLogged' id="register"><button  ng-click="goRegister()" class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Registrar</button></li>
+                    <li ng-show='isLogged'><p class="black navbar-text" style="margin-left: 15px"><strong>¡Bienvenido!</strong></p></li>
+                    <li ng-show='isLogged' id="logout"><button   ng-click="toLogout()" class="btn btn-danger navbar-btn" type="button" name="button" style="padding: 10px 10px;margin:8px 10px">Cerrar sesión</button></li>
                 </ul>
-                <!-- <ul class="nav navbar-nav navbar-right" ng-show="user.login">
-                <li>
-                    <p class="black"><strong>Hola, {{name}}</strong></p><button type="submit" class="btn btn-default navbar-btn">Cerrar sesión</button></li>
-            </ul> -->
-                <!-- <form class="navbar-form navbar-form-1 navbar-right" role="login" ng-show="user.login">
-                <div class="form-group">
-                    <input type="email" class="form-control" placeholder="Email" maxlength="30" ng-model="user.email">
-                    <input type="password" class="form-control" placeholder="Contraseña" maxlength="30" ng-model="user.password">
-                    <button type="submit" href="#!/inicio" class="btn btn-group-vertical" name="button" ng-click="register()">Entrar</button>
-                </div>
-            </form> -->
             </div>
-            <!-- end home -->
         </div>
     </nav>
 
     <div id="page-content">
         <div class="container" id="content" ng-view></div>
-
-        <!-- <div class="container-fluid"> -->
         <footer>
             <div class="row" style="margin-right: -0px; margin-left: 0px;">
                 <div class="col-md-12 center-block text-center">
@@ -108,46 +74,44 @@
                 </div>
             </div>
         </footer>
-        <!-- </div> -->
     </div>
-
-    <!-- AngujarJS -->
-    <script src="js/vendor/angular.min.js"></script>
-    <!-- AngularJS route -->
-    <script src="js/vendor/angular-route.min.js"></script>
-    <!-- AngularJS cookies -->
-    <script src="js/vendor/angular-cookies.min.js"></script>
-    <!-- AngularJS Sanitize -->
-    <script src="js/vendor/angular-sanitize.min.js"></script>
-    <!-- routes.js -->
-    <script src="js/app.js"></script>
-    <!-- Controllers -->
-    <script src="js/controllers/acercaController.js"></script>
-    <script src="js/controllers/contactoController.js"></script>
-    <script src="js/controllers/equipController.js"></script>
-    <script src="js/controllers/experimentoController.js"></script>
-    <script src="js/controllers/inicioController.js"></script>
-    <script src="js/controllers/loginController.js"></script>
-    <script src="js/controllers/maincontroller.js"></script>
-    <script src="js/controllers/observacionController.js"></script>
-    <script src="js/controllers/perfilController.js"></script>
-    <script src="js/controllers/recoverypwdController.js"></script>
-    <script src="js/controllers/registrarController.js"></script>
-    <!-- Controladores galeria y video -->
-    <script src="js/controllers/galeriaControler.js"></script>
-    <script src="js/controllers/videoControler.js"></script>
-    <!-- Services -->
-    <script src="services/service.js"></script>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/vendor/jquery.min.js"></script>
-    <!-- Bootstrap js-->
-    <script src="js/styles/bootstrap.min.js"></script>
-    <!-- jquery-ui -->
-    <script src="js/vendor/jquery-ui.js"></script>
-    <!-- Script js -->
-    <script src="js/script.js"></script>
-    <!-- Moment.js -->
-    <script src="js/vendor/moment.min.js"></script>
-</body>
+        <!-- AngujarJS -->
+        <script src="js/vendor/angular.min.js"></script>
+        <!-- AngularJS route -->
+        <script src="js/vendor/angular-route.min.js"></script>
+        <!-- AngularJS cookies -->
+        <script src="js/vendor/angular-cookies.min.js"></script>
+        <!-- AngularJS Sanitize -->
+        <script src="js/vendor/angular-sanitize.min.js"></script>
+        <!-- routes.js -->
+        <script src="js/app.js"></script>
+        <!-- Controllers -->
+        <script src="js/controllers/acercaController.js"></script>
+        <script src="js/controllers/contactoController.js"></script>
+        <script src="js/controllers/equipController.js"></script>
+        <script src="js/controllers/experimentoController.js"></script>
+        <script src="js/controllers/inicioController.js"></script>
+        <script src="js/controllers/loginController.js"></script>
+        <script src="js/controllers/maincontroller.js"></script>
+        <script src="js/controllers/observacionController.js"></script>
+        <script src="js/controllers/perfilController.js"></script>
+        <script src="js/controllers/recoverypwdController.js"></script>
+        <script src="js/controllers/registrarController.js"></script>
+        <!-- Controladores galeria y video -->
+        <script src="js/controllers/galeriaControler.js"></script>
+        <script src="js/controllers/videoControler.js"></script>
+        <!-- Services -->
+        <script src="services/service.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="js/vendor/jquery.min.js"></script>
+        <!-- Bootstrap js-->
+        <script src="js/styles/bootstrap.min.js"></script>
+        <!-- jquery-ui -->
+        <script src="js/vendor/jquery-ui.js"></script>
+        <!-- Script js -->
+        <script src="js/script.js"></script>
+        <!-- Moment.js -->
+        <script src="js/vendor/moment.min.js"></script>
+    </body>
 
 </html>

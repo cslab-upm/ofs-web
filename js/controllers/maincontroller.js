@@ -81,5 +81,27 @@ app.controller('mainController', function($rootScope, $scope, $location, authFac
         }
     });
 
+    $scope.enReserva =  function () {
+        $http({
+            method: 'GET',
+            url: 'https://ofs.fi.upm.es/api/reservations/own',
+        }).then(function successCallback(response){
+            var reservasPropias = response.data;
+            var objetoFecha = new Date();
+            angular.foreach(reservasPropias, function(reserva){
+                var ahora = new Date(objetoFecha.getYear()+objetoFecha.getMonth()+objetoFecha.getDate() + "T" + objetoFecha.getHours()+":"+objetoFecha.getMinutes());
+                var inicio = new Date(reserva.startDate);
+                var fin = new Date(reserva.endDate);
+                if(ahora > inicio && ahora < fin){
+                    return true;
+                }
+            });
+            return false;
+
+        }), function errorCallback(response){
+            console.log(response.statusText);
+        }
+    }
+
     $rootScope.isLogged = userFactory.getIsLogged();
 });
