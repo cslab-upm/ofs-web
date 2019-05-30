@@ -132,17 +132,16 @@
                 <option value="5"></option>
             </datalist>
         </input>
-        <label>Introduce los tags uno a uno</label><input class="text" type="text" placeholder="Nombre tag{{listSize+1}}"
-        ng-model="nameTag" ng-keypress="getNameTag(nameTag, $event)">
+        <div ng-if="errorMessage">{{errorMessage}}</div>
+        <label>Introduce los tags uno a uno</label>
+        <input class="text" type="text" placeholder="Nombre tag{{listSize+1}}"ng-model="nameTag" ng-keypress="getNameTag(nameTag, $event)">
         </input>
     </div>
     <div class="modal-footer">
-        <button ng-click="setElements()" class="btn btn-success btn-lg" type="button" name="button"
-        style="margin:4px 5px" aria-pressed="true">
+        <button ng-click="setElements()" class="btn btn-success btn-lg" type="button" name="button" style="margin:4px 5px" aria-pressed="true">
             Guardar
         </button>
-        <button ng-click="cerrarModal('modalVideo')" class="btn btn-primary btn-lg" type="button" name="button"
-        style="margin:4px 5px" aria-pressed="true">
+        <button ng-click="cerrarModal('modalVideo')" class="btn btn-primary btn-lg" type="button" name="button" style="margin:4px 5px" aria-pressed="true">
             Salir
         </button>
     </div>

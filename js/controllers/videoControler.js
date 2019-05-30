@@ -7,81 +7,6 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 	/* $scope.url = "http://138.100.9.212:1723	"; */
 	$scope.urlPointer = "http://192.168.1.38:8000";
 
-/* 	$scope.ranges = [
-		{
-			nombre: 'Brightness',
-			min: 0,
-			max: 0,
-			value: 0,
-			valueNum: 0,
-			changeFunction: $scope.putBrightness,
-			keyPressFunction: $scope.putBrightnessNum
-		},
-		{
-			nombre: 'Gamma',
-			min: 0,
-			max: 0,
-			value: '',
-			valueNum: 0,
-			changeFunction: $scope.putGamma,
-			keyPressFunction: $scope.putGammaNum
-		},
-		{
-			nombre: 'Gain',
-			min: 0,
-			max: 0,
-			value: '',
-			valueNum: 0,
-			changeFunction: $scope.putGain,
-			keyPressFunction: $scope.putGainNum
-		},
-		{
-			nombre: 'Exposure',
-			min: 0,
-			max: 0,
-			value: '',
-			valueNum: 0,
-			changeFunction: $scope.putExposure,
-			keyPressFunction: $scope.putExposureNum
-		},
-		{
-			nombre: 'Saturation',
-			min: 0,
-			max: 0,
-			value: '',
-			valueNum: 0,
-			changeFunction: $scope.putSaturation,
-			keyPressFunction: $scope.putSaturationNum
-		},
-		{
-			nombre: 'Hue',
-			min: 0,
-			max: 0,
-			value: '',
-			valueNum: 0,
-			changeFunction: $scope.putHue,
-			keyPressFunction: $scope.puthueNum
-		},
-		{
-			nombre: 'White balance red',
-			min: 0,
-			max: 0,
-			value: '',
-			valueNum: 0,
-			changeFunction: $scope.putWhitebalanceRed,
-			keyPressFunction: $scope.putWhitebalanceRedNum
-		},
-		{
-			nombre: 'White balance blue',
-			min: 0,
-			max: 0,
-			value: '',
-			valueNum: 0,
-			changeFunction: $scope.putWhitebalanceBlue,
-			keyPressFunction: $scope.putWhitebalanceBlueNum
-		}
-	]; */
-
 	$scope.brightnessSlider = 0;
 	$scope.brightnessNumber = 0;
 	$scope.brightnessMin = 0;
@@ -316,7 +241,6 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 			$scope.whitebalanceredMin = response.data.Value.MinValue;
 			$scope.whitebalanceredMax = response.data.Value.MaxValue;
 			$scope.whitebalanceredAuto = response.data.Value.DefaultValue;
-
 			$scope.unableWhiteBalanceRed = "";
 		}, function errorCallback(response){
 			console.log(response.statusText);
@@ -336,11 +260,8 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 			$scope.whitebalanceblueMin = response.data.Value.MinValue;
 			$scope.whitebalanceblueMax = response.data.Value.MaxValue;
 			$scope.whitebalanceblueAuto = response.data.Value.DefaultValue;
-//			console.log($scope.whitebalanceblueAuto);
-
 			$scope.unableWhiteBalanceBlue = "";
 			console.log(response);
-//			$scope.putWhitebalanceBlue($scope.whitebalanceblueAuto);
 		}, function errorCallback(response){
 			console.log(response.statusText);
 		});
@@ -848,64 +769,6 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 			console.log("Getting Response");
 			$scope.listParameters = response.data.listParameters;
 			console.log($scope.listParameters);
-
-			console.log("Ya he terminado de pedir los parametros");
-
-			for(var i=0; i<$scope.listParameters.length; i++)
-			{
-				//Brightness
-				if($scope.listParameters[i] == "Brightness")
-				{
-					console.log("Brightness");
-					console.log(i);
-					$scope.getBrightness();
-				}
-				if($scope.listParameters[i] == "Saturation")
-				{
-					console.log("Saturation");
-					console.log(i);
-					$scope.getSaturation();
-				}
-				if($scope.listParameters[i] == "Hue")
-				{
-					console.log("Hue");
-					console.log(i);
-					$scope.getHue();
-				}
-				if($scope.listParameters[i] == "Whitebalance Red")
-				{
-					console.log("Whitebalance Red");
-					console.log(i);
-					$scope.getWhitebalanceRed();
-				}
-				if($scope.listParameters[i] == "Whitebalance Blue")
-				{
-					console.log("Whitebalance Blue");
-					console.log(i);
-					$scope.getWhitebalanceBlue();
-					console.log($scope.whitebalanceblueMin);
-					console.log($scope.whitebalanceblueMax);
-					console.log($scope.whitebalanceblueAuto);
-				}
-				if($scope.listParameters[i] == "Gamma")
-				{
-					console.log("Gamma");
-					console.log(i);
-					$scope.getGamma();
-				}
-				if($scope.listParameters[i] == "Gain")
-				{
-					console.log("Gain");
-					console.log(i);
-					$scope.getGain();
-				}
-				if($scope.listParameters[i] == "Exposure")
-				{
-					console.log("Exposure");
-					console.log(i);
-					$scope.getExposure();
-				}
-			}
 		}, function errorCallback(response){
 			console.log(response.statusText);
 		});
@@ -916,20 +779,17 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 	{
 
 		$scope.askParameters();
-		//Here it is still coding
-		//End of the coding
-
 		console.log($scope.listParameters);
 		console.log($scope.listParameters.length);
-//		$scope.getBrightness();
-//		$scope.getGamma();
-//		$scope.getGain();
-//		$scope.getExposure();
-//		$scope.getSaturation();
-//		$scope.getHue();
-//		$scope.getWhitebalanceRed();
-//		$scope.getWhitebalanceBlue();
-//		$scope.obtainVideoPointer();
+		$scope.getBrightness();
+		$scope.getGamma();
+		$scope.getGain();
+		$scope.getExposure();
+		$scope.getSaturation();
+		$scope.getHue();
+		$scope.getWhitebalanceRed();
+		$scope.getWhitebalanceBlue();
+		$scope.obtainVideoPointer();
 
 	}
 
@@ -942,7 +802,7 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 	$scope.amountTags = null;
 	$scope.nameTag = "";
 	$scope.listTags = [];
-    $scope.listSize = 0;
+
 	
 	$scope.abrirModal = function (idModal) {
 		document.getElementById(idModal).style.display = 'block';
@@ -957,30 +817,29 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 	}
 
     $scope.setElements = function(){
-        var dat = {Amount: $scope.amountNum,
-            Tags: $scope.listTags,
-            Author: "Juanen"};
-        var json = JSON.stringify(dat);
-
-        $http({
-            method: 'POST',
-            url: $scope.url + '/CreateTask',
-            data: json,
-        })
-        .then(function successCallback(response){
-            console.log(response.data);
-            $scope.ID = response.data.ID;
-            $scope.text = "Success! " + response.data.Message + ". Your ID is " + $scope.ID;
-			console.log($scope.text);
-			$scope.cerrarModal('modalVideo');
-			$scope.abrirModal('modalExito');
-        },
-        function errorCallback(response){
-			console.log(response.statusText);
-			$scope.cerrarModal('modalVideo');
-			$scope.abrirModal('modalError');
-        });
-    }
+		var urlGetInfoUser = "https://ofs.fi.upm.es/api/users/loged";
+		$http.get(urlGetInfoUser).then(function(userInfo){
+			var dat = {
+				Amount: $scope.amountNum,
+				Tags: $scope.listTags,
+				Author: userInfo.data.username
+			};
+			
+			$http.post($scope.url + '/CreateTask', dat)
+			.then(function(response){
+				console.log(response.data);
+				$scope.ID = response.data.ID;
+				$scope.text = "Success! " + response.data.Message + ". Your ID is " + $scope.ID;
+				console.log($scope.text);
+				$scope.cerrarModal('modalVideo');
+				$scope.abrirModal('modalExito');
+			}).catch(function(err){
+				console.log(err);
+				$scope.cerrarModal('modalVideo');
+				$scope.abrirModal('modalError');
+			});
+		})	
+	}
 
     $scope.getAmountNum = function(Amount, keyEvent)
 	{
@@ -995,23 +854,25 @@ app.controller('videoController', ['$scope', '$http', function($scope, $http) {
 		$scope.amountTags = number;
 	}
 
+	$scope.listSize = 0;
 	$scope.getNameTag = function(name, keyEvent)
 	{
 		if(keyEvent.which == 13)
 		{
-			$scope.nameTag = name;
-
-			$scope.listTags.push($scope.nameTag);
-			$scope.listSize++;
-
-			$scope.nameTag = "";
-
-			if($scope.listSize >= $scope.amountTags)
+			if($scope.listSize < $scope.amountTags)
 			{
-				$scope.hideTag = "display: none;";
+				$scope.nameTag = name;
+				$scope.listTags.push($scope.nameTag);
+				$scope.listSize++;
+				$scope.errorMessage = false;
+				$scope.nameTag = "";
+
+			}
+			else
+			{
+				$scope.errorMessage = "Por favor, introduce solo: " + $scope.nameTag + " tags.";
 			}
 		}
-
 	}
 
 
