@@ -51,21 +51,6 @@ app.config(function($routeProvider) {
         .when('/galeria', {
             templateUrl: 'views/galeria.html',
             controller: 'galeriaController',
-            resolve: {
-              photos: function(){
-                var urlGetInfoUser = "https://ofs.fi.upm.es/api/users/loged";
-                $http.get(urlGetInfoUser).then(function(userInfo){
-                  $http({
-                    method: 'GET',
-                    url: 'http://192.168.43.23:1723' + '/Task/' + userInfo.data.username,
-                    }).then(function successCallback(response){
-                      return response.data;
-                    }), function errorCallback(response){
-                      console.log(response.statusText);
-                    }
-                })
-            }
-          }
         })
         .when('/video', {
             templateUrl: 'views/video.html',

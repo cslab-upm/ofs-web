@@ -6,8 +6,8 @@
     <!--Buscador de imagenes--> 
     <div class="row row-no-gutter" style="margin: 20px 0px 40px 0px">
         <form class="barraBusqueda">
-            <input type="text" placeholder="Buscar imágenes por id" ng-model="ID">
-            <button ng-click="getID()"><i class="fa fa-search"></i></button>
+            <input type="text" placeholder="Buscar imágenes por tag" ng-model="tag">
+            <button ng-click="getByTag()"><i class="fa fa-search"></i></button>
         </form>
         <div class="col-md-12" align="center">
                 <button ng-click="downloadZIP()"
@@ -19,59 +19,39 @@
     </div>
 
     <!--Distribucion de las imagenes -->
-    <div class="row responsive">
-        <div class="gallery">
-            <img src="{{listPhotos[0]}}" style="{{hidePhotos[0]}}" title="{{floatingText[0]}}"></img>
+    <div class="row">
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img  src="{{filteredTodos[0]}}" width="100%"></img>
         </div>
-        <div class="gallery">
-            <img src="{{listPhotos[1]}}" style="{{hidePhotos[1]}}" title="{{floatingText[1]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[1]}}" width="100%"></img>
         </div>
-         <div class="gallery">
-            <img src="{{listPhotos[2]}}" style="{{hidePhotos[2]}}" title="{{floatingText[2]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[2]}}" width="100%"></img>
         </div>
-        <div class="gallery">
-            <img src="{{listPhotos[3]}}" style="{{hidePhotos[3]}}" title="{{floatingText[3]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[3]}}" width="100%"></img>
         </div>
-        <div class="gallery">
-            <img src="{{listPhotos[4]}}" style="{{hidePhotos[4]}}" title="{{floatingText[4]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[4]}}" width="100%"></img>
         </div>
-        <div class="gallery">
-            <img src="{{listPhotos[5]}}" style="{{hidePhotos[5]}}" title="{{floatingText[5]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[5]}}" width="100%"></img>
         </div>
-        <div class="gallery">
-            <img src="{{listPhotos[6]}}" style="{{hidePhotos[6]}}" title="{{floatingText[6]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[6]}}" width="100%"></img>
         </div>
-            <img src="{{listPhotos[7]}}" style="{{hidePhotos[7]}}" title="{{floatingText[7]}}"></img>
-        <div class="gallery">
-            <img src="{{listPhotos[8]}}" style="{{hidePhotos[8]}}" title="{{floatingText[8]}}"></img>
-        </div>    
-        <div class="gallery">
-            <img src="{{listPhotos[9]}}" style="{{hidePhotos[9]}}" title="{{floatingText[9]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[7]}}" width="100%"></img>
         </div>
-            <img src="{{listPhotos[10]}}" style="{{hidePhotos[10]}}" title="{{floatingText[10]}}"></img>
-            <img src="{{listPhotos[11]}}" style="{{hidePhotos[11]}}" title="{{floatingText[11]}}"></img>
-            <img src="{{listPhotos[12]}}" style="{{hidePhotos[12]}}" title="{{floatingText[12]}}"></img>
-            <img src="{{listPhotos[13]}}" style="{{hidePhotos[13]}}" title="{{floatingText[13]}}"></img>
-            <img src="{{listPhotos[14]}}" style="{{hidePhotos[14]}}" title="{{floatingText[14]}}"></img>
-            <img src="{{listPhotos[15]}}" style="{{hidePhotos[15]}}" title="{{floatingText[15]}}"></img>
-            <img src="{{listPhotos[16]}}" style="{{hidePhotos[16]}}" title="{{floatingText[16]}}"></img>
-            <img src="{{listPhotos[17]}}" style="{{hidePhotos[17]}}" title="{{floatingText[17]}}"></img>
-            <img src="{{listPhotos[18]}}" style="{{hidePhotos[18]}}" title="{{floatingText[18]}}"></img>
-            <img src="{{listPhotos[19]}}" style="{{hidePhotos[19]}}" title="{{floatingText[19]}}"></img>
-            <img src="{{listPhotos[20]}}" style="{{hidePhotos[20]}}" title="{{floatingText[20]}}"></img>
-            <img src="{{listPhotos[21]}}" style="{{hidePhotos[21]}}" title="{{floatingText[21]}}"></img>
-            <img src="{{listPhotos[22]}}" style="{{hidePhotos[22]}}" title="{{floatingText[22]}}"></img>
-            <img src="{{listPhotos[23]}}" style="{{hidePhotos[23]}}" title="{{floatingText[23]}}"></img>
-            <img src="{{listPhotos[24]}}" style="{{hidePhotos[24]}}" title="{{floatingText[24]}}"></img>
-            <img src="{{listPhotos[25]}}" style="{{hidePhotos[25]}}" title="{{floatingText[25]}}"></img>
-            <img src="{{listPhotos[26]}}" style="{{hidePhotos[26]}}" title="{{floatingText[26]}}"></img>
-            <img src="{{listPhotos[27]}}" style="{{hidePhotos[27]}}" title="{{floatingText[27]}}"></img>
-            <img src="{{listPhotos[28]}}" style="{{hidePhotos[28]}}" title="{{floatingText[28]}}"></img>
-            <img src="{{listPhotos[29]}}" style="{{hidePhotos[29]}}" title="{{floatingText[29]}}"></img>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[8]}}" width="100%"></img>
         </div>
-        <div class="buttonBelow text-center center-block">
-            <a href="#" style="{{hideLastPhotos}}" ng-click="lastList()">Last</a>
-            <a href="#" style="{{hideNextPhotos}}" ng-click="nextList()">Next</a>
-        </div>
+        <div class="gallery col-md-4 col-sm-6 col-xs-12">
+            <img src="{{filteredTodos[9]}}" width="100%"></img>
+        </div>     
+        <div data-pagination="" class="text-center center-block" data-num-pages="numPages()" 
+        data-current-page="currentPage" data-max-size="maxSize"  
+        data-boundary-links="true"></div>
     </div>
 </div>
