@@ -55,4 +55,36 @@ app.controller('galeriaController', ['$scope', '$http',  function($scope, $http)
 		window.open($scope.url + '/CreateZip/' + $scope.IDcopy.toString() + '?' + timestamp,'');
 	}
 
+	$scope.getByTag = function()
+	{
+		$http({
+			method: 'GET',
+			url: $scope.url + '/TaskTags/' + $scope.tag,
+		}).then(function successCallback(response){
+			$scope.photos = response.data;
+			$scope.numPages = function () {
+				return Math.ceil($scope.photos.Amount / $scope.numPerPage);
+			};
+			
+			$scope.$watch('currentPage + numPerPage', function() {
+				var i;
+				var totalFotos = $scope.photos.members.length;
+				$scope.listPhotos = [];
+				for(i=0; i<totalFotos; i++)
+				{
+					var timestamp = Date.now();
+					var element = $scope.photos.members[i];
+					var photo = $scope.url + '/Photo/' + element + '?' + timestamp;
+					$scope.listPhotos.push(photo);
+				}
+				var begin = (($scope.currentPage - 1) * $scope.numPerPage) 
+				, end = begin + $scope.numPerPage;
+
+				$scope.filteredTodos = $scope.listPhotos.slice(begin, end);
+			});
+		}), function errorCallback(response){
+			console.log(response.statusText);
+		}
+	}
+
 }]);
