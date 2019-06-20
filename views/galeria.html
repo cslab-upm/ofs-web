@@ -4,24 +4,26 @@
         <h1 class="text-center" style="margin-bottom:50px">Galería</h1>
     </div>
     <!--Buscador de imagenes--> 
-    <div class="row row-no-gutter" style="margin: 20px 0px 40px 0px">
-        <form class="barraBusqueda">
-            <input type="text" placeholder="Buscar imágenes por tag" ng-model="tag">
-            <button ng-click="getByTag()"><i class="fa fa-search"></i></button>
-        </form>
-        <div class="col-md-12" align="center">
-                <button ng-click="downloadZIP()"
-                class="btn btn-success btn-lg" type="button" name="button"
-                style="margin:4px 5px" aria-pressed="true">
-                Descargar imágenes
-                </button>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <form class="barraBusqueda">
+                <input type="text" placeholder="Buscar imágenes por tag" ng-model="tag">
+                <button ng-click="getByTag()"><i class="fa fa-search"></i></button>
+            </form>
+            <div class="col-md-12" align="center">
+                    <button ng-click="downloadZIP()"
+                    class="btn btn-success btn-lg" type="button" name="button"
+                    style="margin: 30px 0; font-size: 16px;" aria-pressed="true">
+                    Descargar imágenes
+                    </button>
+            </div>
         </div>
     </div>
 
     <!--Distribucion de las imagenes -->
     <div class="row">
         <div class="gallery col-md-4 col-sm-6 col-xs-12">
-            <img  src="{{filteredTodos[0]}}" width="100%"></img>
+            <img src="{{filteredTodos[0]}}" width="100%"></img>
         </div>
         <div class="gallery col-md-4 col-sm-6 col-xs-12">
             <img src="{{filteredTodos[1]}}" width="100%"></img>
@@ -47,11 +49,14 @@
         <div class="gallery col-md-4 col-sm-6 col-xs-12">
             <img src="{{filteredTodos[8]}}" width="100%"></img>
         </div>
-        <div class="gallery col-md-4 col-sm-6 col-xs-12">
-            <img src="{{filteredTodos[9]}}" width="100%"></img>
-        </div>     
-        <div data-pagination="" class="text-center center-block" data-num-pages="numPages()" 
-        data-current-page="currentPage" data-max-size="maxSize"  
-        data-boundary-links="true"></div>
+    </div>
+    <div class="row">
+        <div data-pagination=""
+            class="text-center center-block col-md-12 col-sm-12 col-xs-12 pagination-buttons"
+            data-num-pages="numPages()" 
+            data-current-page="currentPage"
+            data-max-size="maxSize"  
+            data-boundary-links="true">
+        </div>
     </div>
 </div>
